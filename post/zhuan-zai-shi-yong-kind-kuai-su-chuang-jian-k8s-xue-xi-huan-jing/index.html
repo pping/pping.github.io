@@ -1,0 +1,1070 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <meta charset="utf-8" >
+
+<title>转载 使用Kind快速创建K8S学习环境 | Gridea</title>
+
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no">
+
+<link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.7.2/css/all.css" integrity="sha384-fnmOCqbTlWIlj8LyTjo7mOUStjsKC4pOpQbqyi7RrhN7udi9RwhKkMHpvLbHG9Sr" crossorigin="anonymous">
+<link rel="shortcut icon" href="https://blog.aymar.cn/favicon.ico?v=1626535127955">
+<link rel="stylesheet" href="https://blog.aymar.cn/styles/main.css">
+
+
+  
+    <link rel="stylesheet" href="https://unpkg.com/gitalk/dist/gitalk.css" />
+  
+
+  
+
+
+<link rel="stylesheet" href="https://unpkg.com/aos@next/dist/aos.css" />
+<script src="https://cdn.jsdelivr.net/npm/vue/dist/vue.js"></script>
+
+
+
+    <meta name="description" content="使用Kind快速创建K8S学习环境
+原文链接：kind：Kubernetes in Docker，单机运行 Kubernetes 群集的最佳方案？，查看最新版。
+是否没有足够的机器运行 Kubernetes 测试环境，个人电脑配置不高的话，..." />
+    <meta name="keywords" content="" />
+  </head>
+  <body>
+    <div id="app" class="main">
+
+      <div class="sidebar" :class="{ 'full-height': menuVisible }">
+  <div class="top-container" data-aos="fade-right">
+    <div class="top-header-container">
+      <a class="site-title-container" href="https://blog.aymar.cn">
+        <img src="https://blog.aymar.cn/images/avatar.png?v=1626535127955" class="site-logo">
+        <h1 class="site-title">Gridea</h1>
+      </a>
+      <div class="menu-btn" @click="menuVisible = !menuVisible">
+        <div class="line"></div>
+      </div>
+    </div>
+    <div>
+      
+        
+          <a href="/" class="site-nav">
+            首页
+          </a>
+        
+      
+        
+          <a href="/archives" class="site-nav">
+            归档
+          </a>
+        
+      
+        
+          <a href="/tags" class="site-nav">
+            标签
+          </a>
+        
+      
+        
+          <a href="/post/about" class="site-nav">
+            关于
+          </a>
+        
+      
+    </div>
+  </div>
+  <div class="bottom-container" data-aos="flip-up" data-aos-offset="0">
+    <div class="social-container">
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+    </div>
+    <div class="site-description">
+      温故而知新
+    </div>
+    <div class="site-footer">
+      Powered by <a href="https://www.aymar.cn" target="_blank">https://aymar.cn</a> | <a class="rss" href="https://blog.aymar.cn/atom.xml" target="_blank">RSS</a>
+    </div>
+  </div>
+</div>
+
+
+      <div class="main-container">
+        <div class="content-container" data-aos="fade-up">
+          <div class="post-detail">
+            <h2 class="post-title">转载 使用Kind快速创建K8S学习环境</h2>
+            <div class="post-date">2021-06-23</div>
+            
+            <div class="post-content" v-pre>
+              <h1 id="使用kind快速创建k8s学习环境">使用Kind快速创建K8S学习环境</h1>
+<p>原文链接：<a href="https://sysin.org/article/kind/">kind：Kubernetes in Docker，单机运行 Kubernetes 群集的最佳方案？</a>，查看最新版。</p>
+<p>是否没有足够的机器运行 Kubernetes 测试环境，个人电脑配置不高的话，运行多个节点的虚拟化有点力不从心，国内公有云主机一般不支持嵌套虚拟化，一套 3M+3N 的群集环境成本太高。VMware Fusion 12.0 发布，将 Kind 带入了我们的视野，这是 Google 官方的一个工具，可能是在单机运行 Kubernetes 群集的最佳方案。笔者在一台 1C 2G 的公有云虚机上运行 Kind，也不会因为计算资源有限而无法完成。</p>
+<h2 id="1-简介">1. 简介</h2>
+<p>kind 是 Kubernetes in Docker 的简写，是一个使用 Docker 容器作为 Nodes，在本地创建和运行 Kubernetes 群集的工具。适用于在本机创建 Kubernetes 群集环境进行开发和测试。</p>
+<p>官网：https://kind.sigs.k8s.io/</p>
+<p>kind 由以下组件构成:</p>
+<ul>
+<li>Go <a href="https://github.com/kubernetes-sigs/kind/tree/master/pkg">packages</a> implementing <a href="https://github.com/kubernetes-sigs/kind/tree/master/pkg/cluster">cluster creation</a>, <a href="https://github.com/kubernetes-sigs/kind/tree/master/pkg/build">image build</a>, etc.</li>
+<li>A command line interface (<a href="https://github.com/kubernetes-sigs/kind/tree/master/main.go"><code>kind</code></a>) built on these packages.</li>
+<li>Docker <a href="https://github.com/kubernetes-sigs/kind/tree/master/images">image(s)</a> written to run systemd, Kubernetes, etc.</li>
+<li><a href="https://github.com/kubernetes/test-infra/tree/master/kubetest"><code>kubetest</code></a> integration also built on these packages (WIP)</li>
+</ul>
+<p>kind 使用 <a href="https://kubernetes.io/docs/reference/setup-tools/kubeadm/kubeadm/">kubeadm</a> 创建和启动群集节点。</p>
+<h2 id="2-kind-架构">2. kind 架构</h2>
+<p>kind 官方架构图如下，它将 docker 容器作为 kubernetes 的 “node”，并在该 “node” 中安装 kubernetes 组件，包括一个或者多个 Control Plane 和 一个或者多个 Work nodes。这就解决了在本机运行多个 node 的问题，而不需要虚拟化。</p>
+<figure data-type="image" tabindex="1"><a href="https://sysin.org/article/kind/kind-diagram.png"><img src="https://sysin.org/article/kind/kind-diagram.png" alt="kind" loading="lazy"></a></figure>
+<h2 id="3-安装-kind">3. 安装 Kind</h2>
+<p>(1)、<a href="https://docs.docker.com/engine/install/">安装 Docker</a>，这是前提条件。</p>
+<p>(2)、<a href="https://kubernetes.io/docs/tasks/tools/install-kubectl/">安装 kubectl</a>：Kind 本身不需要 kubectl，安装 kubectl 可以在本机直接管理 Kubernetes 群集。</p>
+<p>(3)、安装 kind：</p>
+<p>查看版本：Github <a href="https://github.com/kubernetes-sigs/kind/releases">releases</a> page</p>
+<ul>
+<li>
+<p>Linux：</p>
+<pre><code>curl -Lo ./kind https://kind.sigs.k8s.io/dl/v0.9.0/kind-linux-amd64
+chmod +x ./kind
+#mv ./kind /some-dir-in-your-PATH/kind
+mv ./kind /usr/local/bin/kind
+</code></pre>
+</li>
+<li>
+<p>macOS (homebrew):</p>
+<pre><code>brew install kind
+</code></pre>
+<p>或者</p>
+<pre><code>curl -Lo ./kind https://kind.sigs.k8s.io/dl/v0.9.0/kind-darwin-amd64
+chmod +x ./kind
+mv ./kind /usr/local/bin/kind
+</code></pre>
+</li>
+</ul>
+<p>如果安装了 VMware Fusion 12.0，在启动 vctl（<code>vctl system start</code>）之后，直接运行 <code>vctl kind</code>。</p>
+<ul>
+<li>Windows：可以支持，不推荐。</li>
+</ul>
+<h2 id="4-操作入门">4. 操作入门</h2>
+<h3 id="创建群集">创建群集</h3>
+<pre><code>kind create cluster
+</code></pre>
+<p>默认的群集名称为<code>kind</code>，可以使用参数<code>--name</code>指定创建的群集的名称，可以创建多个群集：</p>
+<pre><code>kind create cluster --name kind-2
+</code></pre>
+<p>指定 node 镜像版本创建群集</p>
+<pre><code># default
+kind create cluster --image kindest/node:latest
+# 1.19.0
+kind create cluster --image kindest/node:v1.19.0
+</code></pre>
+<p>多群集切换</p>
+<p>获取群集名称，可以看到下面有两个群集</p>
+<pre><code>kind get clusters
+kind
+kind2
+</code></pre>
+<p>切换群集</p>
+<pre><code># 切换到群集`kind`
+kubectl cluster-info --context kind-kind
+# 切换到群集`kind-2`
+kubectl cluster-info --context kind-kind-2
+</code></pre>
+<p>可以通过 <a href="https://kubernetes.io/docs/concepts/configuration/organize-cluster-access-kubeconfig/">Kubernetes kubeconfig</a> 配置文件来配置默认群集.</p>
+<p>查看节点（默认只有一个 control-plane）</p>
+<pre><code>kubectl get nodes
+NAME                 STATUS   ROLES    AGE     VERSION
+kind-control-plane   Ready    master   7m51s   v1.19.1
+</code></pre>
+<h3 id="删除群集">删除群集</h3>
+<p>删除群集<code>kind-2</code></p>
+<pre><code>kind delete cluster --name kind-2
+</code></pre>
+<h3 id="将镜像加载到-kind-群集中">将镜像加载到 kind 群集中</h3>
+<p>Kind 群集中的 Docker 镜像可以从互联网直接拉取，如果需要将本机镜像加载到 Kind 群集中，使用如下命令</p>
+<pre><code>kind load docker-image my-custom-image
+</code></pre>
+<p><code>kind load docker-image my-custom-image --name kind-2</code> (指定群集名称)</p>
+<p><code>kind load image-archive /my-image-archive.tar</code> （加载导出的镜像压缩包）</p>
+<h2 id="5-配置-kind-群集">5. 配置 kind 群集</h2>
+<p>可以查看示例配置文件 <a href="https://raw.githubusercontent.com/kubernetes-sigs/kind/master/site/content/docs/user/kind-example-config.yaml">kind-example-config</a>，创建群集时使用 <code>--config</code> 参数:</p>
+<pre><code>kind create cluster --config kind-example-config.yaml
+</code></pre>
+<p>示例配置文件如下：</p>
+<pre><code># this config file contains all config fields with comments
+# NOTE: this is not a particularly useful config file
+kind: Cluster
+apiVersion: kind.x-k8s.io/v1alpha4
+# patch the generated kubeadm config with some extra settings
+kubeadmConfigPatches:
+- |
+  apiVersion: kubelet.config.k8s.io/v1beta1
+  kind: KubeletConfiguration
+  evictionHard:
+    nodefs.available: &quot;0%&quot;
+# patch it further using a JSON 6902 patch
+kubeadmConfigPatchesJSON6902:
+- group: kubeadm.k8s.io
+  version: v1beta2
+  kind: ClusterConfiguration
+  patch: |
+    - op: add
+      path: /apiServer/certSANs/-
+      value: my-hostname
+# 1 control plane node and 3 workers
+nodes:
+# the control plane node config
+- role: control-plane
+# the three workers
+- role: worker
+- role: worker
+- role: worker
+</code></pre>
+<h3 id="multi-node-clusters">Multi-node clusters</h3>
+<p>示例如下：</p>
+<pre><code># three node (two workers) cluster config
+kind: Cluster
+apiVersion: kind.x-k8s.io/v1alpha4
+nodes:
+- role: control-plane
+- role: worker
+- role: worker
+</code></pre>
+<h3 id="control-plane-ha">Control-plane HA</h3>
+<p>示例如下：</p>
+<pre><code># a cluster with 3 control-plane nodes and 3 workers
+kind: Cluster
+apiVersion: kind.x-k8s.io/v1alpha4
+nodes:
+- role: control-plane
+- role: control-plane
+- role: control-plane
+- role: worker
+- role: worker
+- role: worker
+</code></pre>
+<h3 id="将-node-的端口映射到主机">将 node 的端口映射到主机</h3>
+<p>可以通过<code>extraPortMappings</code>将 node 的端口映射到主机</p>
+<pre><code>kind: Cluster
+apiVersion: kind.x-k8s.io/v1alpha4
+nodes:
+- role: control-plane
+  extraPortMappings:
+  - containerPort: 80
+    hostPort: 80
+    listenAddress: &quot;0.0.0.0&quot; # Optional, defaults to &quot;0.0.0.0&quot;
+    protocol: udp # Optional, defaults to tcp
+</code></pre>
+<h3 id="指定-kubernetes-的版本">指定 Kubernetes 的版本</h3>
+<p>可以通过设置 node 的容器镜像版本运行指定版本的 kubernetes 群集。可以在<a href="https://github.com/kubernetes-sigs/kind/releases">官方 release 页面中</a>中查找需要镜像 tag，带上 <code>sha256</code> shasum，例如：</p>
+<pre><code>kind: Cluster
+apiVersion: kind.x-k8s.io/v1alpha4
+nodes:
+- role: control-plane
+  image: kindest/node:v1.16.4@sha256:b91a2c2317a000f3a783489dfb755064177dbc3a0b2f4147d50f04825d016f55
+- role: worker
+  image: kindest/node:v1.16.4@sha256:b91a2c2317a000f3a783489dfb755064177dbc3a0b2f4147d50f04825d016f55
+</code></pre>
+<h3 id="ipv6-clusters">IPv6 clusters</h3>
+<p><code>kind</code>目前支持 IPv6 单栈群集，前提是运行 Docker 的主机支持 IPv6，双栈支持即将到来, 大多数操作系统/发行版支持 IPv6，Linux 上通过以下命令查看：</p>
+<pre><code>sudo sysctl net.ipv6.conf.all.disable_ipv6
+</code></pre>
+<p>显示如下，表明主机启用了 IPv6：</p>
+<pre><code>net.ipv6.conf.all.disable_ipv6 = 0
+</code></pre>
+<p>如果 Docker 运行在 Windows 或者 Mac 上，IPv6 端口转发不起作用，需要指定 API Server 使用 IPv4 端口转发：</p>
+<pre><code># an ipv6 cluster
+kind: Cluster
+apiVersion: kind.x-k8s.io/v1alpha4
+networking:
+  ipFamily: ipv6
+  apiServerAddress: 127.0.0.1
+</code></pre>
+<p>在 Linux 上只需要这样:</p>
+<pre><code># an ipv6 cluster
+kind: Cluster
+apiVersion: kind.x-k8s.io/v1alpha4
+networking:
+  ipFamily: ipv6
+</code></pre>
+<h3 id="导出-cluster-日志">导出 Cluster 日志</h3>
+<p>从默认 cluster (名称为 <code>kind</code>)导出日志：</p>
+<pre><code>kind export logs
+Exported logs to: /tmp/396758314
+</code></pre>
+<p>切换群集加上 <code>--name</code> 参数。</p>
+<p>默认日志导出到 /tmp 目录下，可以指定导出的目录，例如：</p>
+<pre><code>kind export logs ./somedir
+Exported logs to: ./somedir
+</code></pre>
+<p>日志文件结构如下：</p>
+<pre><code>.
+├── docker-info.txt
+└── kind-control-plane/
+    ├── containers
+    ├── docker.log
+    ├── inspect.json
+    ├── journal.log
+    ├── kubelet.log
+    ├── kubernetes-version.txt
+    └── pods/
+</code></pre>
+<h2 id="6-配置概述">6. 配置概述</h2>
+<h3 id="61-入门">6.1 入门</h3>
+<p>在创建 Kind 群集时，需要通过一个 <a href="https://yaml.org/">YAML</a> 配置文件来自定义群集配置。</p>
+<p>一个最小化的配置如下:</p>
+<pre><code>kind: Cluster
+apiVersion: kind.x-k8s.io/v1alpha4
+</code></pre>
+<p>将配置文件保存为 <code>config.yaml</code>，通过运行命令 <code>kind create cluster --config=config.yaml</code> 来创建群集。</p>
+<h3 id="62-cluster-wide-选项">6.2 Cluster-Wide 选项</h3>
+<p>以下全局选项可用，并非所有的选项列入文档，可以关注官网文档的更新。</p>
+<h4 id="networking">Networking</h4>
+<p>关于网络的配置选项。</p>
+<h5 id="ip-family">IP Family</h5>
+<p>IPv6 (and soon dual-stack!) clusters：</p>
+<pre><code>kind: Cluster
+apiVersion: kind.x-k8s.io/v1alpha4
+networking:
+  ipFamily: ipv6
+</code></pre>
+<p>上节 “IPv6 Clusters” 中有更详细的描述。</p>
+<h5 id="api-server">API Server</h5>
+<p>自定义 API Server 侦听地址和端口：</p>
+<pre><code>kind: Cluster
+apiVersion: kind.x-k8s.io/v1alpha4
+networking:
+  # WARNING: It is _strongly_ recommended that you keep this the default
+  # (127.0.0.1) for security reasons. However it is possible to change this.
+  apiServerAddress: &quot;127.0.0.1&quot;
+  # By default the API server listens on a random open port.
+  # You may choose a specific port but probably don't need to in most cases.
+  # Using a random port makes it easier to spin up multiple clusters.
+  apiServerPort: 6443
+</code></pre>
+<h5 id="pod-subnet">Pod Subnet</h5>
+<p>自定义 pod IP 地址范围：</p>
+<pre><code>kind: Cluster
+apiVersion: kind.x-k8s.io/v1alpha4
+networking:
+  podSubnet: &quot;10.244.0.0/16&quot;
+</code></pre>
+<h5 id="service-subnet">Service Subnet</h5>
+<p>自定义 service IP 地址范围：</p>
+<pre><code>kind: Cluster
+apiVersion: kind.x-k8s.io/v1alpha4
+networking:
+  serviceSubnet: &quot;10.96.0.0/12&quot;
+</code></pre>
+<h5 id="禁用默认-cni">禁用默认 CNI</h5>
+<p>KIND 附带了一个简单的网络实现（“kindnetd”），它基于标准 CNI 插件（<code>ptp</code>，<code>host local</code>，…）和简单的 netlink 路由。</p>
+<p>这个 CNI 也处理 IP 伪装。</p>
+<p>您可以禁用默认值以安装其他 CNI。这是一个高级用户功能，支持有限，但已知许多常见的 CNI 清单可以工作，例如 Calico。</p>
+<pre><code>kind: Cluster
+apiVersion: kind.x-k8s.io/v1alpha4
+networking:
+  # the default CNI will not be installed
+  disableDefaultCNI: true
+</code></pre>
+<h5 id="kube-proxy-mode">kube-proxy mode</h5>
+<p>kube-proxy mode 可选 iptables 和 ipvs，默认使用的 iptables。</p>
+<pre><code>kind: Cluster
+apiVersion: kind.x-k8s.io/v1alpha4
+networking:
+  kubeProxyMode: &quot;ipvs&quot;
+</code></pre>
+<h4 id="nodes">Nodes</h4>
+<p><code>kind: Cluster</code> 的 <code>nodes</code> 字段如果不设置，默认时这样的（即仅有一个 control plane）:</p>
+<pre><code>nodes:
+# one node hosting a control plane
+- role: control-plane
+</code></pre>
+<p>多节点群集示例如下：</p>
+<pre><code>kind: Cluster
+apiVersion: kind.x-k8s.io/v1alpha4
+# One control plane node and three &quot;workers&quot;.
+#
+# While these will not add more real compute capacity and
+# have limited isolation, this can be useful for testing
+# rolling updates etc.
+#
+# The API-server and other control plane components will be
+# on the control-plane node.
+#
+# You probably don't need this unless you are testing Kubernetes itself.
+nodes:
+- role: control-plane
+- role: worker
+- role: worker
+- role: worker
+</code></pre>
+<p>可以通过设置 node 的容器镜像版本运行指定版本的 kubernetes 群集。可以在<a href="https://github.com/kubernetes-sigs/kind/releases">官方 release 页面中</a>中查找需要镜像 tag，带上 <code>sha256</code> shasum，例如：</p>
+<pre><code>kind: Cluster
+apiVersion: kind.x-k8s.io/v1alpha4
+nodes:
+- role: control-plane
+- role: worker
+  image: kindest/node:v1.16.4@sha256:b91a2c2317a000f3a783489dfb755064177dbc3a0b2f4147d50f04825d016f55
+</code></pre>
+<h3 id="63-per-node-选项">6.3 Per-Node 选项</h3>
+<p>以下选项适用于 <code>nodes</code>，并非所有的选项列入文档，可以关注官网文档的更新。</p>
+<h4 id="extra-mounts">Extra Mounts</h4>
+<p>附加挂载可以用来将主机上的存储挂载到 Node 上，用于持久保存数据。</p>
+<pre><code>kind: ClusterapiVersion: kind.x-k8s.io/v1alpha4nodes:- role: control-plane  # add a mount from /path/to/my/files on the host to /files on the node  extraMounts:  - hostPath: /path/to/my/files/    containerPath: /files
+</code></pre>
+<h4 id="extra-port-mappings">Extra Port Mappings</h4>
+<p>附加端口映射可以将端口转发到 Kind 节点。这是一个跨平台的选项，可以将流量引入 Kind 群集。</p>
+<p>使用 Linux 上的 docker，您可以简单地将流量从主机发送到节点 IP，但要在 macOS 和 Windows，您需要使用这些设置才能实现。</p>
+<p>另外也可以使用 ingress 转发流量。</p>
+<pre><code>kind: ClusterapiVersion: kind.x-k8s.io/v1alpha4nodes:- role: control-plane  # port forward 80 on the host to 80 on this node  extraPortMappings:  - containerPort: 80    hostPort: 80    # optional: set the bind address on the host    # 0.0.0.0 is the current default    listenAddress: &quot;127.0.0.1&quot;    # optional: set the protocol to one of TCP, UDP, SCTP.    # TCP is the default    protocol: TCP
+</code></pre>
+<h4 id="kubeadm-config-patches">Kubeadm Config Patches</h4>
+<p>KIND 使用 <a href="https://kind.sigs.k8s.io/docs/design/principles/#leverage-existing-tooling"><code>kubeadm</code></a> 配置群集节点。</p>
+<p>KIND 在第一个控制平面节点上运行“kubeadm init”，该节点可以使用 kubeadm <a href="https://kubernetes.io/docs/reference/setup-tools/kubeadm/kubeadm-init/#config-file">InitConfiguration</a> (<a href="https://godoc.org/k8s.io/kubernetes/cmd/kubeadm/app/apis/kubeadm/v1beta2#InitConfiguration">spec</a>) 进行自定义配置。</p>
+<pre><code>kind: ClusterapiVersion: kind.x-k8s.io/v1alpha4nodes:- role: control-plane  kubeadmConfigPatches:  - |    kind: InitConfiguration    nodeRegistration:      kubeletExtraArgs:        node-labels: &quot;my-label=true&quot;
+</code></pre>
+<p>在 KIND 群集其他节点配置中，包括 worker 或者 control-plane (in HA mode), KIND 运行 <code>kubeadm join</code> 命令参数，可以通过 <a href="https://kubernetes.io/docs/reference/setup-tools/kubeadm/kubeadm-join/#config-file">JoinConfiguration</a> (<a href="https://godoc.org/k8s.io/kubernetes/cmd/kubeadm/app/apis/kubeadm/v1beta2#JoinConfiguration">spec</a>) 进行自定义配置。</p>
+<pre><code>kind: ClusterapiVersion: kind.x-k8s.io/v1alpha4nodes:- role: control-plane- role: worker- role: worker  kubeadmConfigPatches:  - |    kind: JoinConfiguration    nodeRegistration:      kubeletExtraArgs:        node-labels: &quot;my-label2=true&quot;- role: control-plane  kubeadmConfigPatches:  - |    kind: JoinConfiguration    nodeRegistration:      kubeletExtraArgs:        node-labels: &quot;my-label3=true&quot;
+</code></pre>
+<h2 id="7-部署-dashboard">7. 部署 Dashboard</h2>
+<p>直接部署 Dashboard，运行命令:</p>
+<pre><code>$ kubectl apply -f https://raw.githubusercontent.com/kubernetes/dashboard/v2.0.0/aio/deploy/recommended.yaml
+</code></pre>
+<p>验证：</p>
+<pre><code>$ kubectl get po,svc -n kubernetes-dashboardNAME                                             READY   STATUS    RESTARTS   AGEpod/dashboard-metrics-scraper-7b59f7d4df-f7j7h   1/1     Running   0          90spod/kubernetes-dashboard-74d688b6bc-s9wts        1/1     Running   0          89sNAME                                TYPE        CLUSTER-IP     EXTERNAL-IP   PORT(S)    AGEservice/dashboard-metrics-scraper   ClusterIP   10.96.228.22   &lt;none&gt;        8000/TCP   90sservice/kubernetes-dashboard        ClusterIP   10.96.160.22   &lt;none&gt;        443/TCP    91s
+</code></pre>
+<p>创建 <code>ClusterRoleBinding</code> 获得群集 admin 访问权限：</p>
+<pre><code>$ kubectl create clusterrolebinding default-admin --clusterrole cluster-admin --serviceaccount=default:defaultclusterrolebinding.rbac.authorization.k8s.io/default-admin created
+</code></pre>
+<p>创建登录 Dashboard 的 token：</p>
+<pre><code>$ token=$(kubectl get secrets -o jsonpath=&quot;{.items[?(@.metadata.annotations['kubernetes\.io/service-account\.name']=='default')].data.token}&quot;|base64 --decode)
+</code></pre>
+<p>使用 <code>echo</code> 显示 token：</p>
+<pre><code>$ echo $token
+</code></pre>
+<p>记得保存一下 token</p>
+<pre><code>$ echo $token &gt; dashboard-token.txt$ cat dashboard-token.txt
+</code></pre>
+<p>使用 kubectl 命令访问 Dashboard，命令如下:</p>
+<pre><code>$ kubectl proxyStarting to serve on 127.0.0.1:8001
+</code></pre>
+<p>点击 <a href="http://localhost:8001/api/v1/namespaces/kubernetes-dashboard/services/https:kubernetes-dashboard:/proxy/">Kubernetes Dashboard</a> 使用上述 token 登录 Dashboard</p>
+<p>也可以通过 ingress 来访问 Dashboard。</p>
+<h2 id="8-部署-ingress">8. 部署 ingress</h2>
+<p>在创建群集时，需要使用 KIND 的 extraPortMapping 配置选项将端口从主机转发到运行在节点上的入口控制器。</p>
+<p>然后部署一个 Ingress controller，已知以下几个 ingress controllers 可以支持 kind：</p>
+<ul>
+<li><a href="https://kind.sigs.k8s.io/docs/user/ingress/#ambassador">Ambassador</a></li>
+<li><a href="https://kind.sigs.k8s.io/docs/user/ingress/#contour">Contour</a></li>
+<li><a href="https://kind.sigs.k8s.io/docs/user/ingress/#ingress-nginx">Ingress NGINX</a></li>
+</ul>
+<p>这里以 ingress-nginx 为例：</p>
+<h3 id="创建群集-2">创建群集</h3>
+<p>使用 extraPortMappings 和 node-labels 配置选项创建一个群集。</p>
+<ul>
+<li><strong>extraPortMappings</strong> 允许本地主机转发请求到 Ingress controller 的 80/443 端口</li>
+<li><strong>node-labels</strong> 允许 ingress controller 运行在指定的 node 上</li>
+</ul>
+<pre><code>cat &lt;&lt;EOF | kind create cluster --config=-kind: ClusterapiVersion: kind.x-k8s.io/v1alpha4nodes:- role: control-plane  kubeadmConfigPatches:  - |    kind: InitConfiguration    nodeRegistration:      kubeletExtraArgs:        node-labels: &quot;ingress-ready=true&quot;  extraPortMappings:  - containerPort: 80    hostPort: 80    protocol: TCP  - containerPort: 443    hostPort: 443    protocol: TCPEOF
+</code></pre>
+<h3 id="ingress-nginx">Ingress NGINX</h3>
+<pre><code>wget -O kind-ingress-nginx.yaml https://raw.githubusercontent.com/kubernetes/ingress-nginx/master/deploy/static/provider/kind/deploy.yamlkubectl apply -f kind-ingress-nginx.yaml
+</code></pre>
+<p>注意：image 来自 k8s.gcr.io，需要文明访问。</p>
+<pre><code>#image: k8s.gcr.io/ingress-nginx/controller:v0.35.0@sha256:fc4979d8b8443a831c9789b5155cded454cb7de737a8b727bc2ba0106d2eae8bimage: scofield/ingress-nginx-controller:v0.35.0
+</code></pre>
+<p>执行如下命令等待部署完成：</p>
+<pre><code>kubectl wait --namespace ingress-nginx \  --for=condition=ready pod \  --selector=app.kubernetes.io/component=controller \  --timeout=90s
+</code></pre>
+<p>或者执行命令验证部署：</p>
+<pre><code>$ kubectl get po,svc -n ingress-nginx$ kubectl get po,svc -n ingress-nginx -o wide
+</code></pre>
+<h3 id="测试-ingress">测试 Ingress</h3>
+<p>使用官方提供的 http-echo 应用来测试，内容如下：</p>
+<pre><code>kind: PodapiVersion: v1metadata:  name: foo-app  labels:    app: foospec:  containers:  - name: foo-app    image: hashicorp/http-echo:0.2.3    args:    - &quot;-text=foo&quot;---kind: ServiceapiVersion: v1metadata:  name: foo-servicespec:  selector:    app: foo  ports:  # Default port used by the image  - port: 5678---kind: PodapiVersion: v1metadata:  name: bar-app  labels:    app: barspec:  containers:  - name: bar-app    image: hashicorp/http-echo:0.2.3    args:    - &quot;-text=bar&quot;---kind: ServiceapiVersion: v1metadata:  name: bar-servicespec:  selector:    app: bar  ports:  # Default port used by the image  - port: 5678---apiVersion: networking.k8s.io/v1beta1kind: Ingressmetadata:  name: example-ingressspec:  rules:  - http:      paths:      - path: /foo        backend:          serviceName: foo-service          servicePort: 5678      - path: /bar        backend:          serviceName: bar-service          servicePort: 5678---
+</code></pre>
+<p>直接应用：</p>
+<pre><code>kubectl apply -f https://kind.sigs.k8s.io/examples/ingress/usage.yaml
+</code></pre>
+<p>测试效果如下：</p>
+<pre><code># should output &quot;foo&quot;curl localhost/foo# should output &quot;bar&quot;curl localhost/bar
+</code></pre>
+<h3 id="ingress-dashboard">ingress dashboard</h3>
+<p>本例使用受信任的 SSL 证书，通过 ingress 以 https 发布 Dashboard。</p>
+<p>部署受信任的 SSL 证书</p>
+<pre><code># 创建 secret，在 ingress 不能直接使用证书需要转换为 secret 才能使用# key 和 cert 都为 PEM 格式，cert 包含证书文件和证书链部分kubectl create secret tls dashboard-ingress-tls --key dashboard-ingress.key --cert dashboard-ingress.crt -n kubernetes-dashboard# 查看 secret 内容kubectl get secret dashboard-ingress-tls -n kubernetes-dashboard -o yaml# 删除命令kubectl delete secret dashboard-ingress-tls -n kubernetes-dashboard
+</code></pre>
+<p>配置 ingress 转发文件</p>
+<pre><code># vi dashboard-ingress.yamlapiVersion: extensions/v1beta1kind: Ingressmetadata:  annotations:    nginx.ingress.kubernetes.io/ingress.class: &quot;nginx&quot;    nginx.ingress.kubernetes.io/backend-protocol: &quot;HTTPS&quot;  name: kubernetes-dashboard-ingress  namespace: kubernetes-dashboardspec:  tls:  - secretName: dashboard-ingress-tls #上述创建的secret  rules:    - host: k8s.sysin.cn #域名      http:        paths:        - path: /          backend:            serviceName: kubernetes-dashboard            servicePort: 443
+</code></pre>
+<blockquote>
+<p>host: 对应的域名<br>
+path: url上下文<br>
+backend: 后向转发到对应的 serviceName: 和 servicePort:</p>
+</blockquote>
+<p>注意，dashboard 默认使用 https 提供服务，ingress 默认 backend-protocol 使用 http，这里发布成功的关键是要添加 annotations 参数：</p>
+<pre><code>annotations:
+  nginx.ingress.kubernetes.io/ingress.class: &quot;nginx&quot;
+  nginx.ingress.kubernetes.io/backend-protocol: &quot;HTTPS&quot;
+</code></pre>
+<p>部署：</p>
+<pre><code>kubectl apply -f dashboard-ingress.yaml
+</code></pre>
+<p>部署成功后可以通过域名访问：<a href="https://k8s.sysin.cn/">https://k8s.sysin.cn</a></p>
+<h2 id="9-istio">9. Istio</h2>
+<p>Istio 官方支持部署在 Kind 上，以下为简单示例。</p>
+<p>下载当前版本：</p>
+<pre><code>$ curl -L https://istio.io/downloadIstio | sh -
+</code></pre>
+<p>下载指定版本：</p>
+<pre><code>$ curl -L https://istio.io/downloadIstio | ISTIO_VERSION=1.7.0 TARGET_ARCH=x86_64 sh -
+</code></pre>
+<p>切换到 istio 目录:</p>
+<pre><code>$ cd istio-1.7.0
+</code></pre>
+<p>添加 <code>istioctl</code> 到环境变量 (Linux or macOS):</p>
+<pre><code>$ export PATH=$PWD/bin:$PATH
+</code></pre>
+<p>安装：</p>
+<p>例如使用 <code>demo</code> <a href="https://istio.io/latest/docs/setup/additional-setup/config-profiles/">configuration profile</a> 安装</p>
+<pre><code>$ istioctl install --set profile=demo
+✔ Istio core installed
+✔ Istiod installed
+✔ Egress gateways installed
+✔ Ingress gateways installed
+✔ Installation complete
+</code></pre>
+<p>限于篇幅，参看其他文档。</p>
+<h2 id="10-限制">10. 限制</h2>
+<p>kind 部署 kubernetes 群集相当方便，可以快速部署多个群集。但在群集的配置和更新上有明显弊端，只能通过重新创建群集来配置和更新群集。所以在初始化群集的时候需要考虑好配置选项。</p>
+<h1 id="使用kind快速创建k8s学习环境-2">使用Kind快速创建K8S学习环境</h1>
+<p>原文链接：<a href="https://sysin.org/article/kind/">kind：Kubernetes in Docker，单机运行 Kubernetes 群集的最佳方案？</a>，查看最新版。</p>
+<p>是否没有足够的机器运行 Kubernetes 测试环境，个人电脑配置不高的话，运行多个节点的虚拟化有点力不从心，国内公有云主机一般不支持嵌套虚拟化，一套 3M+3N 的群集环境成本太高。VMware Fusion 12.0 发布，将 Kind 带入了我们的视野，这是 Google 官方的一个工具，可能是在单机运行 Kubernetes 群集的最佳方案。笔者在一台 1C 2G 的公有云虚机上运行 Kind，也不会因为计算资源有限而无法完成。</p>
+<h2 id="1-简介-2">1. 简介</h2>
+<p>kind 是 Kubernetes in Docker 的简写，是一个使用 Docker 容器作为 Nodes，在本地创建和运行 Kubernetes 群集的工具。适用于在本机创建 Kubernetes 群集环境进行开发和测试。</p>
+<p>官网：https://kind.sigs.k8s.io/</p>
+<p>kind 由以下组件构成:</p>
+<ul>
+<li>Go <a href="https://github.com/kubernetes-sigs/kind/tree/master/pkg">packages</a> implementing <a href="https://github.com/kubernetes-sigs/kind/tree/master/pkg/cluster">cluster creation</a>, <a href="https://github.com/kubernetes-sigs/kind/tree/master/pkg/build">image build</a>, etc.</li>
+<li>A command line interface (<a href="https://github.com/kubernetes-sigs/kind/tree/master/main.go"><code>kind</code></a>) built on these packages.</li>
+<li>Docker <a href="https://github.com/kubernetes-sigs/kind/tree/master/images">image(s)</a> written to run systemd, Kubernetes, etc.</li>
+<li><a href="https://github.com/kubernetes/test-infra/tree/master/kubetest"><code>kubetest</code></a> integration also built on these packages (WIP)</li>
+</ul>
+<p>kind 使用 <a href="https://kubernetes.io/docs/reference/setup-tools/kubeadm/kubeadm/">kubeadm</a> 创建和启动群集节点。</p>
+<h2 id="2-kind-架构-2">2. kind 架构</h2>
+<p>kind 官方架构图如下，它将 docker 容器作为 kubernetes 的 “node”，并在该 “node” 中安装 kubernetes 组件，包括一个或者多个 Control Plane 和 一个或者多个 Work nodes。这就解决了在本机运行多个 node 的问题，而不需要虚拟化。</p>
+<figure data-type="image" tabindex="2"><a href="https://sysin.org/article/kind/kind-diagram.png"><img src="https://sysin.org/article/kind/kind-diagram.png" alt="kind" loading="lazy"></a></figure>
+<h2 id="3-安装-kind-2">3. 安装 Kind</h2>
+<p>(1)、<a href="https://docs.docker.com/engine/install/">安装 Docker</a>，这是前提条件。</p>
+<p>(2)、<a href="https://kubernetes.io/docs/tasks/tools/install-kubectl/">安装 kubectl</a>：Kind 本身不需要 kubectl，安装 kubectl 可以在本机直接管理 Kubernetes 群集。</p>
+<p>(3)、安装 kind：</p>
+<p>查看版本：Github <a href="https://github.com/kubernetes-sigs/kind/releases">releases</a> page</p>
+<ul>
+<li>
+<p>Linux：</p>
+<pre><code>curl -Lo ./kind https://kind.sigs.k8s.io/dl/v0.9.0/kind-linux-amd64chmod +x ./kind#mv ./kind /some-dir-in-your-PATH/kindmv ./kind /usr/local/bin/kind
+</code></pre>
+</li>
+<li>
+<p>macOS (homebrew):</p>
+<pre><code>brew install kind
+</code></pre>
+<p>或者</p>
+<pre><code>curl -Lo ./kind https://kind.sigs.k8s.io/dl/v0.9.0/kind-darwin-amd64chmod +x ./kindmv ./kind /usr/local/bin/kind
+</code></pre>
+</li>
+</ul>
+<p>如果安装了 VMware Fusion 12.0，在启动 vctl（<code>vctl system start</code>）之后，直接运行 <code>vctl kind</code>。</p>
+<ul>
+<li>Windows：可以支持，不推荐。</li>
+</ul>
+<h2 id="4-操作入门-2">4. 操作入门</h2>
+<h3 id="创建群集-3">创建群集</h3>
+<pre><code>kind create cluster
+</code></pre>
+<p>默认的群集名称为<code>kind</code>，可以使用参数<code>--name</code>指定创建的群集的名称，可以创建多个群集：</p>
+<pre><code>kind create cluster --name kind-2
+</code></pre>
+<p>指定 node 镜像版本创建群集</p>
+<pre><code># defaultkind create cluster --image kindest/node:latest# 1.19.0kind create cluster --image kindest/node:v1.19.0
+</code></pre>
+<p>多群集切换</p>
+<p>获取群集名称，可以看到下面有两个群集</p>
+<pre><code>kind get clusterskindkind2
+</code></pre>
+<p>切换群集</p>
+<pre><code># 切换到群集`kind`kubectl cluster-info --context kind-kind# 切换到群集`kind-2`kubectl cluster-info --context kind-kind-2
+</code></pre>
+<p>可以通过 <a href="https://kubernetes.io/docs/concepts/configuration/organize-cluster-access-kubeconfig/">Kubernetes kubeconfig</a> 配置文件来配置默认群集.</p>
+<p>查看节点（默认只有一个 control-plane）</p>
+<pre><code>kubectl get nodesNAME                 STATUS   ROLES    AGE     VERSIONkind-control-plane   Ready    master   7m51s   v1.19.1
+</code></pre>
+<h3 id="删除群集-2">删除群集</h3>
+<p>删除群集<code>kind-2</code></p>
+<pre><code>kind delete cluster --name kind-2
+</code></pre>
+<h3 id="将镜像加载到-kind-群集中-2">将镜像加载到 kind 群集中</h3>
+<p>Kind 群集中的 Docker 镜像可以从互联网直接拉取，如果需要将本机镜像加载到 Kind 群集中，使用如下命令</p>
+<pre><code>kind load docker-image my-custom-image
+</code></pre>
+<p><code>kind load docker-image my-custom-image --name kind-2</code> (指定群集名称)</p>
+<p><code>kind load image-archive /my-image-archive.tar</code> （加载导出的镜像压缩包）</p>
+<h2 id="5-配置-kind-群集-2">5. 配置 kind 群集</h2>
+<p>可以查看示例配置文件 <a href="https://raw.githubusercontent.com/kubernetes-sigs/kind/master/site/content/docs/user/kind-example-config.yaml">kind-example-config</a>，创建群集时使用 <code>--config</code> 参数:</p>
+<pre><code>kind create cluster --config kind-example-config.yaml
+</code></pre>
+<p>示例配置文件如下：</p>
+<pre><code># this config file contains all config fields with comments# NOTE: this is not a particularly useful config filekind: ClusterapiVersion: kind.x-k8s.io/v1alpha4# patch the generated kubeadm config with some extra settingskubeadmConfigPatches:- |  apiVersion: kubelet.config.k8s.io/v1beta1  kind: KubeletConfiguration  evictionHard:    nodefs.available: &quot;0%&quot;# patch it further using a JSON 6902 patchkubeadmConfigPatchesJSON6902:- group: kubeadm.k8s.io  version: v1beta2  kind: ClusterConfiguration  patch: |    - op: add      path: /apiServer/certSANs/-      value: my-hostname# 1 control plane node and 3 workersnodes:# the control plane node config- role: control-plane# the three workers- role: worker- role: worker- role: worker
+</code></pre>
+<h3 id="multi-node-clusters-2">Multi-node clusters</h3>
+<p>示例如下：</p>
+<pre><code># three node (two workers) cluster configkind: ClusterapiVersion: kind.x-k8s.io/v1alpha4nodes:- role: control-plane- role: worker- role: worker
+</code></pre>
+<h3 id="control-plane-ha-2">Control-plane HA</h3>
+<p>示例如下：</p>
+<pre><code># a cluster with 3 control-plane nodes and 3 workerskind: ClusterapiVersion: kind.x-k8s.io/v1alpha4nodes:- role: control-plane- role: control-plane- role: control-plane- role: worker- role: worker- role: worker
+</code></pre>
+<h3 id="将-node-的端口映射到主机-2">将 node 的端口映射到主机</h3>
+<p>可以通过<code>extraPortMappings</code>将 node 的端口映射到主机</p>
+<pre><code>kind: ClusterapiVersion: kind.x-k8s.io/v1alpha4nodes:- role: control-plane  extraPortMappings:  - containerPort: 80    hostPort: 80    listenAddress: &quot;0.0.0.0&quot; # Optional, defaults to &quot;0.0.0.0&quot;    protocol: udp # Optional, defaults to tcp
+</code></pre>
+<h3 id="指定-kubernetes-的版本-2">指定 Kubernetes 的版本</h3>
+<p>可以通过设置 node 的容器镜像版本运行指定版本的 kubernetes 群集。可以在<a href="https://github.com/kubernetes-sigs/kind/releases">官方 release 页面中</a>中查找需要镜像 tag，带上 <code>sha256</code> shasum，例如：</p>
+<pre><code>kind: ClusterapiVersion: kind.x-k8s.io/v1alpha4nodes:- role: control-plane  image: kindest/node:v1.16.4@sha256:b91a2c2317a000f3a783489dfb755064177dbc3a0b2f4147d50f04825d016f55- role: worker  image: kindest/node:v1.16.4@sha256:b91a2c2317a000f3a783489dfb755064177dbc3a0b2f4147d50f04825d016f55
+</code></pre>
+<h3 id="ipv6-clusters-2">IPv6 clusters</h3>
+<p><code>kind</code>目前支持 IPv6 单栈群集，前提是运行 Docker 的主机支持 IPv6，双栈支持即将到来, 大多数操作系统/发行版支持 IPv6，Linux 上通过以下命令查看：</p>
+<pre><code>sudo sysctl net.ipv6.conf.all.disable_ipv6
+</code></pre>
+<p>显示如下，表明主机启用了 IPv6：</p>
+<pre><code>net.ipv6.conf.all.disable_ipv6 = 0
+</code></pre>
+<p>如果 Docker 运行在 Windows 或者 Mac 上，IPv6 端口转发不起作用，需要指定 API Server 使用 IPv4 端口转发：</p>
+<pre><code># an ipv6 clusterkind: ClusterapiVersion: kind.x-k8s.io/v1alpha4networking:  ipFamily: ipv6  apiServerAddress: 127.0.0.1
+</code></pre>
+<p>在 Linux 上只需要这样:</p>
+<pre><code># an ipv6 cluster
+kind: Cluster
+apiVersion: kind.x-k8s.io/v1alpha4
+networking:
+  ipFamily: ipv6
+</code></pre>
+<h3 id="导出-cluster-日志-2">导出 Cluster 日志</h3>
+<p>从默认 cluster (名称为 <code>kind</code>)导出日志：</p>
+<pre><code>kind export logs
+Exported logs to: /tmp/396758314
+</code></pre>
+<p>切换群集加上 <code>--name</code> 参数。</p>
+<p>默认日志导出到 /tmp 目录下，可以指定导出的目录，例如：</p>
+<pre><code>kind export logs ./somedir
+Exported logs to: ./somedir
+</code></pre>
+<p>日志文件结构如下：</p>
+<pre><code>.
+├── docker-info.txt
+└── kind-control-plane/
+    ├── containers
+    ├── docker.log
+    ├── inspect.json
+    ├── journal.log
+    ├── kubelet.log
+    ├── kubernetes-version.txt
+    └── pods/
+</code></pre>
+<h2 id="6-配置概述-2">6. 配置概述</h2>
+<h3 id="61-入门-2">6.1 入门</h3>
+<p>在创建 Kind 群集时，需要通过一个 <a href="https://yaml.org/">YAML</a> 配置文件来自定义群集配置。</p>
+<p>一个最小化的配置如下:</p>
+<pre><code>kind: ClusterapiVersion: kind.x-k8s.io/v1alpha4
+</code></pre>
+<p>将配置文件保存为 <code>config.yaml</code>，通过运行命令 <code>kind create cluster --config=config.yaml</code> 来创建群集。</p>
+<h3 id="62-cluster-wide-选项-2">6.2 Cluster-Wide 选项</h3>
+<p>以下全局选项可用，并非所有的选项列入文档，可以关注官网文档的更新。</p>
+<h4 id="networking-2">Networking</h4>
+<p>关于网络的配置选项。</p>
+<h5 id="ip-family-2">IP Family</h5>
+<p>IPv6 (and soon dual-stack!) clusters：</p>
+<pre><code>kind: ClusterapiVersion: kind.x-k8s.io/v1alpha4networking:  ipFamily: ipv6
+</code></pre>
+<p>上节 “IPv6 Clusters” 中有更详细的描述。</p>
+<h5 id="api-server-2">API Server</h5>
+<p>自定义 API Server 侦听地址和端口：</p>
+<pre><code>kind: ClusterapiVersion: kind.x-k8s.io/v1alpha4networking:  # WARNING: It is _strongly_ recommended that you keep this the default  # (127.0.0.1) for security reasons. However it is possible to change this.  apiServerAddress: &quot;127.0.0.1&quot;  # By default the API server listens on a random open port.  # You may choose a specific port but probably don't need to in most cases.  # Using a random port makes it easier to spin up multiple clusters.  apiServerPort: 6443
+</code></pre>
+<h5 id="pod-subnet-2">Pod Subnet</h5>
+<p>自定义 pod IP 地址范围：</p>
+<pre><code>kind: ClusterapiVersion: kind.x-k8s.io/v1alpha4networking:  podSubnet: &quot;10.244.0.0/16&quot;
+</code></pre>
+<h5 id="service-subnet-2">Service Subnet</h5>
+<p>自定义 service IP 地址范围：</p>
+<pre><code>kind: ClusterapiVersion: kind.x-k8s.io/v1alpha4networking:  serviceSubnet: &quot;10.96.0.0/12&quot;
+</code></pre>
+<h5 id="禁用默认-cni-2">禁用默认 CNI</h5>
+<p>KIND 附带了一个简单的网络实现（“kindnetd”），它基于标准 CNI 插件（<code>ptp</code>，<code>host local</code>，…）和简单的 netlink 路由。</p>
+<p>这个 CNI 也处理 IP 伪装。</p>
+<p>您可以禁用默认值以安装其他 CNI。这是一个高级用户功能，支持有限，但已知许多常见的 CNI 清单可以工作，例如 Calico。</p>
+<pre><code>kind: ClusterapiVersion: kind.x-k8s.io/v1alpha4networking:  # the default CNI will not be installed  disableDefaultCNI: true
+</code></pre>
+<h5 id="kube-proxy-mode-2">kube-proxy mode</h5>
+<p>kube-proxy mode 可选 iptables 和 ipvs，默认使用的 iptables。</p>
+<pre><code>kind: ClusterapiVersion: kind.x-k8s.io/v1alpha4networking:  kubeProxyMode: &quot;ipvs&quot;
+</code></pre>
+<h4 id="nodes-2">Nodes</h4>
+<p><code>kind: Cluster</code> 的 <code>nodes</code> 字段如果不设置，默认时这样的（即仅有一个 control plane）:</p>
+<pre><code>nodes:# one node hosting a control plane- role: control-plane
+</code></pre>
+<p>多节点群集示例如下：</p>
+<pre><code>kind: ClusterapiVersion: kind.x-k8s.io/v1alpha4# One control plane node and three &quot;workers&quot;.## While these will not add more real compute capacity and# have limited isolation, this can be useful for testing# rolling updates etc.## The API-server and other control plane components will be# on the control-plane node.## You probably don't need this unless you are testing Kubernetes itself.nodes:- role: control-plane- role: worker- role: worker- role: worker
+</code></pre>
+<p>可以通过设置 node 的容器镜像版本运行指定版本的 kubernetes 群集。可以在<a href="https://github.com/kubernetes-sigs/kind/releases">官方 release 页面中</a>中查找需要镜像 tag，带上 <code>sha256</code> shasum，例如：</p>
+<pre><code>kind: ClusterapiVersion: kind.x-k8s.io/v1alpha4nodes:- role: control-plane- role: worker  image: kindest/node:v1.16.4@sha256:b91a2c2317a000f3a783489dfb755064177dbc3a0b2f4147d50f04825d016f55
+</code></pre>
+<h3 id="63-per-node-选项-2">6.3 Per-Node 选项</h3>
+<p>以下选项适用于 <code>nodes</code>，并非所有的选项列入文档，可以关注官网文档的更新。</p>
+<h4 id="extra-mounts-2">Extra Mounts</h4>
+<p>附加挂载可以用来将主机上的存储挂载到 Node 上，用于持久保存数据。</p>
+<pre><code>kind: ClusterapiVersion: kind.x-k8s.io/v1alpha4nodes:- role: control-plane  # add a mount from /path/to/my/files on the host to /files on the node  extraMounts:  - hostPath: /path/to/my/files/    containerPath: /files
+</code></pre>
+<h4 id="extra-port-mappings-2">Extra Port Mappings</h4>
+<p>附加端口映射可以将端口转发到 Kind 节点。这是一个跨平台的选项，可以将流量引入 Kind 群集。</p>
+<p>使用 Linux 上的 docker，您可以简单地将流量从主机发送到节点 IP，但要在 macOS 和 Windows，您需要使用这些设置才能实现。</p>
+<p>另外也可以使用 ingress 转发流量。</p>
+<pre><code>kind: ClusterapiVersion: kind.x-k8s.io/v1alpha4nodes:- role: control-plane  # port forward 80 on the host to 80 on this node  extraPortMappings:  - containerPort: 80    hostPort: 80    # optional: set the bind address on the host    # 0.0.0.0 is the current default    listenAddress: &quot;127.0.0.1&quot;    # optional: set the protocol to one of TCP, UDP, SCTP.    # TCP is the default    protocol: TCP
+</code></pre>
+<h4 id="kubeadm-config-patches-2">Kubeadm Config Patches</h4>
+<p>KIND 使用 <a href="https://kind.sigs.k8s.io/docs/design/principles/#leverage-existing-tooling"><code>kubeadm</code></a> 配置群集节点。</p>
+<p>KIND 在第一个控制平面节点上运行“kubeadm init”，该节点可以使用 kubeadm <a href="https://kubernetes.io/docs/reference/setup-tools/kubeadm/kubeadm-init/#config-file">InitConfiguration</a> (<a href="https://godoc.org/k8s.io/kubernetes/cmd/kubeadm/app/apis/kubeadm/v1beta2#InitConfiguration">spec</a>) 进行自定义配置。</p>
+<pre><code>kind: ClusterapiVersion: kind.x-k8s.io/v1alpha4nodes:- role: control-plane  kubeadmConfigPatches:  - |    kind: InitConfiguration    nodeRegistration:      kubeletExtraArgs:        node-labels: &quot;my-label=true&quot;
+</code></pre>
+<p>在 KIND 群集其他节点配置中，包括 worker 或者 control-plane (in HA mode), KIND 运行 <code>kubeadm join</code> 命令参数，可以通过 <a href="https://kubernetes.io/docs/reference/setup-tools/kubeadm/kubeadm-join/#config-file">JoinConfiguration</a> (<a href="https://godoc.org/k8s.io/kubernetes/cmd/kubeadm/app/apis/kubeadm/v1beta2#JoinConfiguration">spec</a>) 进行自定义配置。</p>
+<pre><code>kind: Cluster
+apiVersion: kind.x-k8s.io/v1alpha4
+nodes:
+- role: control-plane
+- role: worker
+- role: worker
+  kubeadmConfigPatches:
+  - |
+    kind: JoinConfiguration
+    nodeRegistration:
+      kubeletExtraArgs:
+        node-labels: &quot;my-label2=true&quot;
+- role: control-plane
+  kubeadmConfigPatches:
+  - |
+    kind: JoinConfiguration
+    nodeRegistration:
+      kubeletExtraArgs:
+        node-labels: &quot;my-label3=true&quot;
+</code></pre>
+<h2 id="7-部署-dashboard-2">7. 部署 Dashboard</h2>
+<p>直接部署 Dashboard，运行命令:</p>
+<pre><code>$ kubectl apply -f https://raw.githubusercontent.com/kubernetes/dashboard/v2.0.0/aio/deploy/recommended.yaml
+</code></pre>
+<p>验证：</p>
+<pre><code>$ kubectl get po,svc -n kubernetes-dashboard
+NAME                                             READY   STATUS    RESTARTS   AGE
+pod/dashboard-metrics-scraper-7b59f7d4df-f7j7h   1/1     Running   0          90s
+pod/kubernetes-dashboard-74d688b6bc-s9wts        1/1     Running   0          89s
+NAME                                TYPE        CLUSTER-IP     EXTERNAL-IP   PORT(S)    AGE
+service/dashboard-metrics-scraper   ClusterIP   10.96.228.22   &lt;none&gt;        8000/TCP   90s
+service/kubernetes-dashboard        ClusterIP   10.96.160.22   &lt;none&gt;        443/TCP    91s
+</code></pre>
+<p>创建 <code>ClusterRoleBinding</code> 获得群集 admin 访问权限：</p>
+<pre><code>$ kubectl create clusterrolebinding default-admin --clusterrole cluster-admin --serviceaccount=default:default
+clusterrolebinding.rbac.authorization.k8s.io/default-admin created
+</code></pre>
+<p>创建登录 Dashboard 的 token：</p>
+<pre><code>$ token=$(kubectl get secrets -o jsonpath=&quot;{.items[?(@.metadata.annotations['kubernetes\.io/service-account\.name']=='default')].data.token}&quot;|base64 --decode)
+</code></pre>
+<p>使用 <code>echo</code> 显示 token：</p>
+<pre><code>$ echo $token
+</code></pre>
+<p>记得保存一下 token</p>
+<pre><code>$ echo $token &gt; dashboard-token.txt
+$ cat dashboard-token.txt
+</code></pre>
+<p>使用 kubectl 命令访问 Dashboard，命令如下:</p>
+<pre><code>$ kubectl proxy
+Starting to serve on 127.0.0.1:8001
+</code></pre>
+<p>点击 <a href="http://localhost:8001/api/v1/namespaces/kubernetes-dashboard/services/https:kubernetes-dashboard:/proxy/">Kubernetes Dashboard</a> 使用上述 token 登录 Dashboard</p>
+<p>也可以通过 ingress 来访问 Dashboard。</p>
+<h2 id="8-部署-ingress-2">8. 部署 ingress</h2>
+<p>在创建群集时，需要使用 KIND 的 extraPortMapping 配置选项将端口从主机转发到运行在节点上的入口控制器。</p>
+<p>然后部署一个 Ingress controller，已知以下几个 ingress controllers 可以支持 kind：</p>
+<ul>
+<li><a href="https://kind.sigs.k8s.io/docs/user/ingress/#ambassador">Ambassador</a></li>
+<li><a href="https://kind.sigs.k8s.io/docs/user/ingress/#contour">Contour</a></li>
+<li><a href="https://kind.sigs.k8s.io/docs/user/ingress/#ingress-nginx">Ingress NGINX</a></li>
+</ul>
+<p>这里以 ingress-nginx 为例：</p>
+<h3 id="创建群集-4">创建群集</h3>
+<p>使用 extraPortMappings 和 node-labels 配置选项创建一个群集。</p>
+<ul>
+<li><strong>extraPortMappings</strong> 允许本地主机转发请求到 Ingress controller 的 80/443 端口</li>
+<li><strong>node-labels</strong> 允许 ingress controller 运行在指定的 node 上</li>
+</ul>
+<pre><code>cat &lt;&lt;EOF | kind create cluster --config=-
+kind: Cluster
+apiVersion: kind.x-k8s.io/v1alpha4
+nodes:
+- role: control-plane
+  kubeadmConfigPatches:
+  - |
+    kind: InitConfiguration
+    nodeRegistration:
+      kubeletExtraArgs:
+        node-labels: &quot;ingress-ready=true&quot;
+  extraPortMappings:
+  - containerPort: 80
+    hostPort: 80
+    protocol: TCP
+  - containerPort: 443
+    hostPort: 443
+    protocol: TCP
+EOF
+</code></pre>
+<h3 id="ingress-nginx-2">Ingress NGINX</h3>
+<pre><code>wget -O kind-ingress-nginx.yaml https://raw.githubusercontent.com/kubernetes/ingress-nginx/master/deploy/static/provider/kind/deploy.yaml
+kubectl apply -f kind-ingress-nginx.yaml
+</code></pre>
+<p>注意：image 来自 k8s.gcr.io，需要文明访问。</p>
+<pre><code>#image: k8s.gcr.io/ingress-nginx/controller:v0.35.0@sha256:fc4979d8b8443a831c9789b5155cded454cb7de737a8b727bc2ba0106d2eae8b
+image: scofield/ingress-nginx-controller:v0.35.0
+</code></pre>
+<p>执行如下命令等待部署完成：</p>
+<pre><code>kubectl wait --namespace ingress-nginx \
+  --for=condition=ready pod \
+  --selector=app.kubernetes.io/component=controller \
+  --timeout=90s
+</code></pre>
+<p>或者执行命令验证部署：</p>
+<pre><code>$ kubectl get po,svc -n ingress-nginx
+$ kubectl get po,svc -n ingress-nginx -o wide
+</code></pre>
+<h3 id="测试-ingress-2">测试 Ingress</h3>
+<p>使用官方提供的 http-echo 应用来测试，内容如下：</p>
+<pre><code>kind: Pod
+apiVersion: v1
+metadata:
+  name: foo-app
+  labels:
+    app: foo
+spec:
+  containers:
+  - name: foo-app
+    image: hashicorp/http-echo:0.2.3
+    args:
+    - &quot;-text=foo&quot;
+---
+kind: Service
+apiVersion: v1
+metadata:
+  name: foo-service
+spec:
+  selector:
+    app: foo
+  ports:
+  # Default port used by the image
+  - port: 5678
+---
+kind: Pod
+apiVersion: v1
+metadata:
+  name: bar-app
+  labels:
+    app: bar
+spec:
+  containers:
+  - name: bar-app
+    image: hashicorp/http-echo:0.2.3
+    args:
+    - &quot;-text=bar&quot;
+---
+kind: Service
+apiVersion: v1
+metadata:
+  name: bar-service
+spec:
+  selector:
+    app: bar
+  ports:
+  # Default port used by the image
+  - port: 5678
+---
+apiVersion: networking.k8s.io/v1beta1
+kind: Ingress
+metadata:
+  name: example-ingress
+spec:
+  rules:
+  - http:
+      paths:
+      - path: /foo
+        backend:
+          serviceName: foo-service
+          servicePort: 5678
+      - path: /bar
+        backend:
+          serviceName: bar-service
+          servicePort: 5678
+---
+</code></pre>
+<p>直接应用：</p>
+<pre><code>kubectl apply -f https://kind.sigs.k8s.io/examples/ingress/usage.yaml
+</code></pre>
+<p>测试效果如下：</p>
+<pre><code># should output &quot;foo&quot;
+curl localhost/foo
+# should output &quot;bar&quot;
+curl localhost/bar
+</code></pre>
+<h3 id="ingress-dashboard-2">ingress dashboard</h3>
+<p>本例使用受信任的 SSL 证书，通过 ingress 以 https 发布 Dashboard。</p>
+<p>部署受信任的 SSL 证书</p>
+<pre><code># 创建 secret，在 ingress 不能直接使用证书需要转换为 secret 才能使用
+# key 和 cert 都为 PEM 格式，cert 包含证书文件和证书链部分
+kubectl create secret tls dashboard-ingress-tls --key dashboard-ingress.key --cert dashboard-ingress.crt -n kubernetes-dashboard
+# 查看 secret 内容
+kubectl get secret dashboard-ingress-tls -n kubernetes-dashboard -o yaml
+# 删除命令
+kubectl delete secret dashboard-ingress-tls -n kubernetes-dashboard
+</code></pre>
+<p>配置 ingress 转发文件</p>
+<pre><code># vi dashboard-ingress.yaml
+apiVersion: extensions/v1beta1
+kind: Ingress
+metadata:
+  annotations:
+    nginx.ingress.kubernetes.io/ingress.class: &quot;nginx&quot;
+    nginx.ingress.kubernetes.io/backend-protocol: &quot;HTTPS&quot;
+  name: kubernetes-dashboard-ingress
+  namespace: kubernetes-dashboard
+spec:
+  tls:
+  - secretName: dashboard-ingress-tls #上述创建的secret
+  rules:
+    - host: k8s.sysin.cn #域名
+      http:
+        paths:
+        - path: /
+          backend:
+            serviceName: kubernetes-dashboard
+            servicePort: 443
+</code></pre>
+<blockquote>
+<p>host: 对应的域名<br>
+path: url上下文<br>
+backend: 后向转发到对应的 serviceName: 和 servicePort:</p>
+</blockquote>
+<p>注意，dashboard 默认使用 https 提供服务，ingress 默认 backend-protocol 使用 http，这里发布成功的关键是要添加 annotations 参数：</p>
+<pre><code>annotations:
+  nginx.ingress.kubernetes.io/ingress.class: &quot;nginx&quot;
+  nginx.ingress.kubernetes.io/backend-protocol: &quot;HTTPS&quot;
+</code></pre>
+<p>部署：</p>
+<pre><code>kubectl apply -f dashboard-ingress.yaml
+</code></pre>
+<p>部署成功后可以通过域名访问：<a href="https://k8s.sysin.cn/">https://k8s.sysin.cn</a></p>
+<h2 id="9-istio-2">9. Istio</h2>
+<p>Istio 官方支持部署在 Kind 上，以下为简单示例。</p>
+<p>下载当前版本：</p>
+<pre><code>$ curl -L https://istio.io/downloadIstio | sh -
+</code></pre>
+<p>下载指定版本：</p>
+<pre><code>$ curl -L https://istio.io/downloadIstio | ISTIO_VERSION=1.7.0 TARGET_ARCH=x86_64 sh -
+</code></pre>
+<p>切换到 istio 目录:</p>
+<pre><code>$ cd istio-1.7.0
+</code></pre>
+<p>添加 <code>istioctl</code> 到环境变量 (Linux or macOS):</p>
+<pre><code>$ export PATH=$PWD/bin:$PATH
+</code></pre>
+<p>安装：</p>
+<p>例如使用 <code>demo</code> <a href="https://istio.io/latest/docs/setup/additional-setup/config-profiles/">configuration profile</a> 安装</p>
+<pre><code>$ istioctl install --set profile=demo
+✔ Istio core installed
+✔ Istiod installed
+✔ Egress gateways installed
+✔ Ingress gateways installed
+✔ Installation complete
+</code></pre>
+<p>限于篇幅，参看其他文档。</p>
+<h2 id="10-限制-2">10. 限制</h2>
+<p>kind 部署 kubernetes 群集相当方便，可以快速部署多个群集。但在群集的配置和更新上有明显弊端，只能通过重新创建群集来配置和更新群集。所以在初始化群集的时候需要考虑好配置选项。</p>
+
+            </div>
+            
+            
+              <div class="next-post">
+                <div class="next">下一篇</div>
+                <a href="https://blog.aymar.cn/post/6431-mi-ma-yan-zheng-cha-jian-an-zhuang/">
+                  <h3 class="post-title">
+                     6.4.3.1 密码验证插件安装
+                  </h3>
+                </a>
+              </div>
+            
+
+            
+              
+                <div id="gitalk-container" data-aos="fade-in"></div>
+              
+
+              
+            
+
+          </div>
+
+        </div>
+      </div>
+    </div>
+
+    <script src="https://unpkg.com/aos@next/dist/aos.js"></script>
+<script type="application/javascript">
+
+AOS.init();
+
+var app = new Vue({
+  el: '#app',
+  data: {
+    menuVisible: false,
+  },
+})
+
+</script>
+
+
+
+
+
+  
+    <script src="https://unpkg.com/gitalk/dist/gitalk.min.js"></script>
+    <script>
+
+      var gitalk = new Gitalk({
+        clientID: '3911bd8dbdeee631dbc3',
+        clientSecret: '1150000213d6c03dd456a2bed69cbd4cec206a7c',
+        repo: 'pping.github.io',
+        owner: 'pping',
+        admin: ['pping'],
+        id: (location.pathname).substring(0, 49),      // Ensure uniqueness and length less than 50
+        distractionFreeMode: false  // Facebook-like distraction free mode
+      })
+
+      gitalk.render('gitalk-container')
+
+    </script>
+  
+
+  
+
+
+
+
+  </body>
+</html>

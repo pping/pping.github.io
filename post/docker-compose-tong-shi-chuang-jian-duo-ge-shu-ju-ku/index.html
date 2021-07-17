@@ -1,0 +1,292 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <meta charset="utf-8" >
+
+<title>Docker-compose 同时创建多个mysql数据库 | Gridea</title>
+
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no">
+
+<link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.7.2/css/all.css" integrity="sha384-fnmOCqbTlWIlj8LyTjo7mOUStjsKC4pOpQbqyi7RrhN7udi9RwhKkMHpvLbHG9Sr" crossorigin="anonymous">
+<link rel="shortcut icon" href="https://blog.aymar.cn/favicon.ico?v=1626535127955">
+<link rel="stylesheet" href="https://blog.aymar.cn/styles/main.css">
+
+
+  
+    <link rel="stylesheet" href="https://unpkg.com/gitalk/dist/gitalk.css" />
+  
+
+  
+
+
+<link rel="stylesheet" href="https://unpkg.com/aos@next/dist/aos.css" />
+<script src="https://cdn.jsdelivr.net/npm/vue/dist/vue.js"></script>
+
+
+
+    <meta name="description" content="添加环境变量：
+DATABASES=db1,db2,db3,db4,db5
+方法一：
+      entrypoint:
+            bash -c &quot;DBs=($${DATABASES//,/ });
+       ..." />
+    <meta name="keywords" content="" />
+  </head>
+  <body>
+    <div id="app" class="main">
+
+      <div class="sidebar" :class="{ 'full-height': menuVisible }">
+  <div class="top-container" data-aos="fade-right">
+    <div class="top-header-container">
+      <a class="site-title-container" href="https://blog.aymar.cn">
+        <img src="https://blog.aymar.cn/images/avatar.png?v=1626535127955" class="site-logo">
+        <h1 class="site-title">Gridea</h1>
+      </a>
+      <div class="menu-btn" @click="menuVisible = !menuVisible">
+        <div class="line"></div>
+      </div>
+    </div>
+    <div>
+      
+        
+          <a href="/" class="site-nav">
+            首页
+          </a>
+        
+      
+        
+          <a href="/archives" class="site-nav">
+            归档
+          </a>
+        
+      
+        
+          <a href="/tags" class="site-nav">
+            标签
+          </a>
+        
+      
+        
+          <a href="/post/about" class="site-nav">
+            关于
+          </a>
+        
+      
+    </div>
+  </div>
+  <div class="bottom-container" data-aos="flip-up" data-aos-offset="0">
+    <div class="social-container">
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+    </div>
+    <div class="site-description">
+      温故而知新
+    </div>
+    <div class="site-footer">
+      Powered by <a href="https://www.aymar.cn" target="_blank">https://aymar.cn</a> | <a class="rss" href="https://blog.aymar.cn/atom.xml" target="_blank">RSS</a>
+    </div>
+  </div>
+</div>
+
+
+      <div class="main-container">
+        <div class="content-container" data-aos="fade-up">
+          <div class="post-detail">
+            <h2 class="post-title">Docker-compose 同时创建多个mysql数据库</h2>
+            <div class="post-date">2021-06-11</div>
+            
+            <div class="post-content" v-pre>
+              <h1 id="添加环境变量"><strong>添加环境变量：</strong></h1>
+<p>DATABASES=db1,db2,db3,db4,db5</p>
+<h2 id="方法一">方法一：</h2>
+<pre><code class="language-shell">      entrypoint:
+            bash -c &quot;DBs=($${DATABASES//,/ });
+            for db in $${DBs[@]}; 
+            do
+                echo   &quot;'&quot;CREATE DATABASE IF NOT EXISTS $$db;&quot;'&quot; &gt;&gt; /docker-entrypoint-initdb.d/create_databases.sql;
+            done;
+            /usr/local/bin/docker-entrypoint.sh --character-set-server=utf8mb4 --collation-server=utf8mb4_unicode_ci
+            &quot;  
+</code></pre>
+<h2 id="方法二">方法二:</h2>
+<pre><code class="language-shell">       entrypoint:：
+           sh -c &quot;
+                echo '
+                    CREATE DATABASE IF NOT EXISTS db1; 
+                    CREATE DATABASE IF NOT EXISTS db2; 
+                ' &gt;&gt; /docker-entrypoint-initdb.d/create_databases.sql;
+             /usr/local/bin/docker-entrypoint.sh 
+            &quot;
+</code></pre>
+<h2 id="方法三">方法三:</h2>
+<pre><code class="language-shell">       entrypoint:：
+            sh -c &quot;
+            echo  &quot;'&quot;
+            USE mysql;\n
+            DELIMITER //\n
+            DROP PROCEDURE IF EXISTS temp112233;\n
+            CREATE PROCEDURE temp112233()\n
+            BEGIN\n
+            DECLARE var varchar(500) DEFAULT \&quot;$${DATABASES}\&quot;;\n
+            DECLARE db varchar(50);\n
+            WHILE var != \&quot;\&quot; DO\n             
+                IF LOCATE(\&quot;,\&quot;, var) &gt; 0 THEN\n
+                    SET db = SUBSTRING(var,1, LOCATE(\&quot;,\&quot;, var)-1);\n
+                    SET var = SUBSTRING(var, LOCATE(\&quot;,\&quot;, var) + 1);\n
+                ELSE\n
+                    SET db = var;\n
+                    SET var = \&quot;\&quot;;\n
+                END IF;\n
+                SET @query = CONCAT(\&quot;CREATE DATABASE IF NOT EXISTS  \`\&quot;, db, \&quot;\`\&quot;);\n
+                PREPARE stmt FROM @query;\n
+                EXECUTE stmt;\n
+                DEALLOCATE PREPARE stmt;\n
+            END WHILE;\n
+            END; //\n
+            DELIMITER ;\n
+            call temp112233();\n
+            DROP PROCEDURE IF EXISTS temp112233;&quot;'&quot; &gt;&gt;/docker-entrypoint-initdb.d/create_databases.sql;
+            /usr/local/bin/docker-entrypoint.sh --character-set-server=utf8mb4 --collation-server=utf8mb4_unicode_ci&quot;
+</code></pre>
+<pre><code class="language-sql">USE mysql;
+DELIMITER //
+DROP PROCEDURE IF EXISTS temp112233;
+CREATE PROCEDURE temp112233()
+BEGIN
+DECLARE var varchar(300) DEFAULT &quot;db12,db13,db14&quot;;
+DECLARE mydb varchar(20);
+WHILE var != ''  DO
+    IF LOCATE(&quot;,&quot;, var) &gt; 0 THEN
+        SET mydb = SUBSTRING(var,1, LOCATE(&quot;,&quot;, var)-1);
+        SET var = SUBSTRING(var, LOCATE(&quot;,&quot;, var) + 1);
+    ELSE
+        SET mydb = var;
+        SET var = '' ;
+    END IF;
+	-- 使用变量创建数据库
+    SET @query = CONCAT('CREATE DATABASE IF NOT EXISTS  `', mydb, '`');
+    PREPARE stmt FROM @query;
+    EXECUTE stmt;
+    DEALLOCATE PREPARE stmt;
+    select var as var ,mydb as mydb;
+END WHILE;
+END; //
+DELIMITER ;
+call temp112233();
+</code></pre>
+<h2 id="方法四">方法四:</h2>
+<pre><code class="language-shell">RUN set -ex; \
+     echo ${DATABASES} | awk -F, '{for(i=1;i&lt;=NF;i++){print &quot;CREATE DATABASE IF NOT EXISTS &quot; $i &quot;;&quot;}}' &gt;/docker-entrypoint-initdb.d/add_new_databases.sql;
+</code></pre>
+<h2 id="docker-entrypoint-initdbd">docker-entrypoint-initdb.d/</h2>
+<table>
+<thead>
+<tr>
+<th>文件类型</th>
+<th>执行动作</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>*.sh</td>
+<td>&quot;$f&quot;</td>
+</tr>
+<tr>
+<td>*.sql</td>
+<td>docker_process_sql &lt; &quot;$f&quot;</td>
+</tr>
+<tr>
+<td>*.sql.gz</td>
+<td>gunzip -c &quot;$f&quot;</td>
+</tr>
+<tr>
+<td>*.sql.xz</td>
+<td>xzcat &quot;$f&quot;</td>
+</tr>
+<tr>
+<td>*</td>
+<td>mysql_warn &quot;$0: ignoring $f&quot; ;;</td>
+</tr>
+</tbody>
+</table>
+
+            </div>
+            
+            
+              <div class="next-post">
+                <div class="next">下一篇</div>
+                <a href="https://blog.aymar.cn/post/warning-unknown-failed-to-open-stream-no-such-file-or-directory-in-unknown-on-line-0/">
+                  <h3 class="post-title">
+                    Warning: Unknown: Failed to open stream: No such file or directory in Unknown on line 0
+                  </h3>
+                </a>
+              </div>
+            
+
+            
+              
+                <div id="gitalk-container" data-aos="fade-in"></div>
+              
+
+              
+            
+
+          </div>
+
+        </div>
+      </div>
+    </div>
+
+    <script src="https://unpkg.com/aos@next/dist/aos.js"></script>
+<script type="application/javascript">
+
+AOS.init();
+
+var app = new Vue({
+  el: '#app',
+  data: {
+    menuVisible: false,
+  },
+})
+
+</script>
+
+
+
+
+
+  
+    <script src="https://unpkg.com/gitalk/dist/gitalk.min.js"></script>
+    <script>
+
+      var gitalk = new Gitalk({
+        clientID: '3911bd8dbdeee631dbc3',
+        clientSecret: '1150000213d6c03dd456a2bed69cbd4cec206a7c',
+        repo: 'pping.github.io',
+        owner: 'pping',
+        admin: ['pping'],
+        id: (location.pathname).substring(0, 49),      // Ensure uniqueness and length less than 50
+        distractionFreeMode: false  // Facebook-like distraction free mode
+      })
+
+      gitalk.render('gitalk-container')
+
+    </script>
+  
+
+  
+
+
+
+
+  </body>
+</html>

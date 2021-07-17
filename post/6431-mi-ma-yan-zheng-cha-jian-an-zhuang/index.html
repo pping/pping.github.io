@@ -1,0 +1,613 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <meta charset="utf-8" >
+
+<title> 6.4.3.1 密码验证插件安装 | Gridea</title>
+
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no">
+
+<link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.7.2/css/all.css" integrity="sha384-fnmOCqbTlWIlj8LyTjo7mOUStjsKC4pOpQbqyi7RrhN7udi9RwhKkMHpvLbHG9Sr" crossorigin="anonymous">
+<link rel="shortcut icon" href="https://blog.aymar.cn/favicon.ico?v=1626535127955">
+<link rel="stylesheet" href="https://blog.aymar.cn/styles/main.css">
+
+
+  
+    <link rel="stylesheet" href="https://unpkg.com/gitalk/dist/gitalk.css" />
+  
+
+  
+
+
+<link rel="stylesheet" href="https://unpkg.com/aos@next/dist/aos.css" />
+<script src="https://cdn.jsdelivr.net/npm/vue/dist/vue.js"></script>
+
+
+
+    <meta name="description" content="6.4.3.1 密码验证插件安装
+本节介绍如何安装 validate_password密码验证插件。有关安装插件的一般信息，请参阅 第 5.5.1 节，“安装和卸载插件”。
+笔记
+如果使用安装了MySQL 5.7 MySQL Yum rep..." />
+    <meta name="keywords" content="" />
+  </head>
+  <body>
+    <div id="app" class="main">
+
+      <div class="sidebar" :class="{ 'full-height': menuVisible }">
+  <div class="top-container" data-aos="fade-right">
+    <div class="top-header-container">
+      <a class="site-title-container" href="https://blog.aymar.cn">
+        <img src="https://blog.aymar.cn/images/avatar.png?v=1626535127955" class="site-logo">
+        <h1 class="site-title">Gridea</h1>
+      </a>
+      <div class="menu-btn" @click="menuVisible = !menuVisible">
+        <div class="line"></div>
+      </div>
+    </div>
+    <div>
+      
+        
+          <a href="/" class="site-nav">
+            首页
+          </a>
+        
+      
+        
+          <a href="/archives" class="site-nav">
+            归档
+          </a>
+        
+      
+        
+          <a href="/tags" class="site-nav">
+            标签
+          </a>
+        
+      
+        
+          <a href="/post/about" class="site-nav">
+            关于
+          </a>
+        
+      
+    </div>
+  </div>
+  <div class="bottom-container" data-aos="flip-up" data-aos-offset="0">
+    <div class="social-container">
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+    </div>
+    <div class="site-description">
+      温故而知新
+    </div>
+    <div class="site-footer">
+      Powered by <a href="https://www.aymar.cn" target="_blank">https://aymar.cn</a> | <a class="rss" href="https://blog.aymar.cn/atom.xml" target="_blank">RSS</a>
+    </div>
+  </div>
+</div>
+
+
+      <div class="main-container">
+        <div class="content-container" data-aos="fade-up">
+          <div class="post-detail">
+            <h2 class="post-title"> 6.4.3.1 密码验证插件安装</h2>
+            <div class="post-date">2021-06-17</div>
+            
+            <div class="post-content" v-pre>
+              <h4 id="6431-密码验证插件安装">6.4.3.1 密码验证插件安装</h4>
+<p>本节介绍如何安装 <code>validate_password</code>密码验证插件。有关安装插件的一般信息，请参阅 <a href="https://dev.mysql.com/doc/refman/5.7/en/plugin-loading.html">第 5.5.1 节，“安装和卸载插件”</a>。</p>
+<p>笔记</p>
+<p>如果使用安装了MySQL 5.7 <a href="https://dev.mysql.com/downloads/repo/yum/">MySQL Yum repository</a>， <a href="https://dev.mysql.com/downloads/repo/suse/"> MySQL SLES Repository</a>，或 <a href="https://dev.mysql.com/doc/refman/5.7/en/linux-installation-rpm.html">Oracle提供的RPM包</a>，<code>validate_password</code>默认情况下，您启动MySQL服务器的第一次后使能。</p>
+<p>要被服务器使用，插件库文件必须位于 MySQL 插件目录（由<a href="https://dev.mysql.com/doc/refman/5.7/en/server-system-variables.html#sysvar_plugin_dir"><code>plugin_dir</code></a>系统变量命名的目录）中。如有必要，通过设置<a href="https://dev.mysql.com/doc/refman/5.7/en/server-system-variables.html#sysvar_plugin_dir"><code>plugin_dir</code></a>服务器启动时的值来配置插件目录位置 。</p>
+<p>插件库文件基本名称是 <code>validate_password</code>. 文件名后缀因平台<code>.so</code>而异（例如，对于 Unix 和类 Unix 系统，<code>.dll</code>对于 Windows）。</p>
+<p>要在服务器启动时加载插件，请使用该 <a href="https://dev.mysql.com/doc/refman/5.7/en/server-options.html#option_mysqld_plugin-load-add"><code>--plugin-load-add</code></a>选项来命名包含它的库文件。使用这种插件加载方法，每次服务器启动时都必须给出该选项。例如，将这些行放在服务器 <code>my.cnf</code>文件中，<code>.so</code>根据需要调整平台的 后缀：</p>
+<pre><code class="language-ini">[mysqld]
+plugin-load-add=validate_password.so
+</code></pre>
+<p>修改<code>my.cnf</code>后重启服务器使新设置生效。</p>
+<p>或者，要在运行时加载插件，请使用此语句，<code>.so</code>根据需要调整平台的后缀：</p>
+<pre><code class="language-sql">mysql&gt; show variables like 'validate_password%'; 
++--------------------------+-------+
+| Variable_name            | Value |
++--------------------------+-------+
+| password_history         | 0     |
+| password_require_current | OFF   |
+| password_reuse_interval  | 0     |
++--------------------------+-------+
+mysql&gt; INSTALL PLUGIN validate_password SONAME 'validate_password.so';
+</code></pre>
+<p><a href="https://dev.mysql.com/doc/refman/5.7/en/install-plugin.html"><code>INSTALL PLUGIN</code></a>加载插件，并将其注册到<code>mysql.plugins</code> 系统表中，以便为后续每次正常的服务器启动加载插件，而无需 <a href="https://dev.mysql.com/doc/refman/5.7/en/server-options.html#option_mysqld_plugin-load-add"><code>--plugin-load-add</code></a>.</p>
+<p>要验证插件安装，请检查 <a href="https://dev.mysql.com/doc/refman/5.7/en/information-schema-plugins-table.html"><code>INFORMATION_SCHEMA.PLUGINS</code></a>表或使用<a href="https://dev.mysql.com/doc/refman/5.7/en/show-plugins.html"><code>SHOW PLUGINS</code></a>语句（请参阅<a href="https://dev.mysql.com/doc/refman/5.7/en/obtaining-plugin-information.html">第 5.5.2 节，“获取服务器插件信息”</a>）。例如：</p>
+<pre><code class="language-sql">mysql&gt; SELECT PLUGIN_NAME, PLUGIN_STATUS
+       FROM INFORMATION_SCHEMA.PLUGINS
+       WHERE PLUGIN_NAME LIKE 'validate%';
++-------------------+---------------+
+| PLUGIN_NAME       | PLUGIN_STATUS |
++-------------------+---------------+
+| validate_password | ACTIVE        |
++-------------------+---------------+
+</code></pre>
+<p>如果插件无法初始化，请检查服务器错误日志以获取诊断消息。</p>
+<p>如果插件之前已注册 <a href="https://dev.mysql.com/doc/refman/5.7/en/install-plugin.html"><code>INSTALL PLUGIN</code></a>或已加载 <a href="https://dev.mysql.com/doc/refman/5.7/en/server-options.html#option_mysqld_plugin-load-add"><code>--plugin-load-add</code></a>，则可以<code>--validate-password</code>在服务器启动时使用该选项来控制插件激活。例如，要在启动时加载插件并防止它在运行时被删除，请使用以下选项：</p>
+<pre><code class="language-ini">[mysqld]
+plugin-load-add=validate_password.so
+validate-password=FORCE_PLUS_PERMANENT  
+或添加启动参数：
+mysqld  --plugin-load-add=validate_password.so --validate-password=FORCE_PLUS_PERMANENT
+</code></pre>
+<p>如果希望在没有密码验证插件的情况下阻止服务器运行，请使用  <a href="https://dev.mysql.com/doc/refman/5.7/en/validate-password-options-variables.html#option_mysqld_validate-password"><code>--validate-password</code></a>带值<code>FORCE</code>或<code>FORCE_PLUS_PERMANENT</code>，如果插件未成功初始化，强制启动服务器。</p>
+<pre><code class="language-sql">mysql&gt; show variables like 'validate_password%'; 
++--------------------------------------+--------+
+| Variable_name                        | Value  |
++--------------------------------------+--------+
+| validate_password_check_user_name    | ON     |
+| validate_password_dictionary_file    |        |
+| validate_password_length             | 8      |
+| validate_password_mixed_case_count   | 1      |
+| validate_password_number_count       | 1      |
+| validate_password_policy             | MEDIUM |
+| validate_password_special_char_count | 1      |
++--------------------------------------+--------+
+</code></pre>
+<h4 id="6432-密码验证插件选项和变量">6.4.3.2 密码验证插件选项和变量</h4>
+<p>本节介绍了<code>validate_password</code>用于配置和监控其操作的选项、系统变量和状态变量。</p>
+<ul>
+<li><a href="https://dev.mysql.com/doc/refman/5.7/en/validate-password-options-variables.html#validate-password-options">密码验证插件选项</a></li>
+<li><a href="https://dev.mysql.com/doc/refman/5.7/en/validate-password-options-variables.html#validate-password-system-variables">密码验证插件系统变量</a></li>
+<li><a href="https://dev.mysql.com/doc/refman/5.7/en/validate-password-options-variables.html#validate-password-status-variables">密码验证插件状态变量</a></li>
+</ul>
+<h5 id="密码验证插件选项">密码验证插件选项</h5>
+<p>要控制<code>validate_password</code>插件的激活 ，请使用此选项：</p>
+<ul>
+<li>
+<p><a href="https://dev.mysql.com/doc/refman/5.7/en/validate-password-options-variables.html#option_mysqld_validate-password"><code>--validate-password[=*</code>value<code>*\]</code></a></p>
+<table>
+<thead>
+<tr>
+<th style="text-align:left">命令行格式</th>
+<th><code>--validate-password[=value]</code></th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td style="text-align:left">类型</td>
+<td>Enumeration枚举</td>
+</tr>
+<tr>
+<td style="text-align:left">默认值</td>
+<td><code>ON</code></td>
+</tr>
+<tr>
+<td style="text-align:left">有效值</td>
+<td><code>ON``OFF``FORCE``FORCE_PLUS_PERMANENT</code></td>
+</tr>
+</tbody>
+</table>
+<p>此选项控制服务器<code>validate_password</code>在启动时加载 插件的方式。该值应该是插件加载选项可用的值之一，如 <a href="https://dev.mysql.com/doc/refman/5.7/en/plugin-loading.html">第 5.5.1 节，“安装和卸载插件”中所述</a>。例如， <a href="https://dev.mysql.com/doc/refman/5.7/en/validate-password-options-variables.html#option_mysqld_validate-password"><code>--validate-password=FORCE_PLUS_PERMANENT</code></a> 告诉服务器在启动时加载插件并防止它在服务器运行时被删除。</p>
+<p>此选项仅在 <code>validate_password</code>插件之前已注册<a href="https://dev.mysql.com/doc/refman/5.7/en/install-plugin.html"><code>INSTALL PLUGIN</code></a>或加载时可用 <a href="https://dev.mysql.com/doc/refman/5.7/en/server-options.html#option_mysqld_plugin-load-add"><code>--plugin-load-add</code></a>。请参见 <a href="https://dev.mysql.com/doc/refman/5.7/en/validate-password-installation.html">第 6.4.3.1 节，“密码验证插件安装”</a>。</p>
+</li>
+</ul>
+<h5 id="密码验证插件系统变量">密码验证插件系统变量</h5>
+<p>如果<code>validate_password</code>启用了该插件，它会公开几个启用密码检查配置的系统变量：</p>
+<pre><code class="language-sql">mysql&gt; SHOW VARIABLES LIKE 'validate_password%';
++--------------------------------------+--------+
+| Variable_name                        | Value  |
++--------------------------------------+--------+
+| validate_password_check_user_name    | OFF    |
+| validate_password_dictionary_file    |        |
+| validate_password_length             | 8      |
+| validate_password_mixed_case_count   | 1      |
+| validate_password_number_count       | 1      |
+| validate_password_policy             | MEDIUM |
+| validate_password_special_char_count | 1      |
++--------------------------------------+--------+
+</code></pre>
+<p>要更改检查密码的方式，您可以在服务器启动或运行时设置这些系统变量。下面的列表描述了每个变量的含义。</p>
+<ul>
+<li>
+<p><a href="https://dev.mysql.com/doc/refman/5.7/en/validate-password-options-variables.html#sysvar_validate_password_check_user_name"><code>validate_password_check_user_name</code></a></p>
+<table>
+<thead>
+<tr>
+<th style="text-align:left">命令行格式</th>
+<th><code>--validate-password-check-user-name[={OFF|ON}]</code></th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td style="text-align:left">Introduced</td>
+<td>5.7.15</td>
+</tr>
+<tr>
+<td style="text-align:left">系统变量System Variable</td>
+<td><code>validate_password_check_user_name</code></td>
+</tr>
+<tr>
+<td style="text-align:left">范围Scope</td>
+<td>Global</td>
+</tr>
+<tr>
+<td style="text-align:left">动态的Dynamic</td>
+<td>Yes</td>
+</tr>
+<tr>
+<td style="text-align:left">类型</td>
+<td>Boolean</td>
+</tr>
+<tr>
+<td style="text-align:left">默认值</td>
+<td><code>OFF</code></td>
+</tr>
+</tbody>
+</table>
+<p>是否<code>validate_password</code>将密码与当前会话的有效用户帐户的用户名部分进行比较，如果匹配则拒绝它们。除非<code>validate_password</code>已安装，否则此变量不可用 。</p>
+<p>默认情况下， <a href="https://dev.mysql.com/doc/refman/5.7/en/validate-password-options-variables.html#sysvar_validate_password_check_user_name"><code>validate_password_check_user_name</code></a> 禁用。此变量控制与 的值无关的用户名匹配 <a href="https://dev.mysql.com/doc/refman/5.7/en/validate-password-options-variables.html#sysvar_validate_password_policy"><code>validate_password_policy</code></a>。</p>
+<p>当 <a href="https://dev.mysql.com/doc/refman/5.7/en/validate-password-options-variables.html#sysvar_validate_password_check_user_name"><code>validate_password_check_user_name</code></a> 启用时，它具有以下作用：</p>
+<ul>
+<li>检查发生在所有<code>validate_password</code>被调用的上下文中 ，包括使用诸如<a href="https://dev.mysql.com/doc/refman/5.7/en/alter-user.html"><code>ALTER USER</code></a>或 之类的语句 <a href="https://dev.mysql.com/doc/refman/5.7/en/set-password.html"><code>SET PASSWORD</code></a>来更改当前用户的密码，以及调用诸如<a href="https://dev.mysql.com/doc/refman/5.7/en/encryption-functions.html#function_password"><code>PASSWORD()</code></a>和 之类的函数 <a href="https://dev.mysql.com/doc/refman/5.7/en/encryption-functions.html#function_validate-password-strength"><code>VALIDATE_PASSWORD_STRENGTH()</code></a>。</li>
+<li>用于比较的用户名取自 当前会话的<a href="https://dev.mysql.com/doc/refman/5.7/en/information-functions.html#function_user"><code>USER()</code></a> 和<a href="https://dev.mysql.com/doc/refman/5.7/en/information-functions.html#function_current-user"><code>CURRENT_USER()</code></a>函数的值。这意味着具有足够权限设置另一个用户的密码的用户可以将密码设置为该用户的名称，而不能将该用户的密码设置为执行该语句的用户的名称。例如，<code>'root'@'localhost'</code>可以设定密码 <code>'jeffrey'@'localhost'</code>来 <code>'jeffrey'</code>，但不能设置密码<code>'root</code>。</li>
+<li>仅使用<a href="https://dev.mysql.com/doc/refman/5.7/en/information-functions.html#function_user"><code>USER()</code></a>和 <a href="https://dev.mysql.com/doc/refman/5.7/en/information-functions.html#function_current-user"><code>CURRENT_USER()</code></a>函数值的用户名部分 ，而不使用主机名部分。如果用户名为空，则不进行比较。</li>
+<li>如果密码与用户名或其反面相同，则会发生匹配并拒绝该密码。</li>
+<li>用户名匹配区分大小写。密码和用户名值作为二进制字符串逐字节进行比较。</li>
+<li>如果密码与用户名匹配，则<a href="https://dev.mysql.com/doc/refman/5.7/en/encryption-functions.html#function_validate-password-strength"><code>VALIDATE_PASSWORD_STRENGTH()</code></a> 无论其他<code>validate_password</code>系统变量如何设置，都 返回 0 。</li>
+</ul>
+</li>
+<li>
+<p><a href="https://dev.mysql.com/doc/refman/5.7/en/validate-password-options-variables.html#sysvar_validate_password_dictionary_file"><code>validate_password_dictionary_file</code></a></p>
+<table>
+<thead>
+<tr>
+<th style="text-align:left">命令行格式</th>
+<th><code>--validate-password-dictionary-file=file_name</code></th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td style="text-align:left">System Variable</td>
+<td><code>validate_password_dictionary_file</code></td>
+</tr>
+<tr>
+<td style="text-align:left">范围Scope</td>
+<td>Global</td>
+</tr>
+<tr>
+<td style="text-align:left">动态的Dynamic</td>
+<td>Yes</td>
+</tr>
+<tr>
+<td style="text-align:left">类型Type</td>
+<td>File name</td>
+</tr>
+</tbody>
+</table>
+<p><code>validate_password</code>用于检查密码 的字典文件的路径名 。除非<code>validate_password</code>已安装，否则此变量不可用 。</p>
+<p>默认情况下，这个变量有一个空值并且不执行字典检查。要进行字典检查，变量值必须为非空。如果文件被命名为相对路径，则它相对于服务器数据目录进行解释。文件内容应为小写，每行一个字。内容被视为具有<code>utf8</code>. 允许的最大文件大小为 1MB。</p>
+<p>对于密码检查时使用的字典文件，密码策略必须设置为2（<code>STRONG</code>）；参见<a href="https://dev.mysql.com/doc/refman/5.7/en/validate-password-options-variables.html#sysvar_validate_password_policy"><code>validate_password_policy</code></a> 系统变量的描述 。假设这是真的，长度为 4 到 100 的密码的每个子字符串都与字典文件中的单词进行比较。任何匹配都会导致密码被拒绝。比较不区分大小写。</p>
+<p>对于 <a href="https://dev.mysql.com/doc/refman/5.7/en/encryption-functions.html#function_validate-password-strength"><code>VALIDATE_PASSWORD_STRENGTH()</code></a>，根据所有策略（包括 ）检查密码 <code>STRONG</code>，因此无论<a href="https://dev.mysql.com/doc/refman/5.7/en/validate-password-options-variables.html#sysvar_validate_password_policy"><code>validate_password_policy</code></a> 值如何，强度评估都包括字典检查 。</p>
+<p><a href="https://dev.mysql.com/doc/refman/5.7/en/validate-password-options-variables.html#sysvar_validate_password_dictionary_file"><code>validate_password_dictionary_file</code></a> 可以在运行时设置并分配一个值会导致在不重新启动服务器的情况下读取命名文件。</p>
+</li>
+<li>
+<p><a href="https://dev.mysql.com/doc/refman/5.7/en/validate-password-options-variables.html#sysvar_validate_password_length"><code>validate_password_length</code></a></p>
+<table>
+<thead>
+<tr>
+<th style="text-align:left">命令行格式</th>
+<th><code>--validate-password-length=#</code></th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td style="text-align:left">系统变量</td>
+<td><code>validate_password_length</code></td>
+</tr>
+<tr>
+<td style="text-align:left">范围</td>
+<td>Global</td>
+</tr>
+<tr>
+<td style="text-align:left">动态的</td>
+<td>Yes</td>
+</tr>
+<tr>
+<td style="text-align:left">类型</td>
+<td>整数Integer</td>
+</tr>
+<tr>
+<td style="text-align:left">默认值</td>
+<td><code>8</code></td>
+</tr>
+<tr>
+<td style="text-align:left">最小值</td>
+<td><code>0</code></td>
+</tr>
+</tbody>
+</table>
+<p><code>validate_password</code>需要密码 的最少字符数 。除非<code>validate_password</code>已安装，否则此变量不可用 。</p>
+<p>该 <a href="https://dev.mysql.com/doc/refman/5.7/en/validate-password-options-variables.html#sysvar_validate_password_length"><code>validate_password_length</code></a> 最小值是其他几个相关的系统变量的函数。该值不能设置为小于此表达式的值：</p>
+<pre><code class="language-none">validate_password_number_count
++ validate_password_special_char_count
++ (2 * validate_password_mixed_case_count)
+</code></pre>
+<p>如果 由于前面的约束而<code>validate_password</code>调整 的值 <a href="https://dev.mysql.com/doc/refman/5.7/en/validate-password-options-variables.html#sysvar_validate_password_length"><code>validate_password_length</code></a>，则会将消息写入错误日志。</p>
+</li>
+<li>
+<p><a href="https://dev.mysql.com/doc/refman/5.7/en/validate-password-options-variables.html#sysvar_validate_password_mixed_case_count"><code>validate_password_mixed_case_count</code></a></p>
+<table>
+<thead>
+<tr>
+<th style="text-align:left">命令行格式</th>
+<th><code>--validate-password-mixed-case-count=#</code></th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td style="text-align:left">系统变量</td>
+<td><code>validate_password_mixed_case_count</code></td>
+</tr>
+<tr>
+<td style="text-align:left">范围</td>
+<td>Global</td>
+</tr>
+<tr>
+<td style="text-align:left">动态的</td>
+<td>Yes</td>
+</tr>
+<tr>
+<td style="text-align:left">类型</td>
+<td>整数Integer</td>
+</tr>
+<tr>
+<td style="text-align:left">默认值</td>
+<td><code>1</code></td>
+</tr>
+<tr>
+<td style="text-align:left">最小值</td>
+<td><code>0</code></td>
+</tr>
+</tbody>
+</table>
+<p><code>validate_password</code>如果密码策略是<code>MEDIUM</code>或更强 ，则要求密码具有 的最小小写和大写字符数。除非<code>validate_password</code>已安装，否则此变量不可用。</p>
+<p>对于给定的 <a href="https://dev.mysql.com/doc/refman/5.7/en/validate-password-options-variables.html#sysvar_validate_password_mixed_case_count"><code>validate_password_mixed_case_count</code></a> 值，密码必须有那么多小写字符和那么多大写字符。</p>
+</li>
+<li>
+<p><a href="https://dev.mysql.com/doc/refman/5.7/en/validate-password-options-variables.html#sysvar_validate_password_number_count"><code>validate_password_number_count</code></a></p>
+<table>
+<thead>
+<tr>
+<th style="text-align:left">命令行格式</th>
+<th><code>--validate-password-number-count=#</code></th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td style="text-align:left">系统变量</td>
+<td><code>validate_password_number_count</code></td>
+</tr>
+<tr>
+<td style="text-align:left">范围</td>
+<td>Global</td>
+</tr>
+<tr>
+<td style="text-align:left">动态的</td>
+<td>Yes</td>
+</tr>
+<tr>
+<td style="text-align:left">类型</td>
+<td>整数Integer</td>
+</tr>
+<tr>
+<td style="text-align:left">默认值</td>
+<td><code>1</code></td>
+</tr>
+<tr>
+<td style="text-align:left">最小值</td>
+<td><code>0</code></td>
+</tr>
+</tbody>
+</table>
+<p><code>validate_password</code>如果密码策略是<code>MEDIUM</code> 或更强 ，则要求密码具有的最少数字（数字）字符数 。除非<code>validate_password</code>已安装，否则此变量不可用 。</p>
+</li>
+<li>
+<p><a href="https://dev.mysql.com/doc/refman/5.7/en/validate-password-options-variables.html#sysvar_validate_password_policy"><code>validate_password_policy</code></a></p>
+<p><strong>set global validate_password_policy=0;</strong></p>
+<table>
+<thead>
+<tr>
+<th style="text-align:left">命令行格式</th>
+<th><code>--validate-password-policy=value</code></th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td style="text-align:left">系统变量</td>
+<td><code>validate_password_policy</code></td>
+</tr>
+<tr>
+<td style="text-align:left">范围</td>
+<td>Global</td>
+</tr>
+<tr>
+<td style="text-align:left">动态的</td>
+<td>Yes</td>
+</tr>
+<tr>
+<td style="text-align:left">类型</td>
+<td>枚举 Enumeration</td>
+</tr>
+<tr>
+<td style="text-align:left">默认值</td>
+<td><code>1</code></td>
+</tr>
+<tr>
+<td style="text-align:left">有效值</td>
+<td>0 1 2  LOW  MEDIUM HIGH</td>
+</tr>
+</tbody>
+</table>
+<p>由 强制执行的密码策略 <code>validate_password</code>。除非<code>validate_password</code>已安装，否则此变量不可用。</p>
+<p><a href="https://dev.mysql.com/doc/refman/5.7/en/validate-password-options-variables.html#sysvar_validate_password_policy"><code>validate_password_policy</code></a> 影响<code>validate_password</code>其其他策略设置系统变量的使用方式，除了根据用户名检查密码，这是由 <a href="https://dev.mysql.com/doc/refman/5.7/en/validate-password-options-variables.html#sysvar_validate_password_check_user_name"><code>validate_password_check_user_name</code></a>.</p>
+<p><a href="https://dev.mysql.com/doc/refman/5.7/en/validate-password-options-variables.html#sysvar_validate_password_policy"><code>validate_password_policy</code></a> 可以使用数值 0、1、2 或相应的符号值<code>LOW</code>、 <code>MEDIUM</code>、来指定 该 值<code>STRONG</code>。下表描述了为每个策略执行的测试。对于长度测试，需要的长度是<a href="https://dev.mysql.com/doc/refman/5.7/en/validate-password-options-variables.html#sysvar_validate_password_length"><code>validate_password_length</code></a> 系统变量的值 。类似地，其他测试所需的值由其他 变量给出 。 <code>validate_password_*</code>xxx<code>*</code></p>
+<table>
+<thead>
+<tr>
+<th style="text-align:left">策略</th>
+<th style="text-align:left">执行的测试</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td style="text-align:left"><code>0</code> 或者 <code>LOW</code></td>
+<td style="text-align:left">长度</td>
+</tr>
+<tr>
+<td style="text-align:left"><code>1</code> 或者 <code>MEDIUM</code></td>
+<td style="text-align:left">长度; 数字、小写/大写和特殊字符</td>
+</tr>
+<tr>
+<td style="text-align:left"><code>2</code> 或者 <code>STRONG</code></td>
+<td style="text-align:left">长度; 数字、小写/大写和特殊字符；字典文件</td>
+</tr>
+</tbody>
+</table>
+</li>
+<li>
+<p><a href="https://dev.mysql.com/doc/refman/5.7/en/validate-password-options-variables.html#sysvar_validate_password_special_char_count"><code>validate_password_special_char_count</code></a></p>
+<table>
+<thead>
+<tr>
+<th style="text-align:left">命令行格式</th>
+<th><code>--validate-password-special-char-count=#</code></th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td style="text-align:left">系统变量</td>
+<td><code>validate_password_special_char_count</code></td>
+</tr>
+<tr>
+<td style="text-align:left">范围</td>
+<td>Global</td>
+</tr>
+<tr>
+<td style="text-align:left">动态的</td>
+<td>Yes</td>
+</tr>
+<tr>
+<td style="text-align:left">类型</td>
+<td>整数Integer</td>
+</tr>
+<tr>
+<td style="text-align:left">默认值</td>
+<td><code>1</code></td>
+</tr>
+<tr>
+<td style="text-align:left">最小值</td>
+<td><code>0</code></td>
+</tr>
+</tbody>
+</table>
+<p><code>validate_password</code>如果密码策略是<code>MEDIUM</code> 或更强 ，则要求密码具有的最小非字母数字字符数 。除非<code>validate_password</code>已安装，否则此变量不可用 。</p>
+</li>
+</ul>
+<h5 id="密码验证插件状态变量">密码验证插件状态变量</h5>
+<p>如果<code>validate_password</code>启用插件，它会公开提供操作信息的状态变量：</p>
+<pre><code class="language-sql">mysql&gt; SHOW STATUS LIKE 'validate_password%';
++-----------------------------------------------+---------------------+
+| Variable_name                                 | Value               |
++-----------------------------------------------+---------------------+
+| validate_password.dictionary_file_last_parsed | 2019-10-03 08:33:49 |
+| validate_password_dictionary_file_words_count | 1902                |
++-----------------------------------------------+---------------------+
+</code></pre>
+<p>下面的列表描述了每个状态变量的含义。</p>
+<ul>
+<li>
+<p><a href="https://dev.mysql.com/doc/refman/5.7/en/validate-password-options-variables.html#statvar_validate_password_dictionary_file_last_parsed"><code>validate_password_dictionary_file_last_parsed</code></a></p>
+<p>上次解析字典文件的时间。</p>
+</li>
+<li>
+<p><a href="https://dev.mysql.com/doc/refman/5.7/en/validate-password-options-variables.html#statvar_validate_password_dictionary_file_words_count"><code>validate_password_dictionary_file_words_count</code></a></p>
+<p>从字典文件中读取的单词数。</p>
+</li>
+</ul>
+
+            </div>
+            
+            
+              <div class="next-post">
+                <div class="next">下一篇</div>
+                <a href="https://blog.aymar.cn/post/ru-he-shi-yong-docker-compose-an-zhuang-wordpress/">
+                  <h3 class="post-title">
+                    如何使用 Docker Compose 安装 WordPress
+                  </h3>
+                </a>
+              </div>
+            
+
+            
+              
+                <div id="gitalk-container" data-aos="fade-in"></div>
+              
+
+              
+            
+
+          </div>
+
+        </div>
+      </div>
+    </div>
+
+    <script src="https://unpkg.com/aos@next/dist/aos.js"></script>
+<script type="application/javascript">
+
+AOS.init();
+
+var app = new Vue({
+  el: '#app',
+  data: {
+    menuVisible: false,
+  },
+})
+
+</script>
+
+
+
+
+
+  
+    <script src="https://unpkg.com/gitalk/dist/gitalk.min.js"></script>
+    <script>
+
+      var gitalk = new Gitalk({
+        clientID: '3911bd8dbdeee631dbc3',
+        clientSecret: '1150000213d6c03dd456a2bed69cbd4cec206a7c',
+        repo: 'pping.github.io',
+        owner: 'pping',
+        admin: ['pping'],
+        id: (location.pathname).substring(0, 49),      // Ensure uniqueness and length less than 50
+        distractionFreeMode: false  // Facebook-like distraction free mode
+      })
+
+      gitalk.render('gitalk-container')
+
+    </script>
+  
+
+  
+
+
+
+
+  </body>
+</html>

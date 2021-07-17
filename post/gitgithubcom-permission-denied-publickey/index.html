@@ -1,0 +1,223 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <meta charset="utf-8" >
+
+<title>git@github.com: Permission denied (publickey). | Gridea</title>
+
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no">
+
+<link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.7.2/css/all.css" integrity="sha384-fnmOCqbTlWIlj8LyTjo7mOUStjsKC4pOpQbqyi7RrhN7udi9RwhKkMHpvLbHG9Sr" crossorigin="anonymous">
+<link rel="shortcut icon" href="https://blog.aymar.cn/favicon.ico?v=1626535127955">
+<link rel="stylesheet" href="https://blog.aymar.cn/styles/main.css">
+
+
+  
+    <link rel="stylesheet" href="https://unpkg.com/gitalk/dist/gitalk.css" />
+  
+
+  
+
+
+<link rel="stylesheet" href="https://unpkg.com/aos@next/dist/aos.css" />
+<script src="https://cdn.jsdelivr.net/npm/vue/dist/vue.js"></script>
+
+
+
+    <meta name="description" content="ssh -T git@github.com
+git config --global user.name &quot;usernme&quot;
+git config --global user.email &quot;emailName&q..." />
+    <meta name="keywords" content="" />
+  </head>
+  <body>
+    <div id="app" class="main">
+
+      <div class="sidebar" :class="{ 'full-height': menuVisible }">
+  <div class="top-container" data-aos="fade-right">
+    <div class="top-header-container">
+      <a class="site-title-container" href="https://blog.aymar.cn">
+        <img src="https://blog.aymar.cn/images/avatar.png?v=1626535127955" class="site-logo">
+        <h1 class="site-title">Gridea</h1>
+      </a>
+      <div class="menu-btn" @click="menuVisible = !menuVisible">
+        <div class="line"></div>
+      </div>
+    </div>
+    <div>
+      
+        
+          <a href="/" class="site-nav">
+            首页
+          </a>
+        
+      
+        
+          <a href="/archives" class="site-nav">
+            归档
+          </a>
+        
+      
+        
+          <a href="/tags" class="site-nav">
+            标签
+          </a>
+        
+      
+        
+          <a href="/post/about" class="site-nav">
+            关于
+          </a>
+        
+      
+    </div>
+  </div>
+  <div class="bottom-container" data-aos="flip-up" data-aos-offset="0">
+    <div class="social-container">
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+    </div>
+    <div class="site-description">
+      温故而知新
+    </div>
+    <div class="site-footer">
+      Powered by <a href="https://www.aymar.cn" target="_blank">https://aymar.cn</a> | <a class="rss" href="https://blog.aymar.cn/atom.xml" target="_blank">RSS</a>
+    </div>
+  </div>
+</div>
+
+
+      <div class="main-container">
+        <div class="content-container" data-aos="fade-up">
+          <div class="post-detail">
+            <h2 class="post-title">git@github.com: Permission denied (publickey).</h2>
+            <div class="post-date">2021-02-23</div>
+            
+            <div class="post-content" v-pre>
+              <p>ssh -T git@github.com</p>
+<pre><code class="language-shell">git config --global user.name &quot;usernme&quot;
+git config --global user.email &quot;emailName&quot;
+</code></pre>
+<h3 id="quick-setup"><strong>Quick setup</strong></h3>
+<p>Get started by <a href="https://github.com/pping/blog/new/main">creating a new file</a> or <a href="https://github.com/pping/blog/upload">uploading an existing file</a>. We recommend every repository include a <a href="https://github.com/pping/blog/new/main?readme=1">README</a>, <a href="https://github.com/pping/blog/new/main?filename=LICENSE.md">LICENSE</a>, and <a href="https://github.com/pping/blog/new/main?filename=.gitignore">.gitignore</a>.</p>
+<p><strong>…or create a new repository on the command line</strong></p>
+<pre><code class="language-shell">echo &quot;# whatever you write&quot; &gt;&gt; README.md
+git init
+git add README.md
+git commit -m &quot;first commit&quot;
+git branch -M main
+git remote add origin https://github.com/***/***.git
+git push -u origin main
+</code></pre>
+<p><strong>…or push an existing repository from the command line</strong></p>
+<pre><code class="language-shell">git remote add origin https://github.com/***/***.git
+git branch -M main
+git push -u origin main
+</code></pre>
+<p><strong>…or import code from another repository</strong><br>
+You can initialize this repository with code from a Subversion, Mercurial, or TFS project.<br>
+<code>import</code>  https://github.com/<code>username/repo</code>/import</p>
+<p>ssh -v git@github.com</p>
+<pre><code>debug1: SSH2_MSG_SERVICE_ACCEPT received
+debug1: Authentications that can continue: publickey
+debug1: Next authentication method: publickey
+debug1: Trying private key: /home/Tree/.ssh/id_rsa
+debug1: Authentications that can continue: publickey
+debug1: Trying private key: /home/Tree/.ssh/id_dsa
+debug1: Trying private key: /home/Tree/.ssh/id_ecdsa
+debug1: Trying private key: /home/Tree/.ssh/id_ecdsa_sk
+debug1: Trying private key: /home/Tree/.ssh/id_ed25519
+debug1: Trying private key: /home/Tree/.ssh/id_ed25519_sk
+debug1: Trying private key: /home/Tree/.ssh/id_xmss
+debug1: No more authentication methods to try.
+git@github.com: Permission denied (publickey).
+</code></pre>
+<p>解决办法：<br>
+1、修改私钥名称为默认：id_rsa<br>
+2、指定私钥名称<br>
+vim ~/.ssh/config</p>
+<pre><code> Host github.com
+ HostName github.com
+ IdentityFile ~/.ssh/id_rsa_github
+ User git
+</code></pre>
+
+            </div>
+            
+            
+              <div class="next-post">
+                <div class="next">下一篇</div>
+                <a href="https://blog.aymar.cn/post/pcman-syu-sheng-ji-shi-bai/">
+                  <h3 class="post-title">
+                    pcman -Syu 升级失败
+                  </h3>
+                </a>
+              </div>
+            
+
+            
+              
+                <div id="gitalk-container" data-aos="fade-in"></div>
+              
+
+              
+            
+
+          </div>
+
+        </div>
+      </div>
+    </div>
+
+    <script src="https://unpkg.com/aos@next/dist/aos.js"></script>
+<script type="application/javascript">
+
+AOS.init();
+
+var app = new Vue({
+  el: '#app',
+  data: {
+    menuVisible: false,
+  },
+})
+
+</script>
+
+
+
+
+
+  
+    <script src="https://unpkg.com/gitalk/dist/gitalk.min.js"></script>
+    <script>
+
+      var gitalk = new Gitalk({
+        clientID: '3911bd8dbdeee631dbc3',
+        clientSecret: '1150000213d6c03dd456a2bed69cbd4cec206a7c',
+        repo: 'pping.github.io',
+        owner: 'pping',
+        admin: ['pping'],
+        id: (location.pathname).substring(0, 49),      // Ensure uniqueness and length less than 50
+        distractionFreeMode: false  // Facebook-like distraction free mode
+      })
+
+      gitalk.render('gitalk-container')
+
+    </script>
+  
+
+  
+
+
+
+
+  </body>
+</html>
