@@ -1,14 +1,19 @@
+
 <!DOCTYPE html>
 <html>
   <head>
-    <meta charset="utf-8" >
+    
+<meta charset="utf-8" >
 
 <title>如何使用 Docker Compose 安装 WordPress | Gridea</title>
+<meta name="description" content="温故而知新">
 
 <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no">
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/animate.css/3.7.0/animate.min.css">
 
 <link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.7.2/css/all.css" integrity="sha384-fnmOCqbTlWIlj8LyTjo7mOUStjsKC4pOpQbqyi7RrhN7udi9RwhKkMHpvLbHG9Sr" crossorigin="anonymous">
-<link rel="shortcut icon" href="https://blog.aymar.cn/favicon.ico?v=1626667096002">
+<link rel="shortcut icon" href="https://blog.aymar.cn/favicon.ico?v=1629089904696">
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/KaTeX/0.10.0/katex.min.css">
 <link rel="stylesheet" href="https://blog.aymar.cn/styles/main.css">
 
 
@@ -19,89 +24,75 @@
   
 
 
-<link rel="stylesheet" href="https://unpkg.com/aos@next/dist/aos.css" />
 <script src="https://cdn.jsdelivr.net/npm/vue/dist/vue.js"></script>
+<script src="https://cdn.bootcss.com/highlight.js/9.12.0/highlight.min.js"></script>
 
 
 
-    <meta name="description" content="介绍
-WordPress是一个免费的开源内容管理系统 (CMS)，它构建在MySQL数据库上，并使用PHP处理。由于其可扩展的插件架构和模板系统，以及其大部分管理可以通过 Web 界面完成的事实，WordPress 是创建不同类型网站（从博..." />
-    <meta name="keywords" content="" />
   </head>
   <body>
     <div id="app" class="main">
-
-      <div class="sidebar" :class="{ 'full-height': menuVisible }">
-  <div class="top-container" data-aos="fade-right">
-    <div class="top-header-container">
-      <a class="site-title-container" href="https://blog.aymar.cn">
-        <img src="https://blog.aymar.cn/images/avatar.png?v=1626667096002" class="site-logo">
+      <div class="site-header-container">
+  <div class="site-header">
+    <div class="left">
+      <a href="https://blog.aymar.cn">
+        <img class="avatar" src="https://blog.aymar.cn/images/avatar.png?v=1629089904696" alt="" width="32px" height="32px">
+      </a>
+      <a href="https://blog.aymar.cn">
         <h1 class="site-title">Gridea</h1>
       </a>
-      <div class="menu-btn" @click="menuVisible = !menuVisible">
-        <div class="line"></div>
-      </div>
     </div>
-    <div>
+    <div class="right">
+      <transition name="fade">
+        <i class="icon" :class="{ 'icon-close-outline': menuVisible, 'icon-menu-outline': !menuVisible }" @click="menuVisible = !menuVisible"></i>
+      </transition>
+    </div>
+  </div>
+</div>
+
+<transition name="fade">
+  <div class="menu-container" style="display: none;" v-show="menuVisible">
+    <div class="menu-list">
       
         
-          <a href="/" class="site-nav">
+          <a href="/" class="menu purple-link">
             首页
           </a>
         
       
         
-          <a href="/archives" class="site-nav">
+          <a href="/archives" class="menu purple-link">
             归档
           </a>
         
       
         
-          <a href="/tags" class="site-nav">
+          <a href="/tags" class="menu purple-link">
             标签
           </a>
         
       
         
-          <a href="/post/about" class="site-nav">
+          <a href="/post/about" class="menu purple-link">
             关于
           </a>
         
       
     </div>
   </div>
-  <div class="bottom-container" data-aos="flip-up" data-aos-offset="0">
-    <div class="social-container">
-      
-        
-      
-        
-      
-        
-      
-        
-      
-        
-      
-    </div>
-    <div class="site-description">
-      温故而知新
-    </div>
-    <div class="site-footer">
-      Powered by <a href="https://www.aymar.cn" target="_blank">https://aymar.cn</a> | <a class="rss" href="https://blog.aymar.cn/atom.xml" target="_blank">RSS</a>
-    </div>
-  </div>
-</div>
+</transition>
 
 
-      <div class="main-container">
-        <div class="content-container" data-aos="fade-up">
-          <div class="post-detail">
-            <h2 class="post-title">如何使用 Docker Compose 安装 WordPress</h2>
-            <div class="post-date">2021-06-17</div>
+      <div class="content-container">
+        <div class="post-detail">
+          
+          <h2 class="post-title">如何使用 Docker Compose 安装 WordPress</h2>
+          <div class="post-info post-detail-info">
+            <span><i class="icon-calendar-outline"></i> 2021-06-17</span>
             
-            <div class="post-content" v-pre>
-              <h3 id="介绍">介绍</h3>
+          </div>
+          <div class="post-content">
+            <h3 id="介绍">介绍</h3>
 <p><a href="https://wordpress.org/">WordPress</a>是一个免费的开源<a href="https://www.digitalocean.com/community/tutorials/digitalocean-community-glossary#content-management-system">内容管理系统 (CMS)，它</a>构建在<a href="https://www.mysql.com/">MySQL</a>数据库上，并使用<a href="https://www.php.net/">PHP</a>处理。由于其可扩展的插件架构和模板系统，以及其大部分管理可以通过 Web 界面完成的事实，WordPress 是创建不同类型网站（从博客到产品页面再到电子商务网站）的流行选择。</p>
 <p>运行 WordPress 通常需要安装<a href="https://www.digitalocean.com/community/tutorials/digitalocean-community-glossary#lamp">LAMP</a>（Linux、Apache、MySQL 和 PHP）或<a href="https://www.digitalocean.com/community/tutorials/digitalocean-community-glossary#lemp">LEMP</a>（Linux、Nginx、MySQL 和 PHP）堆栈，这可能非常耗时。但是，通过使用<a href="https://www.docker.com/">Docker</a>和<a href="https://docs.docker.com/compose/">Docker Compose</a>等工具，您可以简化设置首选堆栈和安装 WordPress 的过程。您可以使用<em>图像</em>，而不是手动安装单个组件，它将库、配置文件和环境变量等标准化，并在<em>容器中</em>运行这些图像，在共享操作系统上运行的隔离进程。此外，通过使用 Compose，您可以协调多个容器（例如应用程序和数据库）以相互通信。</p>
 <p>在本教程中，您将构建一个多容器 WordPress 安装。您的容器将包括一个 MySQL 数据库、一个 Nginx Web 服务器和 WordPress 本身。您还将通过使用<a href="https://letsencrypt.org/">Let's Encrypt</a>为要与您的站点关联的域获取 TLS/SSL 证书来保护您的安装。最后，您将设置一个<a href="https://www.digitalocean.com/community/tutorials/how-to-schedule-routine-tasks-with-cron-and-anacron-on-a-vps"><code>cron</code></a>工作来更新您的证书，以便您的域保持安全。</p>
@@ -853,37 +844,51 @@ $DOCKER system prune -af
 </ul>
 <p>转载： https://www.digitalocean.com/community/tutorials/how-to-install-wordpress-with-docker-compose</p>
 
-            </div>
-            
-            
-              <div class="next-post">
-                <div class="next">下一篇</div>
-                <a href="https://blog.aymar.cn/post/docker-compose-tong-shi-chuang-jian-duo-ge-shu-ju-ku/">
-                  <h3 class="post-title">
-                    Docker-compose 同时创建多个mysql数据库
-                  </h3>
-                </a>
-              </div>
-            
-
-            
-              
-                <div id="gitalk-container" data-aos="fade-in"></div>
-              
-
-              
-            
-
           </div>
-
         </div>
+
+        
+          <div class="next-post">
+            <a class="purple-link" href="https://blog.aymar.cn/post/docker-compose-tong-shi-chuang-jian-duo-ge-shu-ju-ku/">
+              <h3 class="post-title">
+                下一篇：Docker-compose 同时创建多个mysql数据库
+              </h3>
+            </a>
+          </div>
+          
       </div>
+
+      
+        
+          <div id="gitalk-container"></div>
+        
+
+        
+      
+
+      <div class="site-footer">
+  <div class="slogan">温故而知新</div>
+  <div class="social-container">
+    
+      
+    
+      
+    
+      
+    
+      
+    
+      
+    
+  </div>
+  Powered by <a href="https://www.aymar.cn" target="_blank">https://aymar.cn</a> | <a class="rss" href="https://blog.aymar.cn/atom.xml" target="_blank">RSS</a>
+</div>
+
+
     </div>
+    <script type="application/javascript">
 
-    <script src="https://unpkg.com/aos@next/dist/aos.js"></script>
-<script type="application/javascript">
-
-AOS.init();
+hljs.initHighlightingOnLoad()
 
 var app = new Vue({
   el: '#app',
@@ -893,8 +898,6 @@ var app = new Vue({
 })
 
 </script>
-
-
 
 
 
