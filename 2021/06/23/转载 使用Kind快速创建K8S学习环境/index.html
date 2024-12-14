@@ -1,0 +1,640 @@
+<!DOCTYPE html><html lang="zh_CN" data-theme="light"><head><meta charset="UTF-8"><meta http-equiv="X-UA-Compatible" content="IE=edge"><meta name="viewport" content="width=device-width, initial-scale=1.0,viewport-fit=cover"><title>转载 使用Kind快速创建K8S学习环境 | 热带雨林</title><meta name="author" content="aymar"><meta name="copyright" content="aymar"><meta name="format-detection" content="telephone=no"><meta name="theme-color" content="#ffffff"><meta name="description" content="使用Kind快速创建K8S学习环境原文链接：kind：Kubernetes in Docker，单机运行 Kubernetes 群集的最佳方案？，查看最新版。 是否没有足够的机器运行 Kubernetes 测试环境，个人电脑配置不高的话，运行多个节点的虚拟化有点力不从心，国内公有云主机一般不支持嵌套虚拟化，一套 3M+3N 的群集环境成本太高。VMware Fusion 12.0 发布，将 Kin">
+<meta property="og:type" content="article">
+<meta property="og:title" content="转载 使用Kind快速创建K8S学习环境">
+<meta property="og:url" content="https://pping.github.io/pping.github.io/2021/06/23/%E8%BD%AC%E8%BD%BD%20%E4%BD%BF%E7%94%A8Kind%E5%BF%AB%E9%80%9F%E5%88%9B%E5%BB%BAK8S%E5%AD%A6%E4%B9%A0%E7%8E%AF%E5%A2%83/index.html">
+<meta property="og:site_name" content="热带雨林">
+<meta property="og:description" content="使用Kind快速创建K8S学习环境原文链接：kind：Kubernetes in Docker，单机运行 Kubernetes 群集的最佳方案？，查看最新版。 是否没有足够的机器运行 Kubernetes 测试环境，个人电脑配置不高的话，运行多个节点的虚拟化有点力不从心，国内公有云主机一般不支持嵌套虚拟化，一套 3M+3N 的群集环境成本太高。VMware Fusion 12.0 发布，将 Kin">
+<meta property="og:locale" content="zh_CN">
+<meta property="og:image" content="https://pping.github.io/pping.github.io/img/avatar.jpg">
+<meta property="article:published_time" content="2021-06-22T16:00:00.000Z">
+<meta property="article:modified_time" content="2024-12-14T08:21:16.645Z">
+<meta property="article:author" content="aymar">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:image" content="https://pping.github.io/pping.github.io/img/avatar.jpg"><link rel="shortcut icon" href="/img/favicon.png"><link rel="canonical" href="https://pping.github.io/pping.github.io/2021/06/23/%E8%BD%AC%E8%BD%BD%20%E4%BD%BF%E7%94%A8Kind%E5%BF%AB%E9%80%9F%E5%88%9B%E5%BB%BAK8S%E5%AD%A6%E4%B9%A0%E7%8E%AF%E5%A2%83/index.html"><link rel="preconnect" href="//cdn.jsdelivr.net"/><link rel="preconnect" href="//busuanzi.ibruce.info"/><link rel="stylesheet" href="/css/index.css"><link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@fortawesome/fontawesome-free/css/all.min.css"><script>
+    (() => {
+      
+    const saveToLocal = {
+      set: (key, value, ttl) => {
+        if (!ttl) return
+        const expiry = Date.now() + ttl * 86400000
+        localStorage.setItem(key, JSON.stringify({ value, expiry }))
+      },
+      get: key => {
+        const itemStr = localStorage.getItem(key)
+        if (!itemStr) return undefined
+        const { value, expiry } = JSON.parse(itemStr)
+        if (Date.now() > expiry) {
+          localStorage.removeItem(key)
+          return undefined
+        }
+        return value
+      }
+    }
+
+    window.btf = {
+      saveToLocal,
+      getScript: (url, attr = {}) => new Promise((resolve, reject) => {
+        const script = document.createElement('script')
+        script.src = url
+        script.async = true
+        Object.entries(attr).forEach(([key, val]) => script.setAttribute(key, val))
+        script.onload = script.onreadystatechange = () => {
+          if (!script.readyState || /loaded|complete/.test(script.readyState)) resolve()
+        }
+        script.onerror = reject
+        document.head.appendChild(script)
+      }),
+      getCSS: (url, id) => new Promise((resolve, reject) => {
+        const link = document.createElement('link')
+        link.rel = 'stylesheet'
+        link.href = url
+        if (id) link.id = id
+        link.onload = link.onreadystatechange = () => {
+          if (!link.readyState || /loaded|complete/.test(link.readyState)) resolve()
+        }
+        link.onerror = reject
+        document.head.appendChild(link)
+      }),
+      addGlobalFn: (key, fn, name = false, parent = window) => {
+        if (!false && key.startsWith('pjax')) return
+        const globalFn = parent.globalFn || {}
+        globalFn[key] = globalFn[key] || {}
+        globalFn[key][name || Object.keys(globalFn[key]).length] = fn
+        parent.globalFn = globalFn
+      }
+    }
+  
+      
+      const activateDarkMode = () => {
+        document.documentElement.setAttribute('data-theme', 'dark')
+        if (document.querySelector('meta[name="theme-color"]') !== null) {
+          document.querySelector('meta[name="theme-color"]').setAttribute('content', '#0d0d0d')
+        }
+      }
+      const activateLightMode = () => {
+        document.documentElement.setAttribute('data-theme', 'light')
+        if (document.querySelector('meta[name="theme-color"]') !== null) {
+          document.querySelector('meta[name="theme-color"]').setAttribute('content', '#ffffff')
+        }
+      }
+
+      btf.activateDarkMode = activateDarkMode
+      btf.activateLightMode = activateLightMode
+
+      const theme = saveToLocal.get('theme')
+    
+          theme === 'dark' ? activateDarkMode() : theme === 'light' ? activateLightMode() : null
+        
+      
+      const asideStatus = saveToLocal.get('aside-status')
+      if (asideStatus !== undefined) {
+        document.documentElement.classList.toggle('hide-aside', asideStatus === 'hide')
+      }
+    
+      
+    const detectApple = () => {
+      if (/iPad|iPhone|iPod|Macintosh/.test(navigator.userAgent)) {
+        document.documentElement.classList.add('apple')
+      }
+    }
+    detectApple()
+  
+    })()
+  </script><script>const GLOBAL_CONFIG = {
+  root: '/',
+  algolia: undefined,
+  localSearch: undefined,
+  translate: undefined,
+  highlight: {"plugin":"highlight.js","highlightCopy":true,"highlightLang":true,"highlightHeightLimit":false,"highlightFullpage":false,"highlightMacStyle":false},
+  copy: {
+    success: 'Copy Successful',
+    error: 'Copy Failed',
+    noSupport: 'Browser Not Supported'
+  },
+  relativeDate: {
+    homepage: false,
+    post: false
+  },
+  runtime: '',
+  dateSuffix: {
+    just: 'Just now',
+    min: 'minutes ago',
+    hour: 'hours ago',
+    day: 'days ago',
+    month: 'months ago'
+  },
+  copyright: undefined,
+  lightbox: 'null',
+  Snackbar: undefined,
+  infinitegrid: {
+    js: 'https://cdn.jsdelivr.net/npm/@egjs/infinitegrid/dist/infinitegrid.min.js',
+    buttonText: 'Load More'
+  },
+  isPhotoFigcaption: false,
+  islazyload: false,
+  isAnchor: false,
+  percent: {
+    toc: true,
+    rightside: false,
+  },
+  autoDarkmode: false
+}</script><script id="config-diff">var GLOBAL_CONFIG_SITE = {
+  title: '转载 使用Kind快速创建K8S学习环境',
+  isPost: true,
+  isHome: false,
+  isHighlightShrink: false,
+  isToc: true,
+  isShuoshuo: false
+}</script><meta name="generator" content="Hexo 7.3.0"></head><body><div id="sidebar"><div id="menu-mask"></div><div id="sidebar-menus"><div class="avatar-img text-center"><img src="/img/avatar.jpg" onerror="onerror=null;src='/img/friend_404.gif'" alt="avatar"/></div><div class="site-data text-center"><a href="/archives/"><div class="headline">Articles</div><div class="length-num">14</div></a><a href="/tags/"><div class="headline">Tags</div><div class="length-num">0</div></a><a href="/categories/"><div class="headline">Categories</div><div class="length-num">0</div></a></div><div class="menus_items"><div class="menus_item"><a class="site-page" href="/"><i class="fa-fw fas fa-home"></i><span> 主页</span></a></div><div class="menus_item"><span class="site-page group"><i class="fa-fw fa fa-book"></i><span> 博文</span><i class="fas fa-chevron-down"></i></span><ul class="menus_item_child"><li><a class="site-page child" href="/categories/"><i class="fa-fw fa fa-archive"></i><span> 分类</span></a></li><li><a class="site-page child" href="/tags/"><i class="fa-fw fa fa-tags"></i><span> 标签</span></a></li><li><a class="site-page child" href="/archives/"><i class="fa-fw fa fa-folder-open"></i><span> 归档</span></a></li></ul></div><div class="menus_item"><span class="site-page group"><i class="fa-fw fas fa-list"></i><span> 生活</span><i class="fas fa-chevron-down"></i></span><ul class="menus_item_child"><li><a class="site-page child" href="/share/"><i class="fa-fw fa fa-sticky-note"></i><span> 分享</span></a></li><li><a class="site-page child" href="/photos/"><i class="fa-fw fa fa-camera-retro"></i><span> 相册</span></a></li><li><a class="site-page child" href="/music/"><i class="fa-fw fa fa-music"></i><span> 音乐</span></a></li><li><a class="site-page child" href="/movie/"><i class="fa-fw fas fa-video"></i><span> 影视</span></a></li></ul></div><div class="menus_item"><a class="site-page" href="/comment/"><i class="fa-fw fa fa-paper-plane"></i><span> 留言板</span></a></div><div class="menus_item"><a class="site-page" href="/links/"><i class="fa-fw fa fa-link"></i><span> 友链</span></a></div><div class="menus_item"><a class="site-page" href="/about/"><i class="fa-fw fa fa-address-card"></i><span> 关于博主</span></a></div></div></div></div><div class="post" id="body-wrap"><header class="post-bg" id="page-header" style="background-image: url(http://cdn-hsyq-static.shanhutech.cn/bizhi/staticwp/202412/1544c0f95cb6485a6537a458a54ec6cd--900423146.jpg);"><nav id="nav"><span id="blog-info"><a class="nav-site-title" href="/"><span class="site-name">热带雨林</span></a><a class="nav-page-title" href="/"><span class="site-name">转载 使用Kind快速创建K8S学习环境</span></a></span><div id="menus"><div class="menus_items"><div class="menus_item"><a class="site-page" href="/"><i class="fa-fw fas fa-home"></i><span> 主页</span></a></div><div class="menus_item"><span class="site-page group"><i class="fa-fw fa fa-book"></i><span> 博文</span><i class="fas fa-chevron-down"></i></span><ul class="menus_item_child"><li><a class="site-page child" href="/categories/"><i class="fa-fw fa fa-archive"></i><span> 分类</span></a></li><li><a class="site-page child" href="/tags/"><i class="fa-fw fa fa-tags"></i><span> 标签</span></a></li><li><a class="site-page child" href="/archives/"><i class="fa-fw fa fa-folder-open"></i><span> 归档</span></a></li></ul></div><div class="menus_item"><span class="site-page group"><i class="fa-fw fas fa-list"></i><span> 生活</span><i class="fas fa-chevron-down"></i></span><ul class="menus_item_child"><li><a class="site-page child" href="/share/"><i class="fa-fw fa fa-sticky-note"></i><span> 分享</span></a></li><li><a class="site-page child" href="/photos/"><i class="fa-fw fa fa-camera-retro"></i><span> 相册</span></a></li><li><a class="site-page child" href="/music/"><i class="fa-fw fa fa-music"></i><span> 音乐</span></a></li><li><a class="site-page child" href="/movie/"><i class="fa-fw fas fa-video"></i><span> 影视</span></a></li></ul></div><div class="menus_item"><a class="site-page" href="/comment/"><i class="fa-fw fa fa-paper-plane"></i><span> 留言板</span></a></div><div class="menus_item"><a class="site-page" href="/links/"><i class="fa-fw fa fa-link"></i><span> 友链</span></a></div><div class="menus_item"><a class="site-page" href="/about/"><i class="fa-fw fa fa-address-card"></i><span> 关于博主</span></a></div></div><div id="toggle-menu"><span class="site-page"><i class="fas fa-bars fa-fw"></i></span></div></div></nav><div id="post-info"><h1 class="post-title">转载 使用Kind快速创建K8S学习环境</h1><div id="post-meta"><div class="meta-firstline"><span class="post-meta-date"><i class="far fa-calendar-alt fa-fw post-meta-icon"></i><span class="post-meta-label">Created</span><time class="post-meta-date-created" datetime="2021-06-22T16:00:00.000Z" title="Created 2021-06-23 00:00:00">2021-06-23</time><span class="post-meta-separator">|</span><i class="fas fa-history fa-fw post-meta-icon"></i><span class="post-meta-label">Updated</span><time class="post-meta-date-updated" datetime="2024-12-14T08:21:16.645Z" title="Updated 2024-12-14 16:21:16">2024-12-14</time></span></div><div class="meta-secondline"><span class="post-meta-separator">|</span><span class="post-meta-pv-cv" id="" data-flag-title=""><i class="far fa-eye fa-fw post-meta-icon"></i><span class="post-meta-label">Post Views:</span><span id="busuanzi_value_page_pv"><i class="fa-solid fa-spinner fa-spin"></i></span></span></div></div></div></header><main class="layout" id="content-inner"><div id="post"><article class="container post-content" id="article-container"><h1 id="使用Kind快速创建K8S学习环境"><a href="#使用Kind快速创建K8S学习环境" class="headerlink" title="使用Kind快速创建K8S学习环境"></a>使用Kind快速创建K8S学习环境</h1><p>原文链接：<a target="_blank" rel="noopener" href="https://sysin.org/article/kind/">kind：Kubernetes in Docker，单机运行 Kubernetes 群集的最佳方案？</a>，查看最新版。</p>
+<p>是否没有足够的机器运行 Kubernetes 测试环境，个人电脑配置不高的话，运行多个节点的虚拟化有点力不从心，国内公有云主机一般不支持嵌套虚拟化，一套 3M+3N 的群集环境成本太高。VMware Fusion 12.0 发布，将 Kind 带入了我们的视野，这是 Google 官方的一个工具，可能是在单机运行 Kubernetes 群集的最佳方案。笔者在一台 1C 2G 的公有云虚机上运行 Kind，也不会因为计算资源有限而无法完成。</p>
+<h2 id="1-简介"><a href="#1-简介" class="headerlink" title="1. 简介"></a>1. 简介</h2><p>kind 是 Kubernetes in Docker 的简写，是一个使用 Docker 容器作为 Nodes，在本地创建和运行 Kubernetes 群集的工具。适用于在本机创建 Kubernetes 群集环境进行开发和测试。</p>
+<p>官网：<a target="_blank" rel="noopener" href="https://kind.sigs.k8s.io/">https://kind.sigs.k8s.io/</a></p>
+<p>kind 由以下组件构成:</p>
+<ul>
+<li>Go <a target="_blank" rel="noopener" href="https://github.com/kubernetes-sigs/kind/tree/master/pkg">packages</a> implementing <a target="_blank" rel="noopener" href="https://github.com/kubernetes-sigs/kind/tree/master/pkg/cluster">cluster creation</a>, <a target="_blank" rel="noopener" href="https://github.com/kubernetes-sigs/kind/tree/master/pkg/build">image build</a>, etc.</li>
+<li>A command line interface (<a target="_blank" rel="noopener" href="https://github.com/kubernetes-sigs/kind/tree/master/main.go"><code>kind</code></a>) built on these packages.</li>
+<li>Docker <a target="_blank" rel="noopener" href="https://github.com/kubernetes-sigs/kind/tree/master/images">image(s)</a> written to run systemd, Kubernetes, etc.</li>
+<li><a target="_blank" rel="noopener" href="https://github.com/kubernetes/test-infra/tree/master/kubetest"><code>kubetest</code></a> integration also built on these packages (WIP)</li>
+</ul>
+<p>kind 使用 <a target="_blank" rel="noopener" href="https://kubernetes.io/docs/reference/setup-tools/kubeadm/kubeadm/">kubeadm</a> 创建和启动群集节点。</p>
+<h2 id="2-kind-架构"><a href="#2-kind-架构" class="headerlink" title="2. kind 架构"></a>2. kind 架构</h2><p>kind 官方架构图如下，它将 docker 容器作为 kubernetes 的 “node”，并在该 “node” 中安装 kubernetes 组件，包括一个或者多个 Control Plane 和 一个或者多个 Work nodes。这就解决了在本机运行多个 node 的问题，而不需要虚拟化。</p>
+<p><a target="_blank" rel="noopener" href="https://sysin.org/article/kind/kind-diagram.png"><img src="https://sysin.org/article/kind/kind-diagram.png" alt="kind"></a></p>
+<h2 id="3-安装-Kind"><a href="#3-安装-Kind" class="headerlink" title="3. 安装 Kind"></a>3. 安装 Kind</h2><p>(1)、<a target="_blank" rel="noopener" href="https://docs.docker.com/engine/install/">安装 Docker</a>，这是前提条件。</p>
+<p>(2)、<a target="_blank" rel="noopener" href="https://kubernetes.io/docs/tasks/tools/install-kubectl/">安装 kubectl</a>：Kind 本身不需要 kubectl，安装 kubectl 可以在本机直接管理 Kubernetes 群集。</p>
+<p>(3)、安装 kind：</p>
+<p>查看版本：Github <a target="_blank" rel="noopener" href="https://github.com/kubernetes-sigs/kind/releases">releases</a> page</p>
+<ul>
+<li><p>Linux：</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">curl -Lo ./kind https://kind.sigs.k8s.io/dl/v0.9.0/kind-linux-amd64</span><br><span class="line">chmod +x ./kind</span><br><span class="line">#mv ./kind /some-dir-in-your-PATH/kind</span><br><span class="line">mv ./kind /usr/local/bin/kind</span><br></pre></td></tr></table></figure>
+</li>
+<li><p>macOS (homebrew):</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">brew install kind</span><br></pre></td></tr></table></figure>
+
+<p>  或者</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">curl -Lo ./kind https://kind.sigs.k8s.io/dl/v0.9.0/kind-darwin-amd64</span><br><span class="line">chmod +x ./kind</span><br><span class="line">mv ./kind /usr/local/bin/kind</span><br></pre></td></tr></table></figure></li>
+</ul>
+<p>如果安装了 VMware Fusion 12.0，在启动 vctl（<code>vctl system start</code>）之后，直接运行 <code>vctl kind</code>。</p>
+<ul>
+<li>Windows：可以支持，不推荐。</li>
+</ul>
+<h2 id="4-操作入门"><a href="#4-操作入门" class="headerlink" title="4. 操作入门"></a>4. 操作入门</h2><h3 id="创建群集"><a href="#创建群集" class="headerlink" title="创建群集"></a>创建群集</h3><figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">kind create cluster</span><br></pre></td></tr></table></figure>
+
+<p>默认的群集名称为<code>kind</code>，可以使用参数<code>--name</code>指定创建的群集的名称，可以创建多个群集：</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">kind create cluster --name kind-2</span><br></pre></td></tr></table></figure>
+
+<p>指定 node 镜像版本创建群集</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line"># default</span><br><span class="line">kind create cluster --image kindest/node:latest</span><br><span class="line"># 1.19.0</span><br><span class="line">kind create cluster --image kindest/node:v1.19.0</span><br></pre></td></tr></table></figure>
+
+<p>多群集切换</p>
+<p>获取群集名称，可以看到下面有两个群集</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">kind get clusters</span><br><span class="line">kind</span><br><span class="line">kind2</span><br></pre></td></tr></table></figure>
+
+<p>切换群集</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line"># 切换到群集`kind`</span><br><span class="line">kubectl cluster-info --context kind-kind</span><br><span class="line"># 切换到群集`kind-2`</span><br><span class="line">kubectl cluster-info --context kind-kind-2</span><br></pre></td></tr></table></figure>
+
+<p>可以通过 <a target="_blank" rel="noopener" href="https://kubernetes.io/docs/concepts/configuration/organize-cluster-access-kubeconfig/">Kubernetes kubeconfig</a> 配置文件来配置默认群集.</p>
+<p>查看节点（默认只有一个 control-plane）</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">kubectl get nodes</span><br><span class="line">NAME                 STATUS   ROLES    AGE     VERSION</span><br><span class="line">kind-control-plane   Ready    master   7m51s   v1.19.1</span><br></pre></td></tr></table></figure>
+
+<h3 id="删除群集"><a href="#删除群集" class="headerlink" title="删除群集"></a>删除群集</h3><p>删除群集<code>kind-2</code></p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">kind delete cluster --name kind-2</span><br></pre></td></tr></table></figure>
+
+<h3 id="将镜像加载到-kind-群集中"><a href="#将镜像加载到-kind-群集中" class="headerlink" title="将镜像加载到 kind 群集中"></a>将镜像加载到 kind 群集中</h3><p>Kind 群集中的 Docker 镜像可以从互联网直接拉取，如果需要将本机镜像加载到 Kind 群集中，使用如下命令</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">kind load docker-image my-custom-image</span><br></pre></td></tr></table></figure>
+
+<p><code>kind load docker-image my-custom-image --name kind-2</code> (指定群集名称)</p>
+<p><code>kind load image-archive /my-image-archive.tar</code> （加载导出的镜像压缩包）</p>
+<h2 id="5-配置-kind-群集"><a href="#5-配置-kind-群集" class="headerlink" title="5. 配置 kind 群集"></a>5. 配置 kind 群集</h2><p>可以查看示例配置文件 <a target="_blank" rel="noopener" href="https://raw.githubusercontent.com/kubernetes-sigs/kind/master/site/content/docs/user/kind-example-config.yaml">kind-example-config</a>，创建群集时使用 <code>--config</code> 参数:</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">kind create cluster --config kind-example-config.yaml</span><br></pre></td></tr></table></figure>
+
+<p>示例配置文件如下：</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br></pre></td><td class="code"><pre><span class="line"># this config file contains all config fields with comments</span><br><span class="line"># NOTE: this is not a particularly useful config file</span><br><span class="line">kind: Cluster</span><br><span class="line">apiVersion: kind.x-k8s.io/v1alpha4</span><br><span class="line"># patch the generated kubeadm config with some extra settings</span><br><span class="line">kubeadmConfigPatches:</span><br><span class="line">- |</span><br><span class="line">  apiVersion: kubelet.config.k8s.io/v1beta1</span><br><span class="line">  kind: KubeletConfiguration</span><br><span class="line">  evictionHard:</span><br><span class="line">    nodefs.available: &quot;0%&quot;</span><br><span class="line"># patch it further using a JSON 6902 patch</span><br><span class="line">kubeadmConfigPatchesJSON6902:</span><br><span class="line">- group: kubeadm.k8s.io</span><br><span class="line">  version: v1beta2</span><br><span class="line">  kind: ClusterConfiguration</span><br><span class="line">  patch: |</span><br><span class="line">    - op: add</span><br><span class="line">      path: /apiServer/certSANs/-</span><br><span class="line">      value: my-hostname</span><br><span class="line"># 1 control plane node and 3 workers</span><br><span class="line">nodes:</span><br><span class="line"># the control plane node config</span><br><span class="line">- role: control-plane</span><br><span class="line"># the three workers</span><br><span class="line">- role: worker</span><br><span class="line">- role: worker</span><br><span class="line">- role: worker</span><br></pre></td></tr></table></figure>
+
+<h3 id="Multi-node-clusters"><a href="#Multi-node-clusters" class="headerlink" title="Multi-node clusters"></a>Multi-node clusters</h3><p>示例如下：</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line"># three node (two workers) cluster config</span><br><span class="line">kind: Cluster</span><br><span class="line">apiVersion: kind.x-k8s.io/v1alpha4</span><br><span class="line">nodes:</span><br><span class="line">- role: control-plane</span><br><span class="line">- role: worker</span><br><span class="line">- role: worker</span><br></pre></td></tr></table></figure>
+
+<h3 id="Control-plane-HA"><a href="#Control-plane-HA" class="headerlink" title="Control-plane HA"></a>Control-plane HA</h3><p>示例如下：</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br></pre></td><td class="code"><pre><span class="line"># a cluster with 3 control-plane nodes and 3 workers</span><br><span class="line">kind: Cluster</span><br><span class="line">apiVersion: kind.x-k8s.io/v1alpha4</span><br><span class="line">nodes:</span><br><span class="line">- role: control-plane</span><br><span class="line">- role: control-plane</span><br><span class="line">- role: control-plane</span><br><span class="line">- role: worker</span><br><span class="line">- role: worker</span><br><span class="line">- role: worker</span><br></pre></td></tr></table></figure>
+
+<h3 id="将-node-的端口映射到主机"><a href="#将-node-的端口映射到主机" class="headerlink" title="将 node 的端口映射到主机"></a>将 node 的端口映射到主机</h3><p>可以通过<code>extraPortMappings</code>将 node 的端口映射到主机</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line">kind: Cluster</span><br><span class="line">apiVersion: kind.x-k8s.io/v1alpha4</span><br><span class="line">nodes:</span><br><span class="line">- role: control-plane</span><br><span class="line">  extraPortMappings:</span><br><span class="line">  - containerPort: 80</span><br><span class="line">    hostPort: 80</span><br><span class="line">    listenAddress: &quot;0.0.0.0&quot; # Optional, defaults to &quot;0.0.0.0&quot;</span><br><span class="line">    protocol: udp # Optional, defaults to tcp</span><br></pre></td></tr></table></figure>
+
+<h3 id="指定-Kubernetes-的版本"><a href="#指定-Kubernetes-的版本" class="headerlink" title="指定 Kubernetes 的版本"></a>指定 Kubernetes 的版本</h3><p>可以通过设置 node 的容器镜像版本运行指定版本的 kubernetes 群集。可以在<a target="_blank" rel="noopener" href="https://github.com/kubernetes-sigs/kind/releases">官方 release 页面中</a>中查找需要镜像 tag，带上 <code>sha256</code> shasum，例如：</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line">kind: Cluster</span><br><span class="line">apiVersion: kind.x-k8s.io/v1alpha4</span><br><span class="line">nodes:</span><br><span class="line">- role: control-plane</span><br><span class="line">  image: kindest/node:v1.16.4@sha256:b91a2c2317a000f3a783489dfb755064177dbc3a0b2f4147d50f04825d016f55</span><br><span class="line">- role: worker</span><br><span class="line">  image: kindest/node:v1.16.4@sha256:b91a2c2317a000f3a783489dfb755064177dbc3a0b2f4147d50f04825d016f55</span><br></pre></td></tr></table></figure>
+
+<h3 id="IPv6-clusters"><a href="#IPv6-clusters" class="headerlink" title="IPv6 clusters"></a>IPv6 clusters</h3><p><code>kind</code>目前支持 IPv6 单栈群集，前提是运行 Docker 的主机支持 IPv6，双栈支持即将到来, 大多数操作系统&#x2F;发行版支持 IPv6，Linux 上通过以下命令查看：</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">sudo sysctl net.ipv6.conf.all.disable_ipv6</span><br></pre></td></tr></table></figure>
+
+<p>显示如下，表明主机启用了 IPv6：</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">net.ipv6.conf.all.disable_ipv6 = 0</span><br></pre></td></tr></table></figure>
+
+<p>如果 Docker 运行在 Windows 或者 Mac 上，IPv6 端口转发不起作用，需要指定 API Server 使用 IPv4 端口转发：</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line"># an ipv6 cluster</span><br><span class="line">kind: Cluster</span><br><span class="line">apiVersion: kind.x-k8s.io/v1alpha4</span><br><span class="line">networking:</span><br><span class="line">  ipFamily: ipv6</span><br><span class="line">  apiServerAddress: 127.0.0.1</span><br></pre></td></tr></table></figure>
+
+<p>在 Linux 上只需要这样:</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line"># an ipv6 cluster</span><br><span class="line">kind: Cluster</span><br><span class="line">apiVersion: kind.x-k8s.io/v1alpha4</span><br><span class="line">networking:</span><br><span class="line">  ipFamily: ipv6</span><br></pre></td></tr></table></figure>
+
+<h3 id="导出-Cluster-日志"><a href="#导出-Cluster-日志" class="headerlink" title="导出 Cluster 日志"></a>导出 Cluster 日志</h3><p>从默认 cluster (名称为 <code>kind</code>)导出日志：</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">kind export logs</span><br><span class="line">Exported logs to: /tmp/396758314</span><br></pre></td></tr></table></figure>
+
+<p>切换群集加上 <code>--name</code> 参数。</p>
+<p>默认日志导出到 &#x2F;tmp 目录下，可以指定导出的目录，例如：</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">kind export logs ./somedir</span><br><span class="line">Exported logs to: ./somedir</span><br></pre></td></tr></table></figure>
+
+<p>日志文件结构如下：</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br></pre></td><td class="code"><pre><span class="line">.</span><br><span class="line">├── docker-info.txt</span><br><span class="line">└── kind-control-plane/</span><br><span class="line">    ├── containers</span><br><span class="line">    ├── docker.log</span><br><span class="line">    ├── inspect.json</span><br><span class="line">    ├── journal.log</span><br><span class="line">    ├── kubelet.log</span><br><span class="line">    ├── kubernetes-version.txt</span><br><span class="line">    └── pods/</span><br></pre></td></tr></table></figure>
+
+<h2 id="6-配置概述"><a href="#6-配置概述" class="headerlink" title="6. 配置概述"></a>6. 配置概述</h2><h3 id="6-1-入门"><a href="#6-1-入门" class="headerlink" title="6.1 入门"></a>6.1 入门</h3><p>在创建 Kind 群集时，需要通过一个 <a target="_blank" rel="noopener" href="https://yaml.org/">YAML</a> 配置文件来自定义群集配置。</p>
+<p>一个最小化的配置如下:</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">kind: Cluster</span><br><span class="line">apiVersion: kind.x-k8s.io/v1alpha4</span><br></pre></td></tr></table></figure>
+
+<p>将配置文件保存为 <code>config.yaml</code>，通过运行命令 <code>kind create cluster --config=config.yaml</code> 来创建群集。</p>
+<h3 id="6-2-Cluster-Wide-选项"><a href="#6-2-Cluster-Wide-选项" class="headerlink" title="6.2 Cluster-Wide 选项"></a>6.2 Cluster-Wide 选项</h3><p>以下全局选项可用，并非所有的选项列入文档，可以关注官网文档的更新。</p>
+<h4 id="Networking"><a href="#Networking" class="headerlink" title="Networking"></a>Networking</h4><p>关于网络的配置选项。</p>
+<h5 id="IP-Family"><a href="#IP-Family" class="headerlink" title="IP Family"></a>IP Family</h5><p>IPv6 (and soon dual-stack!) clusters：</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">kind: Cluster</span><br><span class="line">apiVersion: kind.x-k8s.io/v1alpha4</span><br><span class="line">networking:</span><br><span class="line">  ipFamily: ipv6</span><br></pre></td></tr></table></figure>
+
+<p>上节 “IPv6 Clusters” 中有更详细的描述。</p>
+<h5 id="API-Server"><a href="#API-Server" class="headerlink" title="API Server"></a>API Server</h5><p>自定义 API Server 侦听地址和端口：</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br></pre></td><td class="code"><pre><span class="line">kind: Cluster</span><br><span class="line">apiVersion: kind.x-k8s.io/v1alpha4</span><br><span class="line">networking:</span><br><span class="line">  # WARNING: It is _strongly_ recommended that you keep this the default</span><br><span class="line">  # (127.0.0.1) for security reasons. However it is possible to change this.</span><br><span class="line">  apiServerAddress: &quot;127.0.0.1&quot;</span><br><span class="line">  # By default the API server listens on a random open port.</span><br><span class="line">  # You may choose a specific port but probably don&#x27;t need to in most cases.</span><br><span class="line">  # Using a random port makes it easier to spin up multiple clusters.</span><br><span class="line">  apiServerPort: 6443</span><br></pre></td></tr></table></figure>
+
+<h5 id="Pod-Subnet"><a href="#Pod-Subnet" class="headerlink" title="Pod Subnet"></a>Pod Subnet</h5><p>自定义 pod IP 地址范围：</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">kind: Cluster</span><br><span class="line">apiVersion: kind.x-k8s.io/v1alpha4</span><br><span class="line">networking:</span><br><span class="line">  podSubnet: &quot;10.244.0.0/16&quot;</span><br></pre></td></tr></table></figure>
+
+<h5 id="Service-Subnet"><a href="#Service-Subnet" class="headerlink" title="Service Subnet"></a>Service Subnet</h5><p>自定义 service IP 地址范围：</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">kind: Cluster</span><br><span class="line">apiVersion: kind.x-k8s.io/v1alpha4</span><br><span class="line">networking:</span><br><span class="line">  serviceSubnet: &quot;10.96.0.0/12&quot;</span><br></pre></td></tr></table></figure>
+
+<h5 id="禁用默认-CNI"><a href="#禁用默认-CNI" class="headerlink" title="禁用默认 CNI"></a>禁用默认 CNI</h5><p>KIND 附带了一个简单的网络实现（“kindnetd”），它基于标准 CNI 插件（<code>ptp</code>，<code>host local</code>，…）和简单的 netlink 路由。</p>
+<p>这个 CNI 也处理 IP 伪装。</p>
+<p>您可以禁用默认值以安装其他 CNI。这是一个高级用户功能，支持有限，但已知许多常见的 CNI 清单可以工作，例如 Calico。</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">kind: Cluster</span><br><span class="line">apiVersion: kind.x-k8s.io/v1alpha4</span><br><span class="line">networking:</span><br><span class="line">  # the default CNI will not be installed</span><br><span class="line">  disableDefaultCNI: true</span><br></pre></td></tr></table></figure>
+
+<h5 id="kube-proxy-mode"><a href="#kube-proxy-mode" class="headerlink" title="kube-proxy mode"></a>kube-proxy mode</h5><p>kube-proxy mode 可选 iptables 和 ipvs，默认使用的 iptables。</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">kind: Cluster</span><br><span class="line">apiVersion: kind.x-k8s.io/v1alpha4</span><br><span class="line">networking:</span><br><span class="line">  kubeProxyMode: &quot;ipvs&quot;</span><br></pre></td></tr></table></figure>
+
+<h4 id="Nodes"><a href="#Nodes" class="headerlink" title="Nodes"></a>Nodes</h4><p><code>kind: Cluster</code> 的 <code>nodes</code> 字段如果不设置，默认时这样的（即仅有一个 control plane）:</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">nodes:</span><br><span class="line"># one node hosting a control plane</span><br><span class="line">- role: control-plane</span><br></pre></td></tr></table></figure>
+
+<p>多节点群集示例如下：</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br></pre></td><td class="code"><pre><span class="line">kind: Cluster</span><br><span class="line">apiVersion: kind.x-k8s.io/v1alpha4</span><br><span class="line"># One control plane node and three &quot;workers&quot;.</span><br><span class="line">#</span><br><span class="line"># While these will not add more real compute capacity and</span><br><span class="line"># have limited isolation, this can be useful for testing</span><br><span class="line"># rolling updates etc.</span><br><span class="line">#</span><br><span class="line"># The API-server and other control plane components will be</span><br><span class="line"># on the control-plane node.</span><br><span class="line">#</span><br><span class="line"># You probably don&#x27;t need this unless you are testing Kubernetes itself.</span><br><span class="line">nodes:</span><br><span class="line">- role: control-plane</span><br><span class="line">- role: worker</span><br><span class="line">- role: worker</span><br><span class="line">- role: worker</span><br></pre></td></tr></table></figure>
+
+<p>可以通过设置 node 的容器镜像版本运行指定版本的 kubernetes 群集。可以在<a target="_blank" rel="noopener" href="https://github.com/kubernetes-sigs/kind/releases">官方 release 页面中</a>中查找需要镜像 tag，带上 <code>sha256</code> shasum，例如：</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line">kind: Cluster</span><br><span class="line">apiVersion: kind.x-k8s.io/v1alpha4</span><br><span class="line">nodes:</span><br><span class="line">- role: control-plane</span><br><span class="line">- role: worker</span><br><span class="line">  image: kindest/node:v1.16.4@sha256:b91a2c2317a000f3a783489dfb755064177dbc3a0b2f4147d50f04825d016f55</span><br></pre></td></tr></table></figure>
+
+<h3 id="6-3-Per-Node-选项"><a href="#6-3-Per-Node-选项" class="headerlink" title="6.3 Per-Node 选项"></a>6.3 Per-Node 选项</h3><p>以下选项适用于 <code>nodes</code>，并非所有的选项列入文档，可以关注官网文档的更新。</p>
+<h4 id="Extra-Mounts"><a href="#Extra-Mounts" class="headerlink" title="Extra Mounts"></a>Extra Mounts</h4><p>附加挂载可以用来将主机上的存储挂载到 Node 上，用于持久保存数据。</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">kind: ClusterapiVersion: kind.x-k8s.io/v1alpha4nodes:- role: control-plane  # add a mount from /path/to/my/files on the host to /files on the node  extraMounts:  - hostPath: /path/to/my/files/    containerPath: /files</span><br></pre></td></tr></table></figure>
+
+<h4 id="Extra-Port-Mappings"><a href="#Extra-Port-Mappings" class="headerlink" title="Extra Port Mappings"></a>Extra Port Mappings</h4><p>附加端口映射可以将端口转发到 Kind 节点。这是一个跨平台的选项，可以将流量引入 Kind 群集。</p>
+<p>使用 Linux 上的 docker，您可以简单地将流量从主机发送到节点 IP，但要在 macOS 和 Windows，您需要使用这些设置才能实现。</p>
+<p>另外也可以使用 ingress 转发流量。</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">kind: ClusterapiVersion: kind.x-k8s.io/v1alpha4nodes:- role: control-plane  # port forward 80 on the host to 80 on this node  extraPortMappings:  - containerPort: 80    hostPort: 80    # optional: set the bind address on the host    # 0.0.0.0 is the current default    listenAddress: &quot;127.0.0.1&quot;    # optional: set the protocol to one of TCP, UDP, SCTP.    # TCP is the default    protocol: TCP</span><br></pre></td></tr></table></figure>
+
+<h4 id="Kubeadm-Config-Patches"><a href="#Kubeadm-Config-Patches" class="headerlink" title="Kubeadm Config Patches"></a>Kubeadm Config Patches</h4><p>KIND 使用 <a target="_blank" rel="noopener" href="https://kind.sigs.k8s.io/docs/design/principles/#leverage-existing-tooling"><code>kubeadm</code></a> 配置群集节点。</p>
+<p>KIND 在第一个控制平面节点上运行“kubeadm init”，该节点可以使用 kubeadm <a target="_blank" rel="noopener" href="https://kubernetes.io/docs/reference/setup-tools/kubeadm/kubeadm-init/#config-file">InitConfiguration</a> (<a target="_blank" rel="noopener" href="https://godoc.org/k8s.io/kubernetes/cmd/kubeadm/app/apis/kubeadm/v1beta2#InitConfiguration">spec</a>) 进行自定义配置。</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">kind: ClusterapiVersion: kind.x-k8s.io/v1alpha4nodes:- role: control-plane  kubeadmConfigPatches:  - |    kind: InitConfiguration    nodeRegistration:      kubeletExtraArgs:        node-labels: &quot;my-label=true&quot;</span><br></pre></td></tr></table></figure>
+
+<p>在 KIND 群集其他节点配置中，包括 worker 或者 control-plane (in HA mode), KIND 运行 <code>kubeadm join</code> 命令参数，可以通过 <a target="_blank" rel="noopener" href="https://kubernetes.io/docs/reference/setup-tools/kubeadm/kubeadm-join/#config-file">JoinConfiguration</a> (<a target="_blank" rel="noopener" href="https://godoc.org/k8s.io/kubernetes/cmd/kubeadm/app/apis/kubeadm/v1beta2#JoinConfiguration">spec</a>) 进行自定义配置。</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">kind: ClusterapiVersion: kind.x-k8s.io/v1alpha4nodes:- role: control-plane- role: worker- role: worker  kubeadmConfigPatches:  - |    kind: JoinConfiguration    nodeRegistration:      kubeletExtraArgs:        node-labels: &quot;my-label2=true&quot;- role: control-plane  kubeadmConfigPatches:  - |    kind: JoinConfiguration    nodeRegistration:      kubeletExtraArgs:        node-labels: &quot;my-label3=true&quot;</span><br></pre></td></tr></table></figure>
+
+<h2 id="7-部署-Dashboard"><a href="#7-部署-Dashboard" class="headerlink" title="7. 部署 Dashboard"></a>7. 部署 Dashboard</h2><p>直接部署 Dashboard，运行命令:</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">$ kubectl apply -f https://raw.githubusercontent.com/kubernetes/dashboard/v2.0.0/aio/deploy/recommended.yaml</span><br></pre></td></tr></table></figure>
+
+<p>验证：</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">$ kubectl get po,svc -n kubernetes-dashboardNAME                                             READY   STATUS    RESTARTS   AGEpod/dashboard-metrics-scraper-7b59f7d4df-f7j7h   1/1     Running   0          90spod/kubernetes-dashboard-74d688b6bc-s9wts        1/1     Running   0          89sNAME                                TYPE        CLUSTER-IP     EXTERNAL-IP   PORT(S)    AGEservice/dashboard-metrics-scraper   ClusterIP   10.96.228.22   &lt;none&gt;        8000/TCP   90sservice/kubernetes-dashboard        ClusterIP   10.96.160.22   &lt;none&gt;        443/TCP    91s</span><br></pre></td></tr></table></figure>
+
+<p>创建 <code>ClusterRoleBinding</code> 获得群集 admin 访问权限：</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">$ kubectl create clusterrolebinding default-admin --clusterrole cluster-admin --serviceaccount=default:defaultclusterrolebinding.rbac.authorization.k8s.io/default-admin created</span><br></pre></td></tr></table></figure>
+
+<p>创建登录 Dashboard 的 token：</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">$ token=$(kubectl get secrets -o jsonpath=&quot;&#123;.items[?(@.metadata.annotations[&#x27;kubernetes\.io/service-account\.name&#x27;]==&#x27;default&#x27;)].data.token&#125;&quot;|base64 --decode)</span><br></pre></td></tr></table></figure>
+
+<p>使用 <code>echo</code> 显示 token：</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">$ echo $token</span><br></pre></td></tr></table></figure>
+
+<p>记得保存一下 token</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">$ echo $token &gt; dashboard-token.txt$ cat dashboard-token.txt</span><br></pre></td></tr></table></figure>
+
+<p>使用 kubectl 命令访问 Dashboard，命令如下:</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">$ kubectl proxyStarting to serve on 127.0.0.1:8001</span><br></pre></td></tr></table></figure>
+
+<p>点击 <a target="_blank" rel="noopener" href="http://localhost:8001/api/v1/namespaces/kubernetes-dashboard/services/https:kubernetes-dashboard:/proxy/">Kubernetes Dashboard</a> 使用上述 token 登录 Dashboard</p>
+<p>也可以通过 ingress 来访问 Dashboard。</p>
+<h2 id="8-部署-ingress"><a href="#8-部署-ingress" class="headerlink" title="8. 部署 ingress"></a>8. 部署 ingress</h2><p>在创建群集时，需要使用 KIND 的 extraPortMapping 配置选项将端口从主机转发到运行在节点上的入口控制器。</p>
+<p>然后部署一个 Ingress controller，已知以下几个 ingress controllers 可以支持 kind：</p>
+<ul>
+<li><a target="_blank" rel="noopener" href="https://kind.sigs.k8s.io/docs/user/ingress/#ambassador">Ambassador</a></li>
+<li><a target="_blank" rel="noopener" href="https://kind.sigs.k8s.io/docs/user/ingress/#contour">Contour</a></li>
+<li><a target="_blank" rel="noopener" href="https://kind.sigs.k8s.io/docs/user/ingress/#ingress-nginx">Ingress NGINX</a></li>
+</ul>
+<p>这里以 ingress-nginx 为例：</p>
+<h3 id="创建群集-1"><a href="#创建群集-1" class="headerlink" title="创建群集"></a>创建群集</h3><p>使用 extraPortMappings 和 node-labels 配置选项创建一个群集。</p>
+<ul>
+<li><strong>extraPortMappings</strong> 允许本地主机转发请求到 Ingress controller 的 80&#x2F;443 端口</li>
+<li><strong>node-labels</strong> 允许 ingress controller 运行在指定的 node 上</li>
+</ul>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">cat &lt;&lt;EOF | kind create cluster --config=-kind: ClusterapiVersion: kind.x-k8s.io/v1alpha4nodes:- role: control-plane  kubeadmConfigPatches:  - |    kind: InitConfiguration    nodeRegistration:      kubeletExtraArgs:        node-labels: &quot;ingress-ready=true&quot;  extraPortMappings:  - containerPort: 80    hostPort: 80    protocol: TCP  - containerPort: 443    hostPort: 443    protocol: TCPEOF</span><br></pre></td></tr></table></figure>
+
+<h3 id="Ingress-NGINX"><a href="#Ingress-NGINX" class="headerlink" title="Ingress NGINX"></a>Ingress NGINX</h3><figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">wget -O kind-ingress-nginx.yaml https://raw.githubusercontent.com/kubernetes/ingress-nginx/master/deploy/static/provider/kind/deploy.yamlkubectl apply -f kind-ingress-nginx.yaml</span><br></pre></td></tr></table></figure>
+
+<p>注意：image 来自 k8s.gcr.io，需要文明访问。</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">#image: k8s.gcr.io/ingress-nginx/controller:v0.35.0@sha256:fc4979d8b8443a831c9789b5155cded454cb7de737a8b727bc2ba0106d2eae8bimage: scofield/ingress-nginx-controller:v0.35.0</span><br></pre></td></tr></table></figure>
+
+<p>执行如下命令等待部署完成：</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">kubectl wait --namespace ingress-nginx \  --for=condition=ready pod \  --selector=app.kubernetes.io/component=controller \  --timeout=90s</span><br></pre></td></tr></table></figure>
+
+<p>或者执行命令验证部署：</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">$ kubectl get po,svc -n ingress-nginx$ kubectl get po,svc -n ingress-nginx -o wide</span><br></pre></td></tr></table></figure>
+
+<h3 id="测试-Ingress"><a href="#测试-Ingress" class="headerlink" title="测试 Ingress"></a>测试 Ingress</h3><p>使用官方提供的 http-echo 应用来测试，内容如下：</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">kind: PodapiVersion: v1metadata:  name: foo-app  labels:    app: foospec:  containers:  - name: foo-app    image: hashicorp/http-echo:0.2.3    args:    - &quot;-text=foo&quot;---kind: ServiceapiVersion: v1metadata:  name: foo-servicespec:  selector:    app: foo  ports:  # Default port used by the image  - port: 5678---kind: PodapiVersion: v1metadata:  name: bar-app  labels:    app: barspec:  containers:  - name: bar-app    image: hashicorp/http-echo:0.2.3    args:    - &quot;-text=bar&quot;---kind: ServiceapiVersion: v1metadata:  name: bar-servicespec:  selector:    app: bar  ports:  # Default port used by the image  - port: 5678---apiVersion: networking.k8s.io/v1beta1kind: Ingressmetadata:  name: example-ingressspec:  rules:  - http:      paths:      - path: /foo        backend:          serviceName: foo-service          servicePort: 5678      - path: /bar        backend:          serviceName: bar-service          servicePort: 5678---</span><br></pre></td></tr></table></figure>
+
+<p>直接应用：</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">kubectl apply -f https://kind.sigs.k8s.io/examples/ingress/usage.yaml</span><br></pre></td></tr></table></figure>
+
+<p>测试效果如下：</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"># should output &quot;foo&quot;curl localhost/foo# should output &quot;bar&quot;curl localhost/bar</span><br></pre></td></tr></table></figure>
+
+<h3 id="ingress-dashboard"><a href="#ingress-dashboard" class="headerlink" title="ingress dashboard"></a>ingress dashboard</h3><p>本例使用受信任的 SSL 证书，通过 ingress 以 https 发布 Dashboard。</p>
+<p>部署受信任的 SSL 证书</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"># 创建 secret，在 ingress 不能直接使用证书需要转换为 secret 才能使用# key 和 cert 都为 PEM 格式，cert 包含证书文件和证书链部分kubectl create secret tls dashboard-ingress-tls --key dashboard-ingress.key --cert dashboard-ingress.crt -n kubernetes-dashboard# 查看 secret 内容kubectl get secret dashboard-ingress-tls -n kubernetes-dashboard -o yaml# 删除命令kubectl delete secret dashboard-ingress-tls -n kubernetes-dashboard</span><br></pre></td></tr></table></figure>
+
+<p>配置 ingress 转发文件</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"># vi dashboard-ingress.yamlapiVersion: extensions/v1beta1kind: Ingressmetadata:  annotations:    nginx.ingress.kubernetes.io/ingress.class: &quot;nginx&quot;    nginx.ingress.kubernetes.io/backend-protocol: &quot;HTTPS&quot;  name: kubernetes-dashboard-ingress  namespace: kubernetes-dashboardspec:  tls:  - secretName: dashboard-ingress-tls #上述创建的secret  rules:    - host: k8s.sysin.cn #域名      http:        paths:        - path: /          backend:            serviceName: kubernetes-dashboard            servicePort: 443</span><br></pre></td></tr></table></figure>
+
+<blockquote>
+<p>host: 对应的域名<br>path: url上下文<br>backend: 后向转发到对应的 serviceName: 和 servicePort:</p>
+</blockquote>
+<p>注意，dashboard 默认使用 https 提供服务，ingress 默认 backend-protocol 使用 http，这里发布成功的关键是要添加 annotations 参数：</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">annotations:</span><br><span class="line">  nginx.ingress.kubernetes.io/ingress.class: &quot;nginx&quot;</span><br><span class="line">  nginx.ingress.kubernetes.io/backend-protocol: &quot;HTTPS&quot;</span><br></pre></td></tr></table></figure>
+
+<p>部署：</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">kubectl apply -f dashboard-ingress.yaml</span><br></pre></td></tr></table></figure>
+
+<p>部署成功后可以通过域名访问：<a target="_blank" rel="noopener" href="https://k8s.sysin.cn/">https://k8s.sysin.cn</a></p>
+<h2 id="9-Istio"><a href="#9-Istio" class="headerlink" title="9. Istio"></a>9. Istio</h2><p>Istio 官方支持部署在 Kind 上，以下为简单示例。</p>
+<p>下载当前版本：</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">$ curl -L https://istio.io/downloadIstio | sh -</span><br></pre></td></tr></table></figure>
+
+<p>下载指定版本：</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">$ curl -L https://istio.io/downloadIstio | ISTIO_VERSION=1.7.0 TARGET_ARCH=x86_64 sh -</span><br></pre></td></tr></table></figure>
+
+<p>切换到 istio 目录:</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">$ cd istio-1.7.0</span><br></pre></td></tr></table></figure>
+
+<p>添加 <code>istioctl</code> 到环境变量 (Linux or macOS):</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">$ export PATH=$PWD/bin:$PATH</span><br></pre></td></tr></table></figure>
+
+<p>安装：</p>
+<p>例如使用 <code>demo</code> <a target="_blank" rel="noopener" href="https://istio.io/latest/docs/setup/additional-setup/config-profiles/">configuration profile</a> 安装</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line">$ istioctl install --set profile=demo</span><br><span class="line">✔ Istio core installed</span><br><span class="line">✔ Istiod installed</span><br><span class="line">✔ Egress gateways installed</span><br><span class="line">✔ Ingress gateways installed</span><br><span class="line">✔ Installation complete</span><br></pre></td></tr></table></figure>
+
+<p>限于篇幅，参看其他文档。</p>
+<h2 id="10-限制"><a href="#10-限制" class="headerlink" title="10. 限制"></a>10. 限制</h2><p>kind 部署 kubernetes 群集相当方便，可以快速部署多个群集。但在群集的配置和更新上有明显弊端，只能通过重新创建群集来配置和更新群集。所以在初始化群集的时候需要考虑好配置选项。</p>
+<h1 id="使用Kind快速创建K8S学习环境-1"><a href="#使用Kind快速创建K8S学习环境-1" class="headerlink" title="使用Kind快速创建K8S学习环境"></a>使用Kind快速创建K8S学习环境</h1><p>原文链接：<a target="_blank" rel="noopener" href="https://sysin.org/article/kind/">kind：Kubernetes in Docker，单机运行 Kubernetes 群集的最佳方案？</a>，查看最新版。</p>
+<p>是否没有足够的机器运行 Kubernetes 测试环境，个人电脑配置不高的话，运行多个节点的虚拟化有点力不从心，国内公有云主机一般不支持嵌套虚拟化，一套 3M+3N 的群集环境成本太高。VMware Fusion 12.0 发布，将 Kind 带入了我们的视野，这是 Google 官方的一个工具，可能是在单机运行 Kubernetes 群集的最佳方案。笔者在一台 1C 2G 的公有云虚机上运行 Kind，也不会因为计算资源有限而无法完成。</p>
+<h2 id="1-简介-1"><a href="#1-简介-1" class="headerlink" title="1. 简介"></a>1. 简介</h2><p>kind 是 Kubernetes in Docker 的简写，是一个使用 Docker 容器作为 Nodes，在本地创建和运行 Kubernetes 群集的工具。适用于在本机创建 Kubernetes 群集环境进行开发和测试。</p>
+<p>官网：<a target="_blank" rel="noopener" href="https://kind.sigs.k8s.io/">https://kind.sigs.k8s.io/</a></p>
+<p>kind 由以下组件构成:</p>
+<ul>
+<li>Go <a target="_blank" rel="noopener" href="https://github.com/kubernetes-sigs/kind/tree/master/pkg">packages</a> implementing <a target="_blank" rel="noopener" href="https://github.com/kubernetes-sigs/kind/tree/master/pkg/cluster">cluster creation</a>, <a target="_blank" rel="noopener" href="https://github.com/kubernetes-sigs/kind/tree/master/pkg/build">image build</a>, etc.</li>
+<li>A command line interface (<a target="_blank" rel="noopener" href="https://github.com/kubernetes-sigs/kind/tree/master/main.go"><code>kind</code></a>) built on these packages.</li>
+<li>Docker <a target="_blank" rel="noopener" href="https://github.com/kubernetes-sigs/kind/tree/master/images">image(s)</a> written to run systemd, Kubernetes, etc.</li>
+<li><a target="_blank" rel="noopener" href="https://github.com/kubernetes/test-infra/tree/master/kubetest"><code>kubetest</code></a> integration also built on these packages (WIP)</li>
+</ul>
+<p>kind 使用 <a target="_blank" rel="noopener" href="https://kubernetes.io/docs/reference/setup-tools/kubeadm/kubeadm/">kubeadm</a> 创建和启动群集节点。</p>
+<h2 id="2-kind-架构-1"><a href="#2-kind-架构-1" class="headerlink" title="2. kind 架构"></a>2. kind 架构</h2><p>kind 官方架构图如下，它将 docker 容器作为 kubernetes 的 “node”，并在该 “node” 中安装 kubernetes 组件，包括一个或者多个 Control Plane 和 一个或者多个 Work nodes。这就解决了在本机运行多个 node 的问题，而不需要虚拟化。</p>
+<p><a target="_blank" rel="noopener" href="https://sysin.org/article/kind/kind-diagram.png"><img src="https://sysin.org/article/kind/kind-diagram.png" alt="kind"></a></p>
+<h2 id="3-安装-Kind-1"><a href="#3-安装-Kind-1" class="headerlink" title="3. 安装 Kind"></a>3. 安装 Kind</h2><p>(1)、<a target="_blank" rel="noopener" href="https://docs.docker.com/engine/install/">安装 Docker</a>，这是前提条件。</p>
+<p>(2)、<a target="_blank" rel="noopener" href="https://kubernetes.io/docs/tasks/tools/install-kubectl/">安装 kubectl</a>：Kind 本身不需要 kubectl，安装 kubectl 可以在本机直接管理 Kubernetes 群集。</p>
+<p>(3)、安装 kind：</p>
+<p>查看版本：Github <a target="_blank" rel="noopener" href="https://github.com/kubernetes-sigs/kind/releases">releases</a> page</p>
+<ul>
+<li><p>Linux：</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">curl -Lo ./kind https://kind.sigs.k8s.io/dl/v0.9.0/kind-linux-amd64chmod +x ./kind#mv ./kind /some-dir-in-your-PATH/kindmv ./kind /usr/local/bin/kind</span><br></pre></td></tr></table></figure>
+</li>
+<li><p>macOS (homebrew):</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">brew install kind</span><br></pre></td></tr></table></figure>
+
+<p>  或者</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">curl -Lo ./kind https://kind.sigs.k8s.io/dl/v0.9.0/kind-darwin-amd64chmod +x ./kindmv ./kind /usr/local/bin/kind</span><br></pre></td></tr></table></figure></li>
+</ul>
+<p>如果安装了 VMware Fusion 12.0，在启动 vctl（<code>vctl system start</code>）之后，直接运行 <code>vctl kind</code>。</p>
+<ul>
+<li>Windows：可以支持，不推荐。</li>
+</ul>
+<h2 id="4-操作入门-1"><a href="#4-操作入门-1" class="headerlink" title="4. 操作入门"></a>4. 操作入门</h2><h3 id="创建群集-2"><a href="#创建群集-2" class="headerlink" title="创建群集"></a>创建群集</h3><figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">kind create cluster</span><br></pre></td></tr></table></figure>
+
+<p>默认的群集名称为<code>kind</code>，可以使用参数<code>--name</code>指定创建的群集的名称，可以创建多个群集：</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">kind create cluster --name kind-2</span><br></pre></td></tr></table></figure>
+
+<p>指定 node 镜像版本创建群集</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"># defaultkind create cluster --image kindest/node:latest# 1.19.0kind create cluster --image kindest/node:v1.19.0</span><br></pre></td></tr></table></figure>
+
+<p>多群集切换</p>
+<p>获取群集名称，可以看到下面有两个群集</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">kind get clusterskindkind2</span><br></pre></td></tr></table></figure>
+
+<p>切换群集</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"># 切换到群集`kind`kubectl cluster-info --context kind-kind# 切换到群集`kind-2`kubectl cluster-info --context kind-kind-2</span><br></pre></td></tr></table></figure>
+
+<p>可以通过 <a target="_blank" rel="noopener" href="https://kubernetes.io/docs/concepts/configuration/organize-cluster-access-kubeconfig/">Kubernetes kubeconfig</a> 配置文件来配置默认群集.</p>
+<p>查看节点（默认只有一个 control-plane）</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">kubectl get nodesNAME                 STATUS   ROLES    AGE     VERSIONkind-control-plane   Ready    master   7m51s   v1.19.1</span><br></pre></td></tr></table></figure>
+
+<h3 id="删除群集-1"><a href="#删除群集-1" class="headerlink" title="删除群集"></a>删除群集</h3><p>删除群集<code>kind-2</code></p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">kind delete cluster --name kind-2</span><br></pre></td></tr></table></figure>
+
+<h3 id="将镜像加载到-kind-群集中-1"><a href="#将镜像加载到-kind-群集中-1" class="headerlink" title="将镜像加载到 kind 群集中"></a>将镜像加载到 kind 群集中</h3><p>Kind 群集中的 Docker 镜像可以从互联网直接拉取，如果需要将本机镜像加载到 Kind 群集中，使用如下命令</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">kind load docker-image my-custom-image</span><br></pre></td></tr></table></figure>
+
+<p><code>kind load docker-image my-custom-image --name kind-2</code> (指定群集名称)</p>
+<p><code>kind load image-archive /my-image-archive.tar</code> （加载导出的镜像压缩包）</p>
+<h2 id="5-配置-kind-群集-1"><a href="#5-配置-kind-群集-1" class="headerlink" title="5. 配置 kind 群集"></a>5. 配置 kind 群集</h2><p>可以查看示例配置文件 <a target="_blank" rel="noopener" href="https://raw.githubusercontent.com/kubernetes-sigs/kind/master/site/content/docs/user/kind-example-config.yaml">kind-example-config</a>，创建群集时使用 <code>--config</code> 参数:</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">kind create cluster --config kind-example-config.yaml</span><br></pre></td></tr></table></figure>
+
+<p>示例配置文件如下：</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"># this config file contains all config fields with comments# NOTE: this is not a particularly useful config filekind: ClusterapiVersion: kind.x-k8s.io/v1alpha4# patch the generated kubeadm config with some extra settingskubeadmConfigPatches:- |  apiVersion: kubelet.config.k8s.io/v1beta1  kind: KubeletConfiguration  evictionHard:    nodefs.available: &quot;0%&quot;# patch it further using a JSON 6902 patchkubeadmConfigPatchesJSON6902:- group: kubeadm.k8s.io  version: v1beta2  kind: ClusterConfiguration  patch: |    - op: add      path: /apiServer/certSANs/-      value: my-hostname# 1 control plane node and 3 workersnodes:# the control plane node config- role: control-plane# the three workers- role: worker- role: worker- role: worker</span><br></pre></td></tr></table></figure>
+
+<h3 id="Multi-node-clusters-1"><a href="#Multi-node-clusters-1" class="headerlink" title="Multi-node clusters"></a>Multi-node clusters</h3><p>示例如下：</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"># three node (two workers) cluster configkind: ClusterapiVersion: kind.x-k8s.io/v1alpha4nodes:- role: control-plane- role: worker- role: worker</span><br></pre></td></tr></table></figure>
+
+<h3 id="Control-plane-HA-1"><a href="#Control-plane-HA-1" class="headerlink" title="Control-plane HA"></a>Control-plane HA</h3><p>示例如下：</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"># a cluster with 3 control-plane nodes and 3 workerskind: ClusterapiVersion: kind.x-k8s.io/v1alpha4nodes:- role: control-plane- role: control-plane- role: control-plane- role: worker- role: worker- role: worker</span><br></pre></td></tr></table></figure>
+
+<h3 id="将-node-的端口映射到主机-1"><a href="#将-node-的端口映射到主机-1" class="headerlink" title="将 node 的端口映射到主机"></a>将 node 的端口映射到主机</h3><p>可以通过<code>extraPortMappings</code>将 node 的端口映射到主机</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">kind: ClusterapiVersion: kind.x-k8s.io/v1alpha4nodes:- role: control-plane  extraPortMappings:  - containerPort: 80    hostPort: 80    listenAddress: &quot;0.0.0.0&quot; # Optional, defaults to &quot;0.0.0.0&quot;    protocol: udp # Optional, defaults to tcp</span><br></pre></td></tr></table></figure>
+
+<h3 id="指定-Kubernetes-的版本-1"><a href="#指定-Kubernetes-的版本-1" class="headerlink" title="指定 Kubernetes 的版本"></a>指定 Kubernetes 的版本</h3><p>可以通过设置 node 的容器镜像版本运行指定版本的 kubernetes 群集。可以在<a target="_blank" rel="noopener" href="https://github.com/kubernetes-sigs/kind/releases">官方 release 页面中</a>中查找需要镜像 tag，带上 <code>sha256</code> shasum，例如：</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">kind: ClusterapiVersion: kind.x-k8s.io/v1alpha4nodes:- role: control-plane  image: kindest/node:v1.16.4@sha256:b91a2c2317a000f3a783489dfb755064177dbc3a0b2f4147d50f04825d016f55- role: worker  image: kindest/node:v1.16.4@sha256:b91a2c2317a000f3a783489dfb755064177dbc3a0b2f4147d50f04825d016f55</span><br></pre></td></tr></table></figure>
+
+<h3 id="IPv6-clusters-1"><a href="#IPv6-clusters-1" class="headerlink" title="IPv6 clusters"></a>IPv6 clusters</h3><p><code>kind</code>目前支持 IPv6 单栈群集，前提是运行 Docker 的主机支持 IPv6，双栈支持即将到来, 大多数操作系统&#x2F;发行版支持 IPv6，Linux 上通过以下命令查看：</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">sudo sysctl net.ipv6.conf.all.disable_ipv6</span><br></pre></td></tr></table></figure>
+
+<p>显示如下，表明主机启用了 IPv6：</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">net.ipv6.conf.all.disable_ipv6 = 0</span><br></pre></td></tr></table></figure>
+
+<p>如果 Docker 运行在 Windows 或者 Mac 上，IPv6 端口转发不起作用，需要指定 API Server 使用 IPv4 端口转发：</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"># an ipv6 clusterkind: ClusterapiVersion: kind.x-k8s.io/v1alpha4networking:  ipFamily: ipv6  apiServerAddress: 127.0.0.1</span><br></pre></td></tr></table></figure>
+
+<p>在 Linux 上只需要这样:</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line"># an ipv6 cluster</span><br><span class="line">kind: Cluster</span><br><span class="line">apiVersion: kind.x-k8s.io/v1alpha4</span><br><span class="line">networking:</span><br><span class="line">  ipFamily: ipv6</span><br></pre></td></tr></table></figure>
+
+<h3 id="导出-Cluster-日志-1"><a href="#导出-Cluster-日志-1" class="headerlink" title="导出 Cluster 日志"></a>导出 Cluster 日志</h3><p>从默认 cluster (名称为 <code>kind</code>)导出日志：</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">kind export logs</span><br><span class="line">Exported logs to: /tmp/396758314</span><br></pre></td></tr></table></figure>
+
+<p>切换群集加上 <code>--name</code> 参数。</p>
+<p>默认日志导出到 &#x2F;tmp 目录下，可以指定导出的目录，例如：</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">kind export logs ./somedir</span><br><span class="line">Exported logs to: ./somedir</span><br></pre></td></tr></table></figure>
+
+<p>日志文件结构如下：</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br></pre></td><td class="code"><pre><span class="line">.</span><br><span class="line">├── docker-info.txt</span><br><span class="line">└── kind-control-plane/</span><br><span class="line">    ├── containers</span><br><span class="line">    ├── docker.log</span><br><span class="line">    ├── inspect.json</span><br><span class="line">    ├── journal.log</span><br><span class="line">    ├── kubelet.log</span><br><span class="line">    ├── kubernetes-version.txt</span><br><span class="line">    └── pods/</span><br></pre></td></tr></table></figure>
+
+<h2 id="6-配置概述-1"><a href="#6-配置概述-1" class="headerlink" title="6. 配置概述"></a>6. 配置概述</h2><h3 id="6-1-入门-1"><a href="#6-1-入门-1" class="headerlink" title="6.1 入门"></a>6.1 入门</h3><p>在创建 Kind 群集时，需要通过一个 <a target="_blank" rel="noopener" href="https://yaml.org/">YAML</a> 配置文件来自定义群集配置。</p>
+<p>一个最小化的配置如下:</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">kind: ClusterapiVersion: kind.x-k8s.io/v1alpha4</span><br></pre></td></tr></table></figure>
+
+<p>将配置文件保存为 <code>config.yaml</code>，通过运行命令 <code>kind create cluster --config=config.yaml</code> 来创建群集。</p>
+<h3 id="6-2-Cluster-Wide-选项-1"><a href="#6-2-Cluster-Wide-选项-1" class="headerlink" title="6.2 Cluster-Wide 选项"></a>6.2 Cluster-Wide 选项</h3><p>以下全局选项可用，并非所有的选项列入文档，可以关注官网文档的更新。</p>
+<h4 id="Networking-1"><a href="#Networking-1" class="headerlink" title="Networking"></a>Networking</h4><p>关于网络的配置选项。</p>
+<h5 id="IP-Family-1"><a href="#IP-Family-1" class="headerlink" title="IP Family"></a>IP Family</h5><p>IPv6 (and soon dual-stack!) clusters：</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">kind: ClusterapiVersion: kind.x-k8s.io/v1alpha4networking:  ipFamily: ipv6</span><br></pre></td></tr></table></figure>
+
+<p>上节 “IPv6 Clusters” 中有更详细的描述。</p>
+<h5 id="API-Server-1"><a href="#API-Server-1" class="headerlink" title="API Server"></a>API Server</h5><p>自定义 API Server 侦听地址和端口：</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">kind: ClusterapiVersion: kind.x-k8s.io/v1alpha4networking:  # WARNING: It is _strongly_ recommended that you keep this the default  # (127.0.0.1) for security reasons. However it is possible to change this.  apiServerAddress: &quot;127.0.0.1&quot;  # By default the API server listens on a random open port.  # You may choose a specific port but probably don&#x27;t need to in most cases.  # Using a random port makes it easier to spin up multiple clusters.  apiServerPort: 6443</span><br></pre></td></tr></table></figure>
+
+<h5 id="Pod-Subnet-1"><a href="#Pod-Subnet-1" class="headerlink" title="Pod Subnet"></a>Pod Subnet</h5><p>自定义 pod IP 地址范围：</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">kind: ClusterapiVersion: kind.x-k8s.io/v1alpha4networking:  podSubnet: &quot;10.244.0.0/16&quot;</span><br></pre></td></tr></table></figure>
+
+<h5 id="Service-Subnet-1"><a href="#Service-Subnet-1" class="headerlink" title="Service Subnet"></a>Service Subnet</h5><p>自定义 service IP 地址范围：</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">kind: ClusterapiVersion: kind.x-k8s.io/v1alpha4networking:  serviceSubnet: &quot;10.96.0.0/12&quot;</span><br></pre></td></tr></table></figure>
+
+<h5 id="禁用默认-CNI-1"><a href="#禁用默认-CNI-1" class="headerlink" title="禁用默认 CNI"></a>禁用默认 CNI</h5><p>KIND 附带了一个简单的网络实现（“kindnetd”），它基于标准 CNI 插件（<code>ptp</code>，<code>host local</code>，…）和简单的 netlink 路由。</p>
+<p>这个 CNI 也处理 IP 伪装。</p>
+<p>您可以禁用默认值以安装其他 CNI。这是一个高级用户功能，支持有限，但已知许多常见的 CNI 清单可以工作，例如 Calico。</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">kind: ClusterapiVersion: kind.x-k8s.io/v1alpha4networking:  # the default CNI will not be installed  disableDefaultCNI: true</span><br></pre></td></tr></table></figure>
+
+<h5 id="kube-proxy-mode-1"><a href="#kube-proxy-mode-1" class="headerlink" title="kube-proxy mode"></a>kube-proxy mode</h5><p>kube-proxy mode 可选 iptables 和 ipvs，默认使用的 iptables。</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">kind: ClusterapiVersion: kind.x-k8s.io/v1alpha4networking:  kubeProxyMode: &quot;ipvs&quot;</span><br></pre></td></tr></table></figure>
+
+<h4 id="Nodes-1"><a href="#Nodes-1" class="headerlink" title="Nodes"></a>Nodes</h4><p><code>kind: Cluster</code> 的 <code>nodes</code> 字段如果不设置，默认时这样的（即仅有一个 control plane）:</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">nodes:# one node hosting a control plane- role: control-plane</span><br></pre></td></tr></table></figure>
+
+<p>多节点群集示例如下：</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">kind: ClusterapiVersion: kind.x-k8s.io/v1alpha4# One control plane node and three &quot;workers&quot;.## While these will not add more real compute capacity and# have limited isolation, this can be useful for testing# rolling updates etc.## The API-server and other control plane components will be# on the control-plane node.## You probably don&#x27;t need this unless you are testing Kubernetes itself.nodes:- role: control-plane- role: worker- role: worker- role: worker</span><br></pre></td></tr></table></figure>
+
+<p>可以通过设置 node 的容器镜像版本运行指定版本的 kubernetes 群集。可以在<a target="_blank" rel="noopener" href="https://github.com/kubernetes-sigs/kind/releases">官方 release 页面中</a>中查找需要镜像 tag，带上 <code>sha256</code> shasum，例如：</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">kind: ClusterapiVersion: kind.x-k8s.io/v1alpha4nodes:- role: control-plane- role: worker  image: kindest/node:v1.16.4@sha256:b91a2c2317a000f3a783489dfb755064177dbc3a0b2f4147d50f04825d016f55</span><br></pre></td></tr></table></figure>
+
+<h3 id="6-3-Per-Node-选项-1"><a href="#6-3-Per-Node-选项-1" class="headerlink" title="6.3 Per-Node 选项"></a>6.3 Per-Node 选项</h3><p>以下选项适用于 <code>nodes</code>，并非所有的选项列入文档，可以关注官网文档的更新。</p>
+<h4 id="Extra-Mounts-1"><a href="#Extra-Mounts-1" class="headerlink" title="Extra Mounts"></a>Extra Mounts</h4><p>附加挂载可以用来将主机上的存储挂载到 Node 上，用于持久保存数据。</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">kind: ClusterapiVersion: kind.x-k8s.io/v1alpha4nodes:- role: control-plane  # add a mount from /path/to/my/files on the host to /files on the node  extraMounts:  - hostPath: /path/to/my/files/    containerPath: /files</span><br></pre></td></tr></table></figure>
+
+<h4 id="Extra-Port-Mappings-1"><a href="#Extra-Port-Mappings-1" class="headerlink" title="Extra Port Mappings"></a>Extra Port Mappings</h4><p>附加端口映射可以将端口转发到 Kind 节点。这是一个跨平台的选项，可以将流量引入 Kind 群集。</p>
+<p>使用 Linux 上的 docker，您可以简单地将流量从主机发送到节点 IP，但要在 macOS 和 Windows，您需要使用这些设置才能实现。</p>
+<p>另外也可以使用 ingress 转发流量。</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">kind: ClusterapiVersion: kind.x-k8s.io/v1alpha4nodes:- role: control-plane  # port forward 80 on the host to 80 on this node  extraPortMappings:  - containerPort: 80    hostPort: 80    # optional: set the bind address on the host    # 0.0.0.0 is the current default    listenAddress: &quot;127.0.0.1&quot;    # optional: set the protocol to one of TCP, UDP, SCTP.    # TCP is the default    protocol: TCP</span><br></pre></td></tr></table></figure>
+
+<h4 id="Kubeadm-Config-Patches-1"><a href="#Kubeadm-Config-Patches-1" class="headerlink" title="Kubeadm Config Patches"></a>Kubeadm Config Patches</h4><p>KIND 使用 <a target="_blank" rel="noopener" href="https://kind.sigs.k8s.io/docs/design/principles/#leverage-existing-tooling"><code>kubeadm</code></a> 配置群集节点。</p>
+<p>KIND 在第一个控制平面节点上运行“kubeadm init”，该节点可以使用 kubeadm <a target="_blank" rel="noopener" href="https://kubernetes.io/docs/reference/setup-tools/kubeadm/kubeadm-init/#config-file">InitConfiguration</a> (<a target="_blank" rel="noopener" href="https://godoc.org/k8s.io/kubernetes/cmd/kubeadm/app/apis/kubeadm/v1beta2#InitConfiguration">spec</a>) 进行自定义配置。</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">kind: ClusterapiVersion: kind.x-k8s.io/v1alpha4nodes:- role: control-plane  kubeadmConfigPatches:  - |    kind: InitConfiguration    nodeRegistration:      kubeletExtraArgs:        node-labels: &quot;my-label=true&quot;</span><br></pre></td></tr></table></figure>
+
+<p>在 KIND 群集其他节点配置中，包括 worker 或者 control-plane (in HA mode), KIND 运行 <code>kubeadm join</code> 命令参数，可以通过 <a target="_blank" rel="noopener" href="https://kubernetes.io/docs/reference/setup-tools/kubeadm/kubeadm-join/#config-file">JoinConfiguration</a> (<a target="_blank" rel="noopener" href="https://godoc.org/k8s.io/kubernetes/cmd/kubeadm/app/apis/kubeadm/v1beta2#JoinConfiguration">spec</a>) 进行自定义配置。</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br></pre></td><td class="code"><pre><span class="line">kind: Cluster</span><br><span class="line">apiVersion: kind.x-k8s.io/v1alpha4</span><br><span class="line">nodes:</span><br><span class="line">- role: control-plane</span><br><span class="line">- role: worker</span><br><span class="line">- role: worker</span><br><span class="line">  kubeadmConfigPatches:</span><br><span class="line">  - |</span><br><span class="line">    kind: JoinConfiguration</span><br><span class="line">    nodeRegistration:</span><br><span class="line">      kubeletExtraArgs:</span><br><span class="line">        node-labels: &quot;my-label2=true&quot;</span><br><span class="line">- role: control-plane</span><br><span class="line">  kubeadmConfigPatches:</span><br><span class="line">  - |</span><br><span class="line">    kind: JoinConfiguration</span><br><span class="line">    nodeRegistration:</span><br><span class="line">      kubeletExtraArgs:</span><br><span class="line">        node-labels: &quot;my-label3=true&quot;</span><br></pre></td></tr></table></figure>
+
+<h2 id="7-部署-Dashboard-1"><a href="#7-部署-Dashboard-1" class="headerlink" title="7. 部署 Dashboard"></a>7. 部署 Dashboard</h2><p>直接部署 Dashboard，运行命令:</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">$ kubectl apply -f https://raw.githubusercontent.com/kubernetes/dashboard/v2.0.0/aio/deploy/recommended.yaml</span><br></pre></td></tr></table></figure>
+
+<p>验证：</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line">$ kubectl get po,svc -n kubernetes-dashboard</span><br><span class="line">NAME                                             READY   STATUS    RESTARTS   AGE</span><br><span class="line">pod/dashboard-metrics-scraper-7b59f7d4df-f7j7h   1/1     Running   0          90s</span><br><span class="line">pod/kubernetes-dashboard-74d688b6bc-s9wts        1/1     Running   0          89s</span><br><span class="line">NAME                                TYPE        CLUSTER-IP     EXTERNAL-IP   PORT(S)    AGE</span><br><span class="line">service/dashboard-metrics-scraper   ClusterIP   10.96.228.22   &lt;none&gt;        8000/TCP   90s</span><br><span class="line">service/kubernetes-dashboard        ClusterIP   10.96.160.22   &lt;none&gt;        443/TCP    91s</span><br></pre></td></tr></table></figure>
+
+<p>创建 <code>ClusterRoleBinding</code> 获得群集 admin 访问权限：</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">$ kubectl create clusterrolebinding default-admin --clusterrole cluster-admin --serviceaccount=default:default</span><br><span class="line">clusterrolebinding.rbac.authorization.k8s.io/default-admin created</span><br></pre></td></tr></table></figure>
+
+<p>创建登录 Dashboard 的 token：</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">$ token=$(kubectl get secrets -o jsonpath=&quot;&#123;.items[?(@.metadata.annotations[&#x27;kubernetes\.io/service-account\.name&#x27;]==&#x27;default&#x27;)].data.token&#125;&quot;|base64 --decode)</span><br></pre></td></tr></table></figure>
+
+<p>使用 <code>echo</code> 显示 token：</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">$ echo $token</span><br></pre></td></tr></table></figure>
+
+<p>记得保存一下 token</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">$ echo $token &gt; dashboard-token.txt</span><br><span class="line">$ cat dashboard-token.txt</span><br></pre></td></tr></table></figure>
+
+<p>使用 kubectl 命令访问 Dashboard，命令如下:</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">$ kubectl proxy</span><br><span class="line">Starting to serve on 127.0.0.1:8001</span><br></pre></td></tr></table></figure>
+
+<p>点击 <a target="_blank" rel="noopener" href="http://localhost:8001/api/v1/namespaces/kubernetes-dashboard/services/https:kubernetes-dashboard:/proxy/">Kubernetes Dashboard</a> 使用上述 token 登录 Dashboard</p>
+<p>也可以通过 ingress 来访问 Dashboard。</p>
+<h2 id="8-部署-ingress-1"><a href="#8-部署-ingress-1" class="headerlink" title="8. 部署 ingress"></a>8. 部署 ingress</h2><p>在创建群集时，需要使用 KIND 的 extraPortMapping 配置选项将端口从主机转发到运行在节点上的入口控制器。</p>
+<p>然后部署一个 Ingress controller，已知以下几个 ingress controllers 可以支持 kind：</p>
+<ul>
+<li><a target="_blank" rel="noopener" href="https://kind.sigs.k8s.io/docs/user/ingress/#ambassador">Ambassador</a></li>
+<li><a target="_blank" rel="noopener" href="https://kind.sigs.k8s.io/docs/user/ingress/#contour">Contour</a></li>
+<li><a target="_blank" rel="noopener" href="https://kind.sigs.k8s.io/docs/user/ingress/#ingress-nginx">Ingress NGINX</a></li>
+</ul>
+<p>这里以 ingress-nginx 为例：</p>
+<h3 id="创建群集-3"><a href="#创建群集-3" class="headerlink" title="创建群集"></a>创建群集</h3><p>使用 extraPortMappings 和 node-labels 配置选项创建一个群集。</p>
+<ul>
+<li><strong>extraPortMappings</strong> 允许本地主机转发请求到 Ingress controller 的 80&#x2F;443 端口</li>
+<li><strong>node-labels</strong> 允许 ingress controller 运行在指定的 node 上</li>
+</ul>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br></pre></td><td class="code"><pre><span class="line">cat &lt;&lt;EOF | kind create cluster --config=-</span><br><span class="line">kind: Cluster</span><br><span class="line">apiVersion: kind.x-k8s.io/v1alpha4</span><br><span class="line">nodes:</span><br><span class="line">- role: control-plane</span><br><span class="line">  kubeadmConfigPatches:</span><br><span class="line">  - |</span><br><span class="line">    kind: InitConfiguration</span><br><span class="line">    nodeRegistration:</span><br><span class="line">      kubeletExtraArgs:</span><br><span class="line">        node-labels: &quot;ingress-ready=true&quot;</span><br><span class="line">  extraPortMappings:</span><br><span class="line">  - containerPort: 80</span><br><span class="line">    hostPort: 80</span><br><span class="line">    protocol: TCP</span><br><span class="line">  - containerPort: 443</span><br><span class="line">    hostPort: 443</span><br><span class="line">    protocol: TCP</span><br><span class="line">EOF</span><br></pre></td></tr></table></figure>
+
+<h3 id="Ingress-NGINX-1"><a href="#Ingress-NGINX-1" class="headerlink" title="Ingress NGINX"></a>Ingress NGINX</h3><figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">wget -O kind-ingress-nginx.yaml https://raw.githubusercontent.com/kubernetes/ingress-nginx/master/deploy/static/provider/kind/deploy.yaml</span><br><span class="line">kubectl apply -f kind-ingress-nginx.yaml</span><br></pre></td></tr></table></figure>
+
+<p>注意：image 来自 k8s.gcr.io，需要文明访问。</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">#image: k8s.gcr.io/ingress-nginx/controller:v0.35.0@sha256:fc4979d8b8443a831c9789b5155cded454cb7de737a8b727bc2ba0106d2eae8b</span><br><span class="line">image: scofield/ingress-nginx-controller:v0.35.0</span><br></pre></td></tr></table></figure>
+
+<p>执行如下命令等待部署完成：</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">kubectl wait --namespace ingress-nginx \</span><br><span class="line">  --for=condition=ready pod \</span><br><span class="line">  --selector=app.kubernetes.io/component=controller \</span><br><span class="line">  --timeout=90s</span><br></pre></td></tr></table></figure>
+
+<p>或者执行命令验证部署：</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">$ kubectl get po,svc -n ingress-nginx</span><br><span class="line">$ kubectl get po,svc -n ingress-nginx -o wide</span><br></pre></td></tr></table></figure>
+
+<h3 id="测试-Ingress-1"><a href="#测试-Ingress-1" class="headerlink" title="测试 Ingress"></a>测试 Ingress</h3><p>使用官方提供的 http-echo 应用来测试，内容如下：</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br><span class="line">54</span><br><span class="line">55</span><br><span class="line">56</span><br><span class="line">57</span><br><span class="line">58</span><br><span class="line">59</span><br><span class="line">60</span><br><span class="line">61</span><br><span class="line">62</span><br><span class="line">63</span><br><span class="line">64</span><br><span class="line">65</span><br></pre></td><td class="code"><pre><span class="line">kind: Pod</span><br><span class="line">apiVersion: v1</span><br><span class="line">metadata:</span><br><span class="line">  name: foo-app</span><br><span class="line">  labels:</span><br><span class="line">    app: foo</span><br><span class="line">spec:</span><br><span class="line">  containers:</span><br><span class="line">  - name: foo-app</span><br><span class="line">    image: hashicorp/http-echo:0.2.3</span><br><span class="line">    args:</span><br><span class="line">    - &quot;-text=foo&quot;</span><br><span class="line">---</span><br><span class="line">kind: Service</span><br><span class="line">apiVersion: v1</span><br><span class="line">metadata:</span><br><span class="line">  name: foo-service</span><br><span class="line">spec:</span><br><span class="line">  selector:</span><br><span class="line">    app: foo</span><br><span class="line">  ports:</span><br><span class="line">  # Default port used by the image</span><br><span class="line">  - port: 5678</span><br><span class="line">---</span><br><span class="line">kind: Pod</span><br><span class="line">apiVersion: v1</span><br><span class="line">metadata:</span><br><span class="line">  name: bar-app</span><br><span class="line">  labels:</span><br><span class="line">    app: bar</span><br><span class="line">spec:</span><br><span class="line">  containers:</span><br><span class="line">  - name: bar-app</span><br><span class="line">    image: hashicorp/http-echo:0.2.3</span><br><span class="line">    args:</span><br><span class="line">    - &quot;-text=bar&quot;</span><br><span class="line">---</span><br><span class="line">kind: Service</span><br><span class="line">apiVersion: v1</span><br><span class="line">metadata:</span><br><span class="line">  name: bar-service</span><br><span class="line">spec:</span><br><span class="line">  selector:</span><br><span class="line">    app: bar</span><br><span class="line">  ports:</span><br><span class="line">  # Default port used by the image</span><br><span class="line">  - port: 5678</span><br><span class="line">---</span><br><span class="line">apiVersion: networking.k8s.io/v1beta1</span><br><span class="line">kind: Ingress</span><br><span class="line">metadata:</span><br><span class="line">  name: example-ingress</span><br><span class="line">spec:</span><br><span class="line">  rules:</span><br><span class="line">  - http:</span><br><span class="line">      paths:</span><br><span class="line">      - path: /foo</span><br><span class="line">        backend:</span><br><span class="line">          serviceName: foo-service</span><br><span class="line">          servicePort: 5678</span><br><span class="line">      - path: /bar</span><br><span class="line">        backend:</span><br><span class="line">          serviceName: bar-service</span><br><span class="line">          servicePort: 5678</span><br><span class="line">---</span><br></pre></td></tr></table></figure>
+
+<p>直接应用：</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">kubectl apply -f https://kind.sigs.k8s.io/examples/ingress/usage.yaml</span><br></pre></td></tr></table></figure>
+
+<p>测试效果如下：</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line"># should output &quot;foo&quot;</span><br><span class="line">curl localhost/foo</span><br><span class="line"># should output &quot;bar&quot;</span><br><span class="line">curl localhost/bar</span><br></pre></td></tr></table></figure>
+
+<h3 id="ingress-dashboard-1"><a href="#ingress-dashboard-1" class="headerlink" title="ingress dashboard"></a>ingress dashboard</h3><p>本例使用受信任的 SSL 证书，通过 ingress 以 https 发布 Dashboard。</p>
+<p>部署受信任的 SSL 证书</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line"># 创建 secret，在 ingress 不能直接使用证书需要转换为 secret 才能使用</span><br><span class="line"># key 和 cert 都为 PEM 格式，cert 包含证书文件和证书链部分</span><br><span class="line">kubectl create secret tls dashboard-ingress-tls --key dashboard-ingress.key --cert dashboard-ingress.crt -n kubernetes-dashboard</span><br><span class="line"># 查看 secret 内容</span><br><span class="line">kubectl get secret dashboard-ingress-tls -n kubernetes-dashboard -o yaml</span><br><span class="line"># 删除命令</span><br><span class="line">kubectl delete secret dashboard-ingress-tls -n kubernetes-dashboard</span><br></pre></td></tr></table></figure>
+
+<p>配置 ingress 转发文件</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br></pre></td><td class="code"><pre><span class="line"># vi dashboard-ingress.yaml</span><br><span class="line">apiVersion: extensions/v1beta1</span><br><span class="line">kind: Ingress</span><br><span class="line">metadata:</span><br><span class="line">  annotations:</span><br><span class="line">    nginx.ingress.kubernetes.io/ingress.class: &quot;nginx&quot;</span><br><span class="line">    nginx.ingress.kubernetes.io/backend-protocol: &quot;HTTPS&quot;</span><br><span class="line">  name: kubernetes-dashboard-ingress</span><br><span class="line">  namespace: kubernetes-dashboard</span><br><span class="line">spec:</span><br><span class="line">  tls:</span><br><span class="line">  - secretName: dashboard-ingress-tls #上述创建的secret</span><br><span class="line">  rules:</span><br><span class="line">    - host: k8s.sysin.cn #域名</span><br><span class="line">      http:</span><br><span class="line">        paths:</span><br><span class="line">        - path: /</span><br><span class="line">          backend:</span><br><span class="line">            serviceName: kubernetes-dashboard</span><br><span class="line">            servicePort: 443</span><br></pre></td></tr></table></figure>
+
+<blockquote>
+<p>host: 对应的域名<br>path: url上下文<br>backend: 后向转发到对应的 serviceName: 和 servicePort:</p>
+</blockquote>
+<p>注意，dashboard 默认使用 https 提供服务，ingress 默认 backend-protocol 使用 http，这里发布成功的关键是要添加 annotations 参数：</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">annotations:</span><br><span class="line">  nginx.ingress.kubernetes.io/ingress.class: &quot;nginx&quot;</span><br><span class="line">  nginx.ingress.kubernetes.io/backend-protocol: &quot;HTTPS&quot;</span><br></pre></td></tr></table></figure>
+
+<p>部署：</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">kubectl apply -f dashboard-ingress.yaml</span><br></pre></td></tr></table></figure>
+
+<p>部署成功后可以通过域名访问：<a target="_blank" rel="noopener" href="https://k8s.sysin.cn/">https://k8s.sysin.cn</a></p>
+<h2 id="9-Istio-1"><a href="#9-Istio-1" class="headerlink" title="9. Istio"></a>9. Istio</h2><p>Istio 官方支持部署在 Kind 上，以下为简单示例。</p>
+<p>下载当前版本：</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">$ curl -L https://istio.io/downloadIstio | sh -</span><br></pre></td></tr></table></figure>
+
+<p>下载指定版本：</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">$ curl -L https://istio.io/downloadIstio | ISTIO_VERSION=1.7.0 TARGET_ARCH=x86_64 sh -</span><br></pre></td></tr></table></figure>
+
+<p>切换到 istio 目录:</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">$ cd istio-1.7.0</span><br></pre></td></tr></table></figure>
+
+<p>添加 <code>istioctl</code> 到环境变量 (Linux or macOS):</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">$ export PATH=$PWD/bin:$PATH</span><br></pre></td></tr></table></figure>
+
+<p>安装：</p>
+<p>例如使用 <code>demo</code> <a target="_blank" rel="noopener" href="https://istio.io/latest/docs/setup/additional-setup/config-profiles/">configuration profile</a> 安装</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line">$ istioctl install --set profile=demo</span><br><span class="line">✔ Istio core installed</span><br><span class="line">✔ Istiod installed</span><br><span class="line">✔ Egress gateways installed</span><br><span class="line">✔ Ingress gateways installed</span><br><span class="line">✔ Installation complete</span><br></pre></td></tr></table></figure>
+
+<p>限于篇幅，参看其他文档。</p>
+<h2 id="10-限制-1"><a href="#10-限制-1" class="headerlink" title="10. 限制"></a>10. 限制</h2><p>kind 部署 kubernetes 群集相当方便，可以快速部署多个群集。但在群集的配置和更新上有明显弊端，只能通过重新创建群集来配置和更新群集。所以在初始化群集的时候需要考虑好配置选项。</p>
+</article><div class="post-copyright"><div class="post-copyright__author"><span class="post-copyright-meta"><i class="fas fa-circle-user fa-fw"></i>Author: </span><span class="post-copyright-info"><a href="https://pping.github.io/pping.github.io">aymar</a></span></div><div class="post-copyright__type"><span class="post-copyright-meta"><i class="fas fa-square-arrow-up-right fa-fw"></i>Link: </span><span class="post-copyright-info"><a href="https://pping.github.io/pping.github.io/2021/06/23/%E8%BD%AC%E8%BD%BD%20%E4%BD%BF%E7%94%A8Kind%E5%BF%AB%E9%80%9F%E5%88%9B%E5%BB%BAK8S%E5%AD%A6%E4%B9%A0%E7%8E%AF%E5%A2%83/">https://pping.github.io/pping.github.io/2021/06/23/%E8%BD%AC%E8%BD%BD%20%E4%BD%BF%E7%94%A8Kind%E5%BF%AB%E9%80%9F%E5%88%9B%E5%BB%BAK8S%E5%AD%A6%E4%B9%A0%E7%8E%AF%E5%A2%83/</a></span></div><div class="post-copyright__notice"><span class="post-copyright-meta"><i class="fas fa-circle-exclamation fa-fw"></i>Copyright Notice: </span><span class="post-copyright-info">All articles on this blog are licensed under <a target="_blank" rel="noopener" href="https://creativecommons.org/licenses/by-nc-sa/4.0/">CC BY-NC-SA 4.0</a> unless otherwise stated.</span></div></div><div class="tag_share"><div class="post-share"><div class="social-share" data-image="/img/avatar.jpg" data-sites="facebook,twitter,wechat,weibo,qq"></div><link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/butterfly-extsrc/sharejs/dist/css/share.min.css" media="print" onload="this.media='all'"><script src="https://cdn.jsdelivr.net/npm/butterfly-extsrc/sharejs/dist/js/social-share.min.js" defer></script></div></div><nav class="pagination-post" id="pagination"><a class="pagination-related" href="/2021/06/25/Bash%20Reference%20Manual/" title="Bash Reference Manual"><div class="cover" style="background: var(--default-bg-color)"></div><div class="info"><div class="info-1"><div class="info-item-1">Previous</div><div class="info-item-2">Bash Reference Manual</div></div><div class="info-2"><div class="info-item-1">Bash Reference Manual Table of Contents 1 Introduction 1.1 What is Bash? 1.2 What is a shell?   2 Definitions 3 Basic Shell Features 3.1 Shell Syntax 3.1.1 Shell Operation 3.1.2 Quoting 3.1.2.1 Escape Character 3.1.2.2 Single Quotes 3.1.2.3 Double Quotes 3.1.2.4 ANSI-C Quoting 3.1.2.5 Locale-Specific Translation   3.1.3 Comments   3.2 Shell Commands 3.2.1 Reserved Words 3.2.2 Simple Commands 3.2.3 Pipelines 3.2.4 Lists of Commands 3.2.5 Compound Commands 3.2.5.1 Looping Constructs 3.2.5.2...</div></div></div></a><a class="pagination-related" href="/2021/06/17/6.4.3.1%20%E5%AF%86%E7%A0%81%E9%AA%8C%E8%AF%81%E6%8F%92%E4%BB%B6%E5%AE%89%E8%A3%85/" title="6.4.3.1 密码验证插件安装"><div class="cover" style="background: var(--default-bg-color)"></div><div class="info text-right"><div class="info-1"><div class="info-item-1">Next</div><div class="info-item-2">6.4.3.1 密码验证插件安装</div></div><div class="info-2"><div class="info-item-1">本节介绍如何安装 validate_password密码验证插件。有关安装插件的一般信息，请参阅 第 5.5.1 节，“安装和卸载插件”。 笔记 如果使用安装了MySQL 5.7 MySQL Yum repository， MySQL SLES Repository，或 Oracle提供的RPM包，validate_password默认情况下，您启动MySQL服务器的第一次后使能。 要被服务器使用，插件库文件必须位于 MySQL 插件目录（由plugin_dir系统变量命名的目录）中。如有必要，通过设置plugin_dir服务器启动时的值来配置插件目录位置 。 插件库文件基本名称是 validate_password. 文件名后缀因平台.so而异（例如，对于 Unix 和类 Unix 系统，.dll对于 Windows）。 要在服务器启动时加载插件，请使用该 --plugin-load-add选项来命名包含它的库文件。使用这种插件加载方法，每次服务器启动时都必须给出该选项。例如，将这些行放在服务器 my.cnf文件中，.so根据需要调整平台的...</div></div></div></a></nav></div><div class="aside-content" id="aside-content"><div class="card-widget card-info text-center"><div class="avatar-img"><img src="/img/avatar.jpg" onerror="this.onerror=null;this.src='/img/friend_404.gif'" alt="avatar"/></div><div class="author-info-name">aymar</div><div class="author-info-description">知之者不如好之者，好之者不如乐之者。</div><div class="site-data"><a href="/archives/"><div class="headline">Articles</div><div class="length-num">14</div></a><a href="/tags/"><div class="headline">Tags</div><div class="length-num">0</div></a><a href="/categories/"><div class="headline">Categories</div><div class="length-num">0</div></a></div><a id="card-info-btn" target="_blank" rel="noopener" href="https://github.com/xxxxxx"><i class="fab fa-github"></i><span>Follow Me</span></a></div><div class="card-widget card-announcement"><div class="item-headline"><i class="fas fa-bullhorn fa-shake"></i><span>Announcement</span></div><div class="announcement_content">This is my Blog</div></div><div class="sticky_layout"><div class="card-widget" id="card-toc"><div class="item-headline"><i class="fas fa-stream"></i><span>Contents</span><span class="toc-percentage"></span></div><div class="toc-content"><ol class="toc"><li class="toc-item toc-level-1"><a class="toc-link" href="#%E4%BD%BF%E7%94%A8Kind%E5%BF%AB%E9%80%9F%E5%88%9B%E5%BB%BAK8S%E5%AD%A6%E4%B9%A0%E7%8E%AF%E5%A2%83"><span class="toc-number">1.</span> <span class="toc-text">使用Kind快速创建K8S学习环境</span></a><ol class="toc-child"><li class="toc-item toc-level-2"><a class="toc-link" href="#1-%E7%AE%80%E4%BB%8B"><span class="toc-number">1.1.</span> <span class="toc-text">1. 简介</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#2-kind-%E6%9E%B6%E6%9E%84"><span class="toc-number">1.2.</span> <span class="toc-text">2. kind 架构</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#3-%E5%AE%89%E8%A3%85-Kind"><span class="toc-number">1.3.</span> <span class="toc-text">3. 安装 Kind</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#4-%E6%93%8D%E4%BD%9C%E5%85%A5%E9%97%A8"><span class="toc-number">1.4.</span> <span class="toc-text">4. 操作入门</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#%E5%88%9B%E5%BB%BA%E7%BE%A4%E9%9B%86"><span class="toc-number">1.4.1.</span> <span class="toc-text">创建群集</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E5%88%A0%E9%99%A4%E7%BE%A4%E9%9B%86"><span class="toc-number">1.4.2.</span> <span class="toc-text">删除群集</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E5%B0%86%E9%95%9C%E5%83%8F%E5%8A%A0%E8%BD%BD%E5%88%B0-kind-%E7%BE%A4%E9%9B%86%E4%B8%AD"><span class="toc-number">1.4.3.</span> <span class="toc-text">将镜像加载到 kind 群集中</span></a></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#5-%E9%85%8D%E7%BD%AE-kind-%E7%BE%A4%E9%9B%86"><span class="toc-number">1.5.</span> <span class="toc-text">5. 配置 kind 群集</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#Multi-node-clusters"><span class="toc-number">1.5.1.</span> <span class="toc-text">Multi-node clusters</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#Control-plane-HA"><span class="toc-number">1.5.2.</span> <span class="toc-text">Control-plane HA</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E5%B0%86-node-%E7%9A%84%E7%AB%AF%E5%8F%A3%E6%98%A0%E5%B0%84%E5%88%B0%E4%B8%BB%E6%9C%BA"><span class="toc-number">1.5.3.</span> <span class="toc-text">将 node 的端口映射到主机</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E6%8C%87%E5%AE%9A-Kubernetes-%E7%9A%84%E7%89%88%E6%9C%AC"><span class="toc-number">1.5.4.</span> <span class="toc-text">指定 Kubernetes 的版本</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#IPv6-clusters"><span class="toc-number">1.5.5.</span> <span class="toc-text">IPv6 clusters</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E5%AF%BC%E5%87%BA-Cluster-%E6%97%A5%E5%BF%97"><span class="toc-number">1.5.6.</span> <span class="toc-text">导出 Cluster 日志</span></a></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#6-%E9%85%8D%E7%BD%AE%E6%A6%82%E8%BF%B0"><span class="toc-number">1.6.</span> <span class="toc-text">6. 配置概述</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#6-1-%E5%85%A5%E9%97%A8"><span class="toc-number">1.6.1.</span> <span class="toc-text">6.1 入门</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#6-2-Cluster-Wide-%E9%80%89%E9%A1%B9"><span class="toc-number">1.6.2.</span> <span class="toc-text">6.2 Cluster-Wide 选项</span></a><ol class="toc-child"><li class="toc-item toc-level-4"><a class="toc-link" href="#Networking"><span class="toc-number">1.6.2.1.</span> <span class="toc-text">Networking</span></a><ol class="toc-child"><li class="toc-item toc-level-5"><a class="toc-link" href="#IP-Family"><span class="toc-number">1.6.2.1.1.</span> <span class="toc-text">IP Family</span></a></li><li class="toc-item toc-level-5"><a class="toc-link" href="#API-Server"><span class="toc-number">1.6.2.1.2.</span> <span class="toc-text">API Server</span></a></li><li class="toc-item toc-level-5"><a class="toc-link" href="#Pod-Subnet"><span class="toc-number">1.6.2.1.3.</span> <span class="toc-text">Pod Subnet</span></a></li><li class="toc-item toc-level-5"><a class="toc-link" href="#Service-Subnet"><span class="toc-number">1.6.2.1.4.</span> <span class="toc-text">Service Subnet</span></a></li><li class="toc-item toc-level-5"><a class="toc-link" href="#%E7%A6%81%E7%94%A8%E9%BB%98%E8%AE%A4-CNI"><span class="toc-number">1.6.2.1.5.</span> <span class="toc-text">禁用默认 CNI</span></a></li><li class="toc-item toc-level-5"><a class="toc-link" href="#kube-proxy-mode"><span class="toc-number">1.6.2.1.6.</span> <span class="toc-text">kube-proxy mode</span></a></li></ol></li><li class="toc-item toc-level-4"><a class="toc-link" href="#Nodes"><span class="toc-number">1.6.2.2.</span> <span class="toc-text">Nodes</span></a></li></ol></li><li class="toc-item toc-level-3"><a class="toc-link" href="#6-3-Per-Node-%E9%80%89%E9%A1%B9"><span class="toc-number">1.6.3.</span> <span class="toc-text">6.3 Per-Node 选项</span></a><ol class="toc-child"><li class="toc-item toc-level-4"><a class="toc-link" href="#Extra-Mounts"><span class="toc-number">1.6.3.1.</span> <span class="toc-text">Extra Mounts</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#Extra-Port-Mappings"><span class="toc-number">1.6.3.2.</span> <span class="toc-text">Extra Port Mappings</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#Kubeadm-Config-Patches"><span class="toc-number">1.6.3.3.</span> <span class="toc-text">Kubeadm Config Patches</span></a></li></ol></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#7-%E9%83%A8%E7%BD%B2-Dashboard"><span class="toc-number">1.7.</span> <span class="toc-text">7. 部署 Dashboard</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#8-%E9%83%A8%E7%BD%B2-ingress"><span class="toc-number">1.8.</span> <span class="toc-text">8. 部署 ingress</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#%E5%88%9B%E5%BB%BA%E7%BE%A4%E9%9B%86-1"><span class="toc-number">1.8.1.</span> <span class="toc-text">创建群集</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#Ingress-NGINX"><span class="toc-number">1.8.2.</span> <span class="toc-text">Ingress NGINX</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E6%B5%8B%E8%AF%95-Ingress"><span class="toc-number">1.8.3.</span> <span class="toc-text">测试 Ingress</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#ingress-dashboard"><span class="toc-number">1.8.4.</span> <span class="toc-text">ingress dashboard</span></a></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#9-Istio"><span class="toc-number">1.9.</span> <span class="toc-text">9. Istio</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#10-%E9%99%90%E5%88%B6"><span class="toc-number">1.10.</span> <span class="toc-text">10. 限制</span></a></li></ol></li><li class="toc-item toc-level-1"><a class="toc-link" href="#%E4%BD%BF%E7%94%A8Kind%E5%BF%AB%E9%80%9F%E5%88%9B%E5%BB%BAK8S%E5%AD%A6%E4%B9%A0%E7%8E%AF%E5%A2%83-1"><span class="toc-number">2.</span> <span class="toc-text">使用Kind快速创建K8S学习环境</span></a><ol class="toc-child"><li class="toc-item toc-level-2"><a class="toc-link" href="#1-%E7%AE%80%E4%BB%8B-1"><span class="toc-number">2.1.</span> <span class="toc-text">1. 简介</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#2-kind-%E6%9E%B6%E6%9E%84-1"><span class="toc-number">2.2.</span> <span class="toc-text">2. kind 架构</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#3-%E5%AE%89%E8%A3%85-Kind-1"><span class="toc-number">2.3.</span> <span class="toc-text">3. 安装 Kind</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#4-%E6%93%8D%E4%BD%9C%E5%85%A5%E9%97%A8-1"><span class="toc-number">2.4.</span> <span class="toc-text">4. 操作入门</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#%E5%88%9B%E5%BB%BA%E7%BE%A4%E9%9B%86-2"><span class="toc-number">2.4.1.</span> <span class="toc-text">创建群集</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E5%88%A0%E9%99%A4%E7%BE%A4%E9%9B%86-1"><span class="toc-number">2.4.2.</span> <span class="toc-text">删除群集</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E5%B0%86%E9%95%9C%E5%83%8F%E5%8A%A0%E8%BD%BD%E5%88%B0-kind-%E7%BE%A4%E9%9B%86%E4%B8%AD-1"><span class="toc-number">2.4.3.</span> <span class="toc-text">将镜像加载到 kind 群集中</span></a></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#5-%E9%85%8D%E7%BD%AE-kind-%E7%BE%A4%E9%9B%86-1"><span class="toc-number">2.5.</span> <span class="toc-text">5. 配置 kind 群集</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#Multi-node-clusters-1"><span class="toc-number">2.5.1.</span> <span class="toc-text">Multi-node clusters</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#Control-plane-HA-1"><span class="toc-number">2.5.2.</span> <span class="toc-text">Control-plane HA</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E5%B0%86-node-%E7%9A%84%E7%AB%AF%E5%8F%A3%E6%98%A0%E5%B0%84%E5%88%B0%E4%B8%BB%E6%9C%BA-1"><span class="toc-number">2.5.3.</span> <span class="toc-text">将 node 的端口映射到主机</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E6%8C%87%E5%AE%9A-Kubernetes-%E7%9A%84%E7%89%88%E6%9C%AC-1"><span class="toc-number">2.5.4.</span> <span class="toc-text">指定 Kubernetes 的版本</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#IPv6-clusters-1"><span class="toc-number">2.5.5.</span> <span class="toc-text">IPv6 clusters</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E5%AF%BC%E5%87%BA-Cluster-%E6%97%A5%E5%BF%97-1"><span class="toc-number">2.5.6.</span> <span class="toc-text">导出 Cluster 日志</span></a></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#6-%E9%85%8D%E7%BD%AE%E6%A6%82%E8%BF%B0-1"><span class="toc-number">2.6.</span> <span class="toc-text">6. 配置概述</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#6-1-%E5%85%A5%E9%97%A8-1"><span class="toc-number">2.6.1.</span> <span class="toc-text">6.1 入门</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#6-2-Cluster-Wide-%E9%80%89%E9%A1%B9-1"><span class="toc-number">2.6.2.</span> <span class="toc-text">6.2 Cluster-Wide 选项</span></a><ol class="toc-child"><li class="toc-item toc-level-4"><a class="toc-link" href="#Networking-1"><span class="toc-number">2.6.2.1.</span> <span class="toc-text">Networking</span></a><ol class="toc-child"><li class="toc-item toc-level-5"><a class="toc-link" href="#IP-Family-1"><span class="toc-number">2.6.2.1.1.</span> <span class="toc-text">IP Family</span></a></li><li class="toc-item toc-level-5"><a class="toc-link" href="#API-Server-1"><span class="toc-number">2.6.2.1.2.</span> <span class="toc-text">API Server</span></a></li><li class="toc-item toc-level-5"><a class="toc-link" href="#Pod-Subnet-1"><span class="toc-number">2.6.2.1.3.</span> <span class="toc-text">Pod Subnet</span></a></li><li class="toc-item toc-level-5"><a class="toc-link" href="#Service-Subnet-1"><span class="toc-number">2.6.2.1.4.</span> <span class="toc-text">Service Subnet</span></a></li><li class="toc-item toc-level-5"><a class="toc-link" href="#%E7%A6%81%E7%94%A8%E9%BB%98%E8%AE%A4-CNI-1"><span class="toc-number">2.6.2.1.5.</span> <span class="toc-text">禁用默认 CNI</span></a></li><li class="toc-item toc-level-5"><a class="toc-link" href="#kube-proxy-mode-1"><span class="toc-number">2.6.2.1.6.</span> <span class="toc-text">kube-proxy mode</span></a></li></ol></li><li class="toc-item toc-level-4"><a class="toc-link" href="#Nodes-1"><span class="toc-number">2.6.2.2.</span> <span class="toc-text">Nodes</span></a></li></ol></li><li class="toc-item toc-level-3"><a class="toc-link" href="#6-3-Per-Node-%E9%80%89%E9%A1%B9-1"><span class="toc-number">2.6.3.</span> <span class="toc-text">6.3 Per-Node 选项</span></a><ol class="toc-child"><li class="toc-item toc-level-4"><a class="toc-link" href="#Extra-Mounts-1"><span class="toc-number">2.6.3.1.</span> <span class="toc-text">Extra Mounts</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#Extra-Port-Mappings-1"><span class="toc-number">2.6.3.2.</span> <span class="toc-text">Extra Port Mappings</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#Kubeadm-Config-Patches-1"><span class="toc-number">2.6.3.3.</span> <span class="toc-text">Kubeadm Config Patches</span></a></li></ol></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#7-%E9%83%A8%E7%BD%B2-Dashboard-1"><span class="toc-number">2.7.</span> <span class="toc-text">7. 部署 Dashboard</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#8-%E9%83%A8%E7%BD%B2-ingress-1"><span class="toc-number">2.8.</span> <span class="toc-text">8. 部署 ingress</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#%E5%88%9B%E5%BB%BA%E7%BE%A4%E9%9B%86-3"><span class="toc-number">2.8.1.</span> <span class="toc-text">创建群集</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#Ingress-NGINX-1"><span class="toc-number">2.8.2.</span> <span class="toc-text">Ingress NGINX</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E6%B5%8B%E8%AF%95-Ingress-1"><span class="toc-number">2.8.3.</span> <span class="toc-text">测试 Ingress</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#ingress-dashboard-1"><span class="toc-number">2.8.4.</span> <span class="toc-text">ingress dashboard</span></a></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#9-Istio-1"><span class="toc-number">2.9.</span> <span class="toc-text">9. Istio</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#10-%E9%99%90%E5%88%B6-1"><span class="toc-number">2.10.</span> <span class="toc-text">10. 限制</span></a></li></ol></li></ol></div></div><div class="card-widget card-recent-post"><div class="item-headline"><i class="fas fa-history"></i><span>Recent Posts</span></div><div class="aside-list"><div class="aside-list-item no-cover"><div class="content"><a class="title" href="/2024/12/14/hello-world/" title="Hello World">Hello World</a><time datetime="2024-12-14T08:20:49.352Z" title="Created 2024-12-14 16:20:49">2024-12-14</time></div></div><div class="aside-list-item no-cover"><div class="content"><a class="title" href="/2021/06/25/Bash%20Reference%20Manual/" title="Bash Reference Manual">Bash Reference Manual</a><time datetime="2021-06-24T16:00:00.000Z" title="Created 2021-06-25 00:00:00">2021-06-25</time></div></div><div class="aside-list-item no-cover"><div class="content"><a class="title" href="/2021/06/23/%E8%BD%AC%E8%BD%BD%20%E4%BD%BF%E7%94%A8Kind%E5%BF%AB%E9%80%9F%E5%88%9B%E5%BB%BAK8S%E5%AD%A6%E4%B9%A0%E7%8E%AF%E5%A2%83/" title="转载 使用Kind快速创建K8S学习环境">转载 使用Kind快速创建K8S学习环境</a><time datetime="2021-06-22T16:00:00.000Z" title="Created 2021-06-23 00:00:00">2021-06-23</time></div></div><div class="aside-list-item no-cover"><div class="content"><a class="title" href="/2021/06/17/6.4.3.1%20%E5%AF%86%E7%A0%81%E9%AA%8C%E8%AF%81%E6%8F%92%E4%BB%B6%E5%AE%89%E8%A3%85/" title="6.4.3.1 密码验证插件安装">6.4.3.1 密码验证插件安装</a><time datetime="2021-06-17T03:23:10.000Z" title="Created 2021-06-17 11:23:10">2021-06-17</time></div></div><div class="aside-list-item no-cover"><div class="content"><a class="title" href="/2021/06/17/My-New-Post/" title="6.4.3.1 密码验证插件安装">6.4.3.1 密码验证插件安装</a><time datetime="2021-06-17T03:23:10.000Z" title="Created 2021-06-17 11:23:10">2021-06-17</time></div></div></div></div></div></div></main><footer id="footer"><div id="footer-wrap"><div class="copyright">&copy;2019 - 2024 By aymar</div><div class="framework-info"><span>Framework </span><a target="_blank" rel="noopener" href="https://hexo.io">Hexo</a><span class="footer-separator">|</span><span>Theme </span><a target="_blank" rel="noopener" href="https://github.com/jerryc127/hexo-theme-butterfly">Butterfly</a></div></div></footer></div><div id="rightside"><div id="rightside-config-hide"><button id="readmode" type="button" title="Reading Mode"><i class="fas fa-book-open"></i></button><button id="darkmode" type="button" title="Toggle Between Light and Dark Mode"><i class="fas fa-adjust"></i></button><button id="hide-aside-btn" type="button" title="Toggle Between Single-column and Double-column"><i class="fas fa-arrows-alt-h"></i></button></div><div id="rightside-config-show"><button id="rightside-config" type="button" title="Settings"><i class="fas fa-cog fa-spin"></i></button><button class="close" id="mobile-toc-button" type="button" title="Table of Contents"><i class="fas fa-list-ul"></i></button><button id="go-up" type="button" title="Back to Top"><span class="scroll-percent"></span><i class="fas fa-arrow-up"></i></button></div></div><div><script src="/js/utils.js"></script><script src="/js/main.js"></script><div class="js-pjax"></div><script async data-pjax src="//busuanzi.ibruce.info/busuanzi/2.3/busuanzi.pure.mini.js"></script></div></body></html>
