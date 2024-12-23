@@ -10,7 +10,7 @@
 <meta property="article:modified_time" content="2024-12-14T08:20:49.335Z">
 <meta property="article:author" content="aymar">
 <meta name="twitter:card" content="summary">
-<meta name="twitter:image" content="https://pping.github.io/pping.github.io/config/img/avatar.jpg"><link rel="shortcut icon" href="/config/img/favicon.png"><link rel="canonical" href="https://pping.github.io/pping.github.io/2021/02/23/%E5%9C%A8%E6%8E%88%E6%9D%83gitalk%E5%90%8E%E5%87%BA%E7%8E%B0403%E9%94%99%E8%AF%AF/index.html"><link rel="preconnect" href="//cdn.jsdelivr.net"/><link rel="preconnect" href="//busuanzi.ibruce.info"/><link rel="stylesheet" href="/css/index.css"><link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@fortawesome/fontawesome-free/css/all.min.css"><script>
+<meta name="twitter:image" content="https://pping.github.io/pping.github.io/config/img/avatar.jpg"><link rel="shortcut icon" href="/config/img/favicon.png"><link rel="canonical" href="https://pping.github.io/pping.github.io/2021/02/23/%E5%9C%A8%E6%8E%88%E6%9D%83gitalk%E5%90%8E%E5%87%BA%E7%8E%B0403%E9%94%99%E8%AF%AF/index.html"><link rel="preconnect" href="//cdn.jsdelivr.net"/><link rel="preconnect" href="//hm.baidu.com"/><link rel="preconnect" href="//busuanzi.ibruce.info"/><link rel="stylesheet" href="/css/index.css"><link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@fortawesome/fontawesome-free/css/all.min.css"><script>
     (() => {
       
     const saveToLocal = {
@@ -100,7 +100,17 @@
     detectApple()
   
     })()
-  </script><script>const GLOBAL_CONFIG = {
+  </script><script>var _hmt = _hmt || [];
+(function() {
+  var hm = document.createElement("script");
+  hm.src = "https://hm.baidu.com/hm.js?d6348a489c9706b09ce89b2cd34384e0";
+  var s = document.getElementsByTagName("script")[0]; 
+  s.parentNode.insertBefore(hm, s);
+})();
+btf.addGlobalFn('pjaxComplete', () => {
+  _hmt.push(['_trackPageview',window.location.pathname])
+}, 'baidu_analytics')
+</script><script>const GLOBAL_CONFIG = {
   root: '/',
   algolia: undefined,
   localSearch: undefined,
@@ -115,7 +125,7 @@
     homepage: false,
     post: false
   },
-  runtime: '',
+  runtime: 'days',
   dateSuffix: {
     just: 'Just now',
     min: 'minutes ago',

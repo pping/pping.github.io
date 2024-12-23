@@ -1,18 +1,10 @@
-:root {
-    --light-grey: #EBEEEF;  /* 或者任何你定义的浅灰色 */
-}
-
 .menus_items {
     font-weight: bold;
 }
 
-.element1 {
-    background-color: rgb(235, 235, 235);
-}
-
-#footer-wrap {
+.footer-wrap {
     position: relative;
     padding: 40px 20px;
-    color: var(--light-grey);
+    background-color: rgb(235, 235, 235);
     text-align: center;
 }
