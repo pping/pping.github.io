@@ -1,0 +1,298 @@
+<!DOCTYPE html><html lang="zh-CN" data-theme="light"><head><meta charset="UTF-8"><meta http-equiv="X-UA-Compatible" content="IE=edge"><meta name="viewport" content="width=device-width, initial-scale=1.0,viewport-fit=cover"><title>FNM环境变量设置 | 热带雨林</title><meta name="author" content="aymar"><meta name="copyright" content="aymar"><meta name="format-detection" content="telephone=no"><meta name="theme-color" content="#ffffff"><meta name="description" content="主要问题描述&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;由于项目原因需要经常在windows下切换node环境，找了下FNM资料，没发现合适的文章。所以主要问题就是在不想切换linux环境，也不想用poweshell，还不使用cmder的情况下，每次打开cmd自动设置环境变量。 解决方案：解决方法1：设置autorun.cmd reg add &quot;">
+<meta property="og:type" content="article">
+<meta property="og:title" content="FNM环境变量设置">
+<meta property="og:url" content="https://pping.github.io/pping.github.io/2023/08/31/cmd%E7%8E%AF%E5%A2%83%E4%B8%8B%E8%AE%BE%E7%BD%AEfnm%E7%8E%AF%E5%A2%83%E5%8F%98%E9%87%8F/index.html">
+<meta property="og:site_name" content="热带雨林">
+<meta property="og:description" content="主要问题描述&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;由于项目原因需要经常在windows下切换node环境，找了下FNM资料，没发现合适的文章。所以主要问题就是在不想切换linux环境，也不想用poweshell，还不使用cmder的情况下，每次打开cmd自动设置环境变量。 解决方案：解决方法1：设置autorun.cmd reg add &quot;">
+<meta property="og:locale" content="zh_CN">
+<meta property="og:image" content="https://pping.github.io/pping.github.io/config/img/avatar.jpg">
+<meta property="article:published_time" content="2023-08-30T16:00:00.000Z">
+<meta property="article:modified_time" content="2025-01-04T11:43:26.886Z">
+<meta property="article:author" content="aymar">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:image" content="https://pping.github.io/pping.github.io/config/img/avatar.jpg"><link rel="shortcut icon" href="/config/img/favicon.png"><link rel="canonical" href="https://pping.github.io/pping.github.io/2023/08/31/cmd%E7%8E%AF%E5%A2%83%E4%B8%8B%E8%AE%BE%E7%BD%AEfnm%E7%8E%AF%E5%A2%83%E5%8F%98%E9%87%8F/index.html"><link rel="preconnect" href="//cdn.jsdelivr.net"/><link rel="preconnect" href="//hm.baidu.com"/><link rel="preconnect" href="//busuanzi.ibruce.info"/><link rel="stylesheet" href="/css/index.css"><link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@fortawesome/fontawesome-free/css/all.min.css"><script>
+    (() => {
+      
+    const saveToLocal = {
+      set: (key, value, ttl) => {
+        if (!ttl) return
+        const expiry = Date.now() + ttl * 86400000
+        localStorage.setItem(key, JSON.stringify({ value, expiry }))
+      },
+      get: key => {
+        const itemStr = localStorage.getItem(key)
+        if (!itemStr) return undefined
+        const { value, expiry } = JSON.parse(itemStr)
+        if (Date.now() > expiry) {
+          localStorage.removeItem(key)
+          return undefined
+        }
+        return value
+      }
+    }
+
+    window.btf = {
+      saveToLocal,
+      getScript: (url, attr = {}) => new Promise((resolve, reject) => {
+        const script = document.createElement('script')
+        script.src = url
+        script.async = true
+        Object.entries(attr).forEach(([key, val]) => script.setAttribute(key, val))
+        script.onload = script.onreadystatechange = () => {
+          if (!script.readyState || /loaded|complete/.test(script.readyState)) resolve()
+        }
+        script.onerror = reject
+        document.head.appendChild(script)
+      }),
+      getCSS: (url, id) => new Promise((resolve, reject) => {
+        const link = document.createElement('link')
+        link.rel = 'stylesheet'
+        link.href = url
+        if (id) link.id = id
+        link.onload = link.onreadystatechange = () => {
+          if (!link.readyState || /loaded|complete/.test(link.readyState)) resolve()
+        }
+        link.onerror = reject
+        document.head.appendChild(link)
+      }),
+      addGlobalFn: (key, fn, name = false, parent = window) => {
+        if (!false && key.startsWith('pjax')) return
+        const globalFn = parent.globalFn || {}
+        globalFn[key] = globalFn[key] || {}
+        globalFn[key][name || Object.keys(globalFn[key]).length] = fn
+        parent.globalFn = globalFn
+      }
+    }
+  
+      
+      const activateDarkMode = () => {
+        document.documentElement.setAttribute('data-theme', 'dark')
+        if (document.querySelector('meta[name="theme-color"]') !== null) {
+          document.querySelector('meta[name="theme-color"]').setAttribute('content', '#0d0d0d')
+        }
+      }
+      const activateLightMode = () => {
+        document.documentElement.setAttribute('data-theme', 'light')
+        if (document.querySelector('meta[name="theme-color"]') !== null) {
+          document.querySelector('meta[name="theme-color"]').setAttribute('content', '#ffffff')
+        }
+      }
+
+      btf.activateDarkMode = activateDarkMode
+      btf.activateLightMode = activateLightMode
+
+      const theme = saveToLocal.get('theme')
+    
+          theme === 'dark' ? activateDarkMode() : theme === 'light' ? activateLightMode() : null
+        
+      
+      const asideStatus = saveToLocal.get('aside-status')
+      if (asideStatus !== undefined) {
+        document.documentElement.classList.toggle('hide-aside', asideStatus === 'hide')
+      }
+    
+      
+    const detectApple = () => {
+      if (/iPad|iPhone|iPod|Macintosh/.test(navigator.userAgent)) {
+        document.documentElement.classList.add('apple')
+      }
+    }
+    detectApple()
+  
+    })()
+  </script><script>var _hmt = _hmt || [];
+(function() {
+  var hm = document.createElement("script");
+  hm.src = "https://hm.baidu.com/hm.js?d6348a489c9706b09ce89b2cd34384e0";
+  var s = document.getElementsByTagName("script")[0]; 
+  s.parentNode.insertBefore(hm, s);
+})();
+btf.addGlobalFn('pjaxComplete', () => {
+  _hmt.push(['_trackPageview',window.location.pathname])
+}, 'baidu_analytics')
+</script><script>const GLOBAL_CONFIG = {
+  root: '/',
+  algolia: undefined,
+  localSearch: {"path":"/search.xml","preload":false,"top_n_per_article":1,"unescape":false,"languages":{"hits_empty":"未找到符合您查询的内容：${query}","hits_stats":"共找到 ${hits} 篇文章"}},
+  translate: undefined,
+  highlight: {"plugin":"highlight.js","highlightCopy":true,"highlightLang":true,"highlightHeightLimit":false,"highlightFullpage":false,"highlightMacStyle":false},
+  copy: {
+    success: '复制成功',
+    error: '复制失败',
+    noSupport: '浏览器不支持'
+  },
+  relativeDate: {
+    homepage: false,
+    post: false
+  },
+  runtime: '天',
+  dateSuffix: {
+    just: '刚刚',
+    min: '分钟前',
+    hour: '小时前',
+    day: '天前',
+    month: '个月前'
+  },
+  copyright: undefined,
+  lightbox: 'null',
+  Snackbar: undefined,
+  infinitegrid: {
+    js: 'https://cdn.jsdelivr.net/npm/@egjs/infinitegrid/dist/infinitegrid.min.js',
+    buttonText: '加载更多'
+  },
+  isPhotoFigcaption: false,
+  islazyload: false,
+  isAnchor: false,
+  percent: {
+    toc: true,
+    rightside: false,
+  },
+  autoDarkmode: false
+}</script><script id="config-diff">var GLOBAL_CONFIG_SITE = {
+  title: 'FNM环境变量设置',
+  isPost: true,
+  isHome: false,
+  isHighlightShrink: false,
+  isToc: true,
+  isShuoshuo: false
+}</script><link href="https://fonts.googleapis.com/css2?family=Noto+Serif+SC:wght@400;700&display=swap" rel="stylesheet"><link rel="stylesheet" href="/config/css/custom_head.css"><meta name="generator" content="Hexo 7.3.0">
+<style>.github-emoji { position: relative; display: inline-block; width: 1.2em; min-height: 1.2em; overflow: hidden; vertical-align: top; color: transparent; }  .github-emoji > span { position: relative; z-index: 10; }  .github-emoji img, .github-emoji .fancybox { margin: 0 !important; padding: 0 !important; border: none !important; outline: none !important; text-decoration: none !important; user-select: none !important; cursor: auto !important; }  .github-emoji img { height: 1.2em !important; width: 1.2em !important; position: absolute !important; left: 50% !important; top: 50% !important; transform: translate(-50%, -50%) !important; user-select: none !important; cursor: auto !important; } .github-emoji-fallback { color: inherit; } .github-emoji-fallback img { opacity: 0 !important; }</style>
+</head><body><div id="sidebar"><div id="menu-mask"></div><div id="sidebar-menus"><div class="avatar-img text-center"><img src="/config/img/avatar.jpg" onerror="onerror=null;src='/img/friend_404.gif'" alt="avatar"/></div><div class="site-data text-center"><a href="/archives/"><div class="headline">文章</div><div class="length-num">13</div></a><a href="/tags/"><div class="headline">标签</div><div class="length-num">0</div></a><a href="/categories/"><div class="headline">分类</div><div class="length-num">0</div></a></div><div class="menus_items"><div class="menus_item"><a class="site-page" href="/"><i class="fa-fw fas fa-home"></i><span> 主页</span></a></div><div class="menus_item"><span class="site-page group"><i class="fa-fw fa fa-book"></i><span> 博文</span><i class="fas fa-chevron-down"></i></span><ul class="menus_item_child"><li><a class="site-page child" href="/categories/"><i class="fa-fw fa fa-archive"></i><span> 分类</span></a></li><li><a class="site-page child" href="/tags/"><i class="fa-fw fa fa-tags"></i><span> 标签</span></a></li><li><a class="site-page child" href="/archives/"><i class="fa-fw fa fa-folder-open"></i><span> 归档</span></a></li></ul></div><div class="menus_item"><span class="site-page group"><i class="fa-fw fas fa-list"></i><span> 生活</span><i class="fas fa-chevron-down"></i></span><ul class="menus_item_child"><li><a class="site-page child" href="/share/"><i class="fa-fw fa fa-sticky-note"></i><span> 分享</span></a></li><li><a class="site-page child" href="/photos/"><i class="fa-fw fa fa-camera-retro"></i><span> 相册</span></a></li><li><a class="site-page child" href="/music/"><i class="fa-fw fa fa-music"></i><span> 音乐</span></a></li><li><a class="site-page child" href="/movie/"><i class="fa-fw fas fa-video"></i><span> 影视</span></a></li><li><a class="site-page child" href="/Game/"><i class="fa-fw fa fa fa-gamepad"></i><span> 游戏</span></a></li></ul></div><div class="menus_item"><a class="site-page" href="/comment/"><i class="fa-fw fa fa-paper-plane"></i><span> 留言板</span></a></div><div class="menus_item"><a class="site-page" href="/links/"><i class="fa-fw fa fa-link"></i><span> 友链</span></a></div><div class="menus_item"><a class="site-page" href="/about/"><i class="fa-fw fa fa-address-card"></i><span> 关于博主</span></a></div></div></div></div><div class="post" id="body-wrap"><header class="post-bg" id="page-header" style="background-image: url(/config/img/top.jpg);"><nav id="nav"><span id="blog-info"><a class="nav-site-title" href="/"><span class="site-name">热带雨林</span></a><a class="nav-page-title" href="/"><span class="site-name">FNM环境变量设置</span></a></span><div id="menus"><div id="search-button"><span class="site-page social-icon search"><i class="fas fa-search fa-fw"></i><span> 搜索</span></span></div><div class="menus_items"><div class="menus_item"><a class="site-page" href="/"><i class="fa-fw fas fa-home"></i><span> 主页</span></a></div><div class="menus_item"><span class="site-page group"><i class="fa-fw fa fa-book"></i><span> 博文</span><i class="fas fa-chevron-down"></i></span><ul class="menus_item_child"><li><a class="site-page child" href="/categories/"><i class="fa-fw fa fa-archive"></i><span> 分类</span></a></li><li><a class="site-page child" href="/tags/"><i class="fa-fw fa fa-tags"></i><span> 标签</span></a></li><li><a class="site-page child" href="/archives/"><i class="fa-fw fa fa-folder-open"></i><span> 归档</span></a></li></ul></div><div class="menus_item"><span class="site-page group"><i class="fa-fw fas fa-list"></i><span> 生活</span><i class="fas fa-chevron-down"></i></span><ul class="menus_item_child"><li><a class="site-page child" href="/share/"><i class="fa-fw fa fa-sticky-note"></i><span> 分享</span></a></li><li><a class="site-page child" href="/photos/"><i class="fa-fw fa fa-camera-retro"></i><span> 相册</span></a></li><li><a class="site-page child" href="/music/"><i class="fa-fw fa fa-music"></i><span> 音乐</span></a></li><li><a class="site-page child" href="/movie/"><i class="fa-fw fas fa-video"></i><span> 影视</span></a></li><li><a class="site-page child" href="/Game/"><i class="fa-fw fa fa fa-gamepad"></i><span> 游戏</span></a></li></ul></div><div class="menus_item"><a class="site-page" href="/comment/"><i class="fa-fw fa fa-paper-plane"></i><span> 留言板</span></a></div><div class="menus_item"><a class="site-page" href="/links/"><i class="fa-fw fa fa-link"></i><span> 友链</span></a></div><div class="menus_item"><a class="site-page" href="/about/"><i class="fa-fw fa fa-address-card"></i><span> 关于博主</span></a></div></div><div id="toggle-menu"><span class="site-page"><i class="fas fa-bars fa-fw"></i></span></div></div></nav><div id="post-info"><h1 class="post-title">FNM环境变量设置</h1><div id="post-meta"><div class="meta-firstline"><span class="post-meta-date"><i class="far fa-calendar-alt fa-fw post-meta-icon"></i><span class="post-meta-label">发表于</span><time class="post-meta-date-created" datetime="2023-08-30T16:00:00.000Z" title="发表于 2023-08-31 00:00:00">2023-08-31</time><span class="post-meta-separator">|</span><i class="fas fa-history fa-fw post-meta-icon"></i><span class="post-meta-label">更新于</span><time class="post-meta-date-updated" datetime="2025-01-04T11:43:26.886Z" title="更新于 2025-01-04 19:43:26">2025-01-04</time></span></div><div class="meta-secondline"><span class="post-meta-separator">|</span><span class="post-meta-pv-cv" id="" data-flag-title=""><i class="far fa-eye fa-fw post-meta-icon"></i><span class="post-meta-label">浏览量:</span><span id="busuanzi_value_page_pv"><i class="fa-solid fa-spinner fa-spin"></i></span></span></div></div></div></header><main class="layout" id="content-inner"><div id="post"><article class="container post-content" id="article-container"><h1 id="主要问题描述"><a href="#主要问题描述" class="headerlink" title="主要问题描述"></a>主要问题描述</h1><p>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;由于项目原因需要经常在windows下切换node环境，找了下FNM资料，没发现合适的文章。所以主要问题就是在不想切换linux环境，也不想用poweshell，还不使用cmder的情况下，每次打开cmd自动设置环境变量。</p>
+<h1 id="解决方案："><a href="#解决方案：" class="headerlink" title="解决方案："></a>解决方案：</h1><p><strong>解决方法1</strong>：设置autorun.cmd</p>
+<p><code>reg add "HKEY_LOCAL_MACHINE\SOFTWARE\Microsoft\Command Processor" /v AutoRun /t REG_SZ /d @^%USERPROFILE^%\autorun.cmd" "2^&gt;NUL /f</code></p>
+<ul>
+<li>打开注册表编辑器（<code>regedit</code>）。</li>
+<li>导航到：<code>HKEY_CURRENT_USER\Software\Microsoft\Command Processor</code></li>
+<li>如果没有<code>Autorun</code>键，右键新建一个<code>String Value</code>（字符串值），命名为<code>Autorun</code>。</li>
+<li>设置值为<code>C:\path\to\autorun.cmd</code>（也可以替换为你实际的<code>autorun.cmd</code>路径）。</li>
+</ul>
+<p> <a target="_blank" rel="noopener" href="https://superuser.com/a/144348">You can set up a startup script</a>&nbsp;and append the following line:</p>
+<figure class="highlight plaintext"><table><tbody><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line">if defined FNM_ENV (</span><br><span class="line">  exit /b</span><br><span class="line">)</span><br><span class="line">set FNM_ENV=true</span><br><span class="line">FOR /f "tokens=*" %%i IN ('fnm env --use-on-cd') DO CALL %%i</span><br><span class="line">set FNM_ENV=</span><br></pre></td></tr></tbody></table></figure>
+
+<p>添加一个标记，用来判断是否已经执行过<code>FOR /f "tokens=*" %%i IN ('fnm env --use-on-cd') DO CALL %%i</code>，防止出现死循环。类似~/.bashrc，每个会话都执行一遍。</p>
+<p><strong>解决办法2</strong>：设置autorun.cmd</p>
+<figure class="highlight plaintext"><table><tbody><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">fnm env --use-on-cd &gt; %USERPROFILE%/fnm.txt</span><br><span class="line">for /f "delims=" %%i in (%USERPROFILE%/fnm.txt) do (</span><br><span class="line">    call %%i</span><br><span class="line">)</span><br><span class="line">del %USERPROFILE%/fnm.txt</span><br></pre></td></tr></tbody></table></figure>
+
+<p>曾经使用了一段时间的改方法，缺点是每次都要创建删除文件。</p>
+<p>手动执行测试：</p>
+<figure class="highlight plaintext"><table><tbody><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">FOR /f "tokens=*" %i IN ('fnm env --use-on-cd') DO CALL %i</span><br></pre></td></tr></tbody></table></figure>
+
+<h1 id="错误示范："><a href="#错误示范：" class="headerlink" title="错误示范："></a>错误示范：</h1><p>1、首先尝试了在批处理里面添加：</p>
+<p><code>FOR /f "tokens=*" %%i IN ('fnm env --use-on-cd') DO CALL %%i</code></p>
+<p><strong>测试结果</strong>：无限循环</p>
+<p><strong>原因分析：</strong></p>
+<p>在<code>autorun.cmd</code>中使用<code>FOR /f "tokens=*" %%i IN ('fnm env --use-on-cd') DO CALL %%i</code>时，造成无限循环的原因可能与<code>CALL</code>命令如何执行命令有关。<code>CALL</code>命令会执行指定的命令，并且在完成后返回到当前批处理脚本继续执行。如果<code>fnm env --use-on-cd</code>的输出包含了某个命令，而这个命令在执行时又触发了对<code>autorun.cmd</code>的调用，就会导致无限循环。</p>
+<p>2、尝试直接引用脚本：</p>
+<figure class="highlight plaintext"><table><tbody><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line">:: %CMDER_ROOT%\bin\fnm_init.cmd</span><br><span class="line">@echo off</span><br><span class="line">FOR /f "tokens=*" %%z IN ('fnm env --use-on-cd') DO CALL %%z</span><br><span class="line"></span><br><span class="line"></span><br><span class="line">:: %CMDER_ROOT%\config\user_profile.cmd</span><br><span class="line">call "%CMDER_ROOT%\bin\fnm_init.cmd"</span><br></pre></td></tr></tbody></table></figure>
+
+<p><strong>测试结果</strong>：无限循环</p>
+<h1 id="思维发散"><a href="#思维发散" class="headerlink" title="思维发散"></a>思维发散</h1><p>每天就是胡思乱想，那么问题来了，</p>
+<p><strong>1、如何判断cmd是第一次启动呢？</strong></p>
+<p>设置环境变量、设置标志文件、读取系统文件进行判断、开机脚本、关机脚本、计划任务……</p>
+<p>有空再研究。</p>
+<p><strong>2、是否可以固定环境变量呢？</strong></p>
+<figure class="highlight plaintext"><table><tbody><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line">FNM_ARCH=x64</span><br><span class="line">FNM_COREPACK_ENABLED=false</span><br><span class="line">FNM_DIR=C:\Users\NAME\AppData\Roaming\fnm</span><br><span class="line">FNM_LOGLEVEL=info</span><br><span class="line">FNM_MULTISHELL_PATH=C:\Users\NAME\AppData\Local\fnm_multishells\29828_1735989106450</span><br><span class="line">FNM_NODE_DIST_MIRROR=https://nodejs.org/dist</span><br><span class="line">FNM_RESOLVE_ENGINES=true</span><br><span class="line">FNM_VERSION_FILE_STRATEGY=local</span><br></pre></td></tr></tbody></table></figure>
+
+<p>应该是可以，假设修改FNM_DIR：</p>
+<p><code>setx /M FNM_DIR "D:\Program Files\npm"</code></p>
+<p>不过这样的话，autorun.cmd的脚本就要更改了，会存在冲突。个人理解，其实只需要设置FNM_MULTISHELL_PATH，其他都可以配置成永久环境变量。</p>
+<p>FNM_MULTISHELL_PATH=C:\Users\NAME\AppData\Local\fnm_multishells`29828_1735989106450`这串数字每次都是变化的。</p>
+<p>我没有测试，感兴趣的可以自行测试。</p>
+<h1 id="总结"><a href="#总结" class="headerlink" title="总结"></a>总结</h1><p>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;本来是个小问题，就是稍微研究研究。可以看到github上的issue，几乎有一半都是跟环境变量有关系（未经严格统计）。懒人症发作，其实不想写的，纠结写还是不写的时间，可能比写下来的时间要久。可见无论要做什么，真正行动起来是最重要的。</p>
+<h1 id="参考"><a href="#参考" class="headerlink" title="参考"></a>参考</h1><p><a target="_blank" rel="noopener" href="https://github.com/Schniz/fnm">https://github.com/Schniz/fnm</a></p>
+<p><a target="_blank" rel="noopener" href="https://github.com/Schniz/fnm/blob/master/docs/commands.md">fnm/docs/commands.md at master · Schniz/fnm · GitHub</a></p>
+<p>Environment variables need to be setup before you can start using fnm. This is done by evaluating the output of&nbsp;<code>fnm env</code>.</p>
+<h4 id="PowerShell"><a href="#PowerShell" class="headerlink" title="PowerShell"></a>PowerShell</h4><p><a target="_blank" rel="noopener" href="https://github.com/Schniz/fnm#powershell"></a></p>
+<p>Add the following to the end of your profile file:</p>
+<figure class="highlight powershell"><table><tbody><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">fnm env <span class="literal">--use-on-cd</span> <span class="literal">--shell</span> powershell | <span class="built_in">Out-String</span> | <span class="built_in">Invoke-Expression</span></span><br></pre></td></tr></tbody></table></figure>
+
+<ul>
+<li><p>For macOS/Linux, the profile is located at&nbsp;<code>~/.config/powershell/Microsoft.PowerShell_profile.ps1</code></p>
+</li>
+<li><p>For Windows location is either:</p>
+<ul>
+<li><code>%userprofile%\Documents\WindowsPowerShell\Microsoft.PowerShell_profile.ps1</code>&nbsp;Powershell 5</li>
+<li><code>%userprofile%\Documents\PowerShell\Microsoft.PowerShell_profile.ps1</code>&nbsp;Powershell 6+</li>
+</ul>
+</li>
+<li><p>To create the profile file you can run this in PowerShell:</p>
+<figure class="highlight powershell"><table><tbody><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">if</span> (<span class="operator">-not</span> (<span class="built_in">Test-Path</span> <span class="variable">$profile</span>)) { <span class="built_in">New-Item</span> <span class="variable">$profile</span> <span class="literal">-Force</span> }</span><br></pre></td></tr></tbody></table></figure>
+</li>
+<li><p>To edit your profile run this in PowerShell:</p>
+<figure class="highlight powershell"><table><tbody><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="built_in">Invoke-Item</span> <span class="variable">$profile</span></span><br></pre></td></tr></tbody></table></figure></li>
+</ul>
+<h4 id="Windows-Command-Prompt-aka-Batch-aka-WinCMD"><a href="#Windows-Command-Prompt-aka-Batch-aka-WinCMD" class="headerlink" title="Windows Command Prompt aka Batch aka WinCMD"></a>Windows Command Prompt aka Batch aka WinCMD</h4><p><a target="_blank" rel="noopener" href="https://github.com/Schniz/fnm#windows-command-prompt-aka-batch-aka-wincmd"></a></p>
+<p>fnm is also supported but is not entirely covered. You can set up a startup script for&nbsp;<a target="_blank" rel="noopener" href="https://superuser.com/a/144348">cmd.exe</a>&nbsp;or&nbsp;<a target="_blank" rel="noopener" href="https://superuser.com/a/1855283">Windows Terminal</a>&nbsp;and append the following lines:</p>
+<figure class="highlight plaintext"><table><tbody><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line">@echo off</span><br><span class="line">:: for /F will launch a new instance of cmd so we create a guard to prevent an infnite loop</span><br><span class="line">if not defined FNM_AUTORUN_GUARD (</span><br><span class="line">    set "FNM_AUTORUN_GUARD=AutorunGuard"</span><br><span class="line">    FOR /f "tokens=*" %%z IN ('fnm env --use-on-cd') DO CALL %%z</span><br><span class="line">)</span><br></pre></td></tr></tbody></table></figure>
+
+<h4 id="Usage-with-Cmder"><a href="#Usage-with-Cmder" class="headerlink" title="Usage with Cmder"></a>Usage with Cmder</h4><p><a target="_blank" rel="noopener" href="https://github.com/Schniz/fnm#usage-with-cmder"></a></p>
+<p>Usage is very similar to the normal WinCMD install, apart for a few tweaks to allow being called from the cmder startup script. The example&nbsp;<strong>assumes</strong>&nbsp;that the&nbsp;<code>CMDER_ROOT</code>&nbsp;environment variable is&nbsp;<strong>set</strong>&nbsp;to the&nbsp;<strong>root directory</strong>&nbsp;of your Cmder installation. Then you can do something like this:</p>
+<ul>
+<li>Make a .cmd file to invoke it</li>
+</ul>
+<figure class="highlight plaintext"><table><tbody><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">:: %CMDER_ROOT%\bin\fnm_init.cmd</span><br><span class="line">@echo off</span><br><span class="line">FOR /f "tokens=*" %%z IN ('fnm env --use-on-cd') DO CALL %%z</span><br></pre></td></tr></tbody></table></figure>
+
+<ul>
+<li>Add it to the startup script</li>
+</ul>
+<figure class="highlight plaintext"><table><tbody><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">:: %CMDER_ROOT%\config\user_profile.cmd</span><br><span class="line">call "%CMDER_ROOT%\bin\fnm_init.cmd"</span><br></pre></td></tr></tbody></table></figure>
+
+<p>You can replace&nbsp;<code>%CMDER_ROOT%</code>&nbsp;with any other convenient path too.</p>
+</article><div class="post-copyright"><div class="post-copyright__author"><span class="post-copyright-meta"><i class="fas fa-circle-user fa-fw"></i>文章作者: </span><span class="post-copyright-info"><a href="https://pping.github.io/pping.github.io">aymar</a></span></div><div class="post-copyright__type"><span class="post-copyright-meta"><i class="fas fa-square-arrow-up-right fa-fw"></i>文章链接: </span><span class="post-copyright-info"><a href="https://pping.github.io/pping.github.io/2023/08/31/cmd%E7%8E%AF%E5%A2%83%E4%B8%8B%E8%AE%BE%E7%BD%AEfnm%E7%8E%AF%E5%A2%83%E5%8F%98%E9%87%8F/">https://pping.github.io/pping.github.io/2023/08/31/cmd%E7%8E%AF%E5%A2%83%E4%B8%8B%E8%AE%BE%E7%BD%AEfnm%E7%8E%AF%E5%A2%83%E5%8F%98%E9%87%8F/</a></span></div><div class="post-copyright__notice"><span class="post-copyright-meta"><i class="fas fa-circle-exclamation fa-fw"></i>版权声明: </span><span class="post-copyright-info">本博客所有文章除特别声明外，均采用 <a href="https://creativecommons.org/licenses/by-nc-sa/4.0/" target="_blank">CC BY-NC-SA 4.0</a> 许可协议。转载请注明来源 <a href="https://pping.github.io/pping.github.io" target="_blank">热带雨林</a>！</span></div></div><div class="tag_share"><div class="post-share"><div class="social-share" data-image="/config/img/avatar.jpg" data-sites="facebook,twitter,wechat,weibo,qq"></div><link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/butterfly-extsrc/sharejs/dist/css/share.min.css" media="print" onload="this.media='all'"><script src="https://cdn.jsdelivr.net/npm/butterfly-extsrc/sharejs/dist/js/social-share.min.js" defer></script></div></div><nav class="pagination-post" id="pagination"><a class="pagination-related full-width" href="/2021/06/25/Bash%20Reference%20Manual/" title="Bash Reference Manual"><div class="cover" style="background: var(--default-bg-color)"></div><div class="info text-right"><div class="info-1"><div class="info-item-1">下一篇</div><div class="info-item-2">Bash Reference Manual</div></div><div class="info-2"><div class="info-item-1">Bash Reference Manual Table of Contents 1 Introduction 1.1 What is Bash? 1.2 What is a shell?   2 Definitions 3 Basic Shell Features 3.1 Shell Syntax 3.1.1 Shell Operation 3.1.2 Quoting 3.1.2.1 Escape Character 3.1.2.2 Single Quotes 3.1.2.3 Double Quotes 3.1.2.4 ANSI-C Quoting 3.1.2.5 Locale-Specific Translation   3.1.3 Comments   3.2 Shell Commands 3.2.1 Reserved Words 3.2.2 Simple Commands 3.2.3 Pipelines 3.2.4 Lists of Commands 3.2.5 Compound Commands 3.2.5.1 Looping Constructs 3.2.5.2...</div></div></div></a></nav><hr class="custom-hr"/><div id="post-comment"><div class="comment-head"><div class="comment-headline"><i class="fas fa-comments fa-fw"></i><span> 评论</span></div></div><div class="comment-wrap"><div><div id="gitalk-container"></div></div></div></div></div><div class="aside-content" id="aside-content"><div class="card-widget card-info text-center"><div class="avatar-img"><img src="/config/img/avatar.jpg" onerror="this.onerror=null;this.src='/img/friend_404.gif'" alt="avatar"/></div><div class="author-info-name">aymar</div><div class="author-info-description">知之者不如好之者，好之者不如乐之者。</div><div class="site-data"><a href="/archives/"><div class="headline">文章</div><div class="length-num">13</div></a><a href="/tags/"><div class="headline">标签</div><div class="length-num">0</div></a><a href="/categories/"><div class="headline">分类</div><div class="length-num">0</div></a></div><a id="card-info-btn" target="_blank" rel="noopener" href="https://github.com/xxxxxx"><i class="fab fa-github"></i><span>Follow Me</span></a></div><div class="card-widget card-announcement"><div class="item-headline"><i class="fas fa-bullhorn fa-shake"></i><span>公告</span></div><div class="announcement_content">亲爱的读者朋友们， 欢迎来到我的博客！非常感谢大家对我的支持和关注。 在这里，我将分享各种有趣的内容，包括技术文章、生活点滴、旅行故事、书籍推荐等等。无论你是技术爱好者、旅行达人，还是喜欢阅读和学习的新手，我希望你都能在这里找到你感兴趣的内容。 我会不定期更新博客，带来更多精彩的内容。同时，我也非常期待与大家互动交流，如果你有任何建议或想法，欢迎在评论区留言或者通过邮件与我联系。</div></div><div class="sticky_layout"><div class="card-widget" id="card-toc"><div class="item-headline"><i class="fas fa-stream"></i><span>目录</span><span class="toc-percentage"></span></div><div class="toc-content"><ol class="toc"><li class="toc-item toc-level-1"><a class="toc-link" href="#%E4%B8%BB%E8%A6%81%E9%97%AE%E9%A2%98%E6%8F%8F%E8%BF%B0"><span class="toc-number">1.</span> <span class="toc-text">主要问题描述</span></a></li><li class="toc-item toc-level-1"><a class="toc-link" href="#%E8%A7%A3%E5%86%B3%E6%96%B9%E6%A1%88%EF%BC%9A"><span class="toc-number">2.</span> <span class="toc-text">解决方案：</span></a></li><li class="toc-item toc-level-1"><a class="toc-link" href="#%E9%94%99%E8%AF%AF%E7%A4%BA%E8%8C%83%EF%BC%9A"><span class="toc-number">3.</span> <span class="toc-text">错误示范：</span></a></li><li class="toc-item toc-level-1"><a class="toc-link" href="#%E6%80%9D%E7%BB%B4%E5%8F%91%E6%95%A3"><span class="toc-number">4.</span> <span class="toc-text">思维发散</span></a></li><li class="toc-item toc-level-1"><a class="toc-link" href="#%E6%80%BB%E7%BB%93"><span class="toc-number">5.</span> <span class="toc-text">总结</span></a></li><li class="toc-item toc-level-1"><a class="toc-link" href="#%E5%8F%82%E8%80%83"><span class="toc-number">6.</span> <span class="toc-text">参考</span></a><ol class="toc-child"><li class="toc-item toc-level-4"><a class="toc-link" href="#PowerShell"><span class="toc-number">6.0.0.1.</span> <span class="toc-text">PowerShell</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#Windows-Command-Prompt-aka-Batch-aka-WinCMD"><span class="toc-number">6.0.0.2.</span> <span class="toc-text">Windows Command Prompt aka Batch aka WinCMD</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#Usage-with-Cmder"><span class="toc-number">6.0.0.3.</span> <span class="toc-text">Usage with Cmder</span></a></li></ol></li></ol></li></ol></li></ol></div></div><div class="card-widget card-recent-post"><div class="item-headline"><i class="fas fa-history"></i><span>最新文章</span></div><div class="aside-list"><div class="aside-list-item no-cover"><div class="content"><a class="title" href="/2023/08/31/cmd%E7%8E%AF%E5%A2%83%E4%B8%8B%E8%AE%BE%E7%BD%AEfnm%E7%8E%AF%E5%A2%83%E5%8F%98%E9%87%8F/" title="FNM环境变量设置">FNM环境变量设置</a><time datetime="2023-08-30T16:00:00.000Z" title="发表于 2023-08-31 00:00:00">2023-08-31</time></div></div><div class="aside-list-item no-cover"><div class="content"><a class="title" href="/2021/06/25/Bash%20Reference%20Manual/" title="Bash Reference Manual">Bash Reference Manual</a><time datetime="2021-06-24T16:00:00.000Z" title="发表于 2021-06-25 00:00:00">2021-06-25</time></div></div><div class="aside-list-item no-cover"><div class="content"><a class="title" href="/2021/06/23/%E8%BD%AC%E8%BD%BD%20%E4%BD%BF%E7%94%A8Kind%E5%BF%AB%E9%80%9F%E5%88%9B%E5%BB%BAK8S%E5%AD%A6%E4%B9%A0%E7%8E%AF%E5%A2%83/" title="转载 使用Kind快速创建K8S学习环境">转载 使用Kind快速创建K8S学习环境</a><time datetime="2021-06-22T16:00:00.000Z" title="发表于 2021-06-23 00:00:00">2021-06-23</time></div></div><div class="aside-list-item no-cover"><div class="content"><a class="title" href="/2021/06/17/6.4.3.1%20%E5%AF%86%E7%A0%81%E9%AA%8C%E8%AF%81%E6%8F%92%E4%BB%B6%E5%AE%89%E8%A3%85/" title="6.4.3.1 密码验证插件安装">6.4.3.1 密码验证插件安装</a><time datetime="2021-06-17T03:23:10.000Z" title="发表于 2021-06-17 11:23:10">2021-06-17</time></div></div><div class="aside-list-item no-cover"><div class="content"><a class="title" href="/2021/06/17/%E5%A6%82%E4%BD%95%E4%BD%BF%E7%94%A8%20Docker%20Compose%20%E5%AE%89%E8%A3%85%20WordPress/" title="如何使用 Docker Compose 安装 WordPress">如何使用 Docker Compose 安装 WordPress</a><time datetime="2021-06-16T16:00:00.000Z" title="发表于 2021-06-17 00:00:00">2021-06-17</time></div></div></div></div></div></div></main><footer id="footer"><div id="footer-wrap"><div class="footer_custom_text">©2014 - ©2024 aymar. All rights reserved.</div></div></footer></div><div id="rightside"><div id="rightside-config-hide"><button id="readmode" type="button" title="阅读模式"><i class="fas fa-book-open"></i></button><button id="darkmode" type="button" title="日间和夜间模式切换"><i class="fas fa-adjust"></i></button><button id="hide-aside-btn" type="button" title="单栏和双栏切换"><i class="fas fa-arrows-alt-h"></i></button></div><div id="rightside-config-show"><button id="rightside-config" type="button" title="设置"><i class="fas fa-cog fa-spin"></i></button><button class="close" id="mobile-toc-button" type="button" title="目录"><i class="fas fa-list-ul"></i></button><a id="to_comment" href="#post-comment" title="前往评论"><i class="fas fa-comments"></i></a><button id="go-up" type="button" title="回到顶部"><span class="scroll-percent"></span><i class="fas fa-arrow-up"></i></button></div></div><div><script src="/js/utils.js"></script><script src="/js/main.js"></script><div class="js-pjax"><script>(() => {
+  const isShuoshuo = GLOBAL_CONFIG_SITE.isShuoshuo
+  const option = null
+
+  const commentCount = n => {
+    const isCommentCount = document.querySelector('#post-meta .gitalk-comment-count')
+    if (isCommentCount) {
+      isCommentCount.textContent= n
+    }
+  }
+
+  const initGitalk = (el, path) => {
+    if (isShuoshuo) {
+      window.shuoshuoComment.destroyGitalk = () => {
+        if (el.children.length) {
+          el.innerHTML = ''
+          el.classList.add('no-comment')
+        }
+      }
+    }
+
+    const gitalk = new Gitalk({
+      clientID: '3911bd8dbdeee631dbc3',
+      clientSecret: 'ce4e6c80bb4b519fd86fae81f2bf24c1312849eb',
+      repo: 'pping.github.io',
+      owner: 'pping',
+      admin: ['pping'],
+      updateCountCallback: commentCount,
+      ...option,
+      id: isShuoshuo ? path : (option && option.id) || 'c4fed5ff8c7f6df4c19e73f8b5effe7c'
+    })
+
+    gitalk.render('gitalk-container')
+  }
+
+  const loadGitalk = async(el, path) => {
+    if (typeof Gitalk === 'function') initGitalk(el, path)
+    else {
+      await btf.getCSS('https://cdn.jsdelivr.net/npm/gitalk/dist/gitalk.min.css')
+      await btf.getScript('https://cdn.jsdelivr.net/npm/gitalk/dist/gitalk.min.js')
+      initGitalk(el, path)
+    }
+  }
+
+  if (isShuoshuo) {
+    'Gitalk' === 'Gitalk'
+      ? window.shuoshuoComment = { loadComment: loadGitalk }
+      : window.loadOtherComment = loadGitalk
+    return
+  }
+
+  if ('Gitalk' === 'Gitalk' || !false) {
+    if (false) btf.loadComment(document.getElementById('gitalk-container'), loadGitalk)
+    else loadGitalk()
+  } else {
+    window.loadOtherComment = loadGitalk
+  }
+})()</script></div><link rel="stylesheet" href="/config/css/custom_bottom.css"><script async data-pjax src="//busuanzi.ibruce.info/busuanzi/2.3/busuanzi.pure.mini.js"></script><div id="local-search"><div class="search-dialog"><nav class="search-nav"><span class="search-dialog-title">搜索</span><span id="loading-status"></span><button class="search-close-button"><i class="fas fa-times"></i></button></nav><div class="text-center" id="loading-database"><i class="fas fa-spinner fa-pulse"></i><span>  数据加载中</span></div><div class="search-wrap"><div id="local-search-input"><div class="local-search-box"><input class="local-search-box--input" placeholder="人工智能" type="text"/></div></div><hr/><div id="local-search-results"></div><div id="local-search-stats-wrap"></div></div></div><div id="search-mask"></div><script src="/js/search/local-search.js"></script></div></div></body></html>
