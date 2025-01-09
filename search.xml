@@ -51,6 +51,14 @@
     <title>如何使用 Docker Compose 安装 WordPress</title>
     <url>/2021/06/17/%E5%A6%82%E4%BD%95%E4%BD%BF%E7%94%A8%20Docker%20Compose%20%E5%AE%89%E8%A3%85%20WordPress/</url>
     <content><![CDATA[]]></content>
+      <categories>
+        <category>docker</category>
+      </categories>
+      <tags>
+        <tag>docker</tag>
+        <tag>linux</tag>
+        <tag>转载</tag>
+      </tags>
   </entry>
   <entry>
     <title>转载 使用Kind快速创建K8S学习环境</title>
