@@ -7,6 +7,9 @@
       <categories>
         <category>Mysql</category>
       </categories>
+      <tags>
+        <tag>mysql</tag>
+      </tags>
   </entry>
   <entry>
     <title>No such file or directory in Unknown on line 0</title>
