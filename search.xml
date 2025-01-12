@@ -114,18 +114,6 @@
       </tags>
   </entry>
   <entry>
-    <title>hexo添加gitalk提示Network Error</title>
-    <url>/2025/01/12/gitalk/%E5%9C%A8%E6%8E%88%E6%9D%83gitalk%E5%90%8E%E5%87%BA%E7%8E%B0403%E9%94%99%E8%AF%AF3%20copy/</url>
-    <content><![CDATA[]]></content>
-      <categories>
-        <category>blog</category>
-      </categories>
-      <tags>
-        <tag>gitalk</tag>
-        <tag>blog</tag>
-      </tags>
-  </entry>
-  <entry>
     <title>Bash Reference Manual</title>
     <url>/2021/06/25/Bash%20Reference%20Manual/</url>
     <content><![CDATA[]]></content>
@@ -148,6 +136,18 @@
         <tag>gitalk</tag>
         <tag>blog</tag>
         <tag>hexo</tag>
+      </tags>
+  </entry>
+  <entry>
+    <title>hexo添加gitalk提示Network Error</title>
+    <url>/2025/01/12/gitalk/hexo%E6%B7%BB%E5%8A%A0gitalk%E6%8F%90%E7%A4%BANetwork%20Error/</url>
+    <content><![CDATA[]]></content>
+      <categories>
+        <category>blog</category>
+      </categories>
+      <tags>
+        <tag>gitalk</tag>
+        <tag>blog</tag>
       </tags>
   </entry>
 </search>
