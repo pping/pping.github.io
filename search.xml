@@ -77,19 +77,6 @@
       </tags>
   </entry>
   <entry>
-    <title>在授权gitalk后出现403错误</title>
-    <url>/2025/01/12/%E5%9C%A8%E6%8E%88%E6%9D%83gitalk%E5%90%8E%E5%87%BA%E7%8E%B0403%E9%94%99%E8%AF%AF/</url>
-    <content><![CDATA[]]></content>
-      <categories>
-        <category>blog</category>
-      </categories>
-      <tags>
-        <tag>gitalk</tag>
-        <tag>blog</tag>
-        <tag>hexo</tag>
-      </tags>
-  </entry>
-  <entry>
     <title>如何使用 Docker Compose 安装 WordPress</title>
     <url>/2021/06/17/%E5%A6%82%E4%BD%95%E4%BD%BF%E7%94%A8%20Docker%20Compose%20%E5%AE%89%E8%A3%85%20WordPress/</url>
     <content><![CDATA[]]></content>
@@ -127,8 +114,8 @@
       </tags>
   </entry>
   <entry>
-    <title>在授权gitalk后出现403错误4</title>
-    <url>/2021/02/23/gitalk/%E5%9C%A8%E6%8E%88%E6%9D%83gitalk%E5%90%8E%E5%87%BA%E7%8E%B0403%E9%94%99%E8%AF%AF3%20copy/</url>
+    <title>hexo添加gitalk提示Network Error</title>
+    <url>/2025/01/12/gitalk/%E5%9C%A8%E6%8E%88%E6%9D%83gitalk%E5%90%8E%E5%87%BA%E7%8E%B0403%E9%94%99%E8%AF%AF3%20copy/</url>
     <content><![CDATA[]]></content>
       <categories>
         <category>blog</category>
@@ -148,6 +135,19 @@
       </categories>
       <tags>
         <tag>bash</tag>
+      </tags>
+  </entry>
+  <entry>
+    <title>在授权gitalk后出现403错误</title>
+    <url>/2021/02/23/gitalk/%E5%9C%A8%E6%8E%88%E6%9D%83gitalk%E5%90%8E%E5%87%BA%E7%8E%B0403%E9%94%99%E8%AF%AF/</url>
+    <content><![CDATA[]]></content>
+      <categories>
+        <category>blog</category>
+      </categories>
+      <tags>
+        <tag>gitalk</tag>
+        <tag>blog</tag>
+        <tag>hexo</tag>
       </tags>
   </entry>
 </search>
