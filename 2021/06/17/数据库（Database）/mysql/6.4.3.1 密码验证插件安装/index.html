@@ -1,0 +1,571 @@
+<!DOCTYPE html><html lang="zh-CN" data-theme="light"><head><meta charset="UTF-8"><meta http-equiv="X-UA-Compatible" content="IE=edge"><meta name="viewport" content="width=device-width, initial-scale=1.0,viewport-fit=cover"><title>6.4.3.1 密码证件安装 | 热带雨林</title><meta name="author" content="aymar"><meta name="copyright" content="aymar"><meta name="format-detection" content="telephone=no"><meta name="theme-color" content="#ffffff"><meta name="description" content="本节介绍如何安装&nbsp;validate_password密码验证插件。有关安装插件的一般信息，请参阅&nbsp;第 5.5.1 节，“安装和卸载插件”。 笔记 如果使用安装了MySQL 5.7&nbsp;MySQL Yum repository，&nbsp;MySQL SLES Repository，或&nbsp;Oracle提供的RPM包，validate_password默认情况下，您启">
+<meta property="og:type" content="article">
+<meta property="og:title" content="6.4.3.1 密码证件安装">
+<meta property="og:url" content="https://blog.aymar.cn/2021/06/17/%E6%95%B0%E6%8D%AE%E5%BA%93%EF%BC%88Database%EF%BC%89/mysql/6.4.3.1%20%E5%AF%86%E7%A0%81%E9%AA%8C%E8%AF%81%E6%8F%92%E4%BB%B6%E5%AE%89%E8%A3%85/index.html">
+<meta property="og:site_name" content="热带雨林">
+<meta property="og:description" content="本节介绍如何安装&nbsp;validate_password密码验证插件。有关安装插件的一般信息，请参阅&nbsp;第 5.5.1 节，“安装和卸载插件”。 笔记 如果使用安装了MySQL 5.7&nbsp;MySQL Yum repository，&nbsp;MySQL SLES Repository，或&nbsp;Oracle提供的RPM包，validate_password默认情况下，您启">
+<meta property="og:locale" content="zh_CN">
+<meta property="og:image" content="https://www.aymar.cn/images/article/wallhaven-96w8e8.webp">
+<meta property="article:published_time" content="2021-06-17T03:23:10.000Z">
+<meta property="article:modified_time" content="2021-06-16T16:00:00.000Z">
+<meta property="article:author" content="aymar">
+<meta property="article:tag" content="mysql">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:image" content="https://www.aymar.cn/images/article/wallhaven-96w8e8.webp"><link rel="shortcut icon" href="/config/img/favicon.png"><link rel="canonical" href="https://blog.aymar.cn/2021/06/17/%E6%95%B0%E6%8D%AE%E5%BA%93%EF%BC%88Database%EF%BC%89/mysql/6.4.3.1%20%E5%AF%86%E7%A0%81%E9%AA%8C%E8%AF%81%E6%8F%92%E4%BB%B6%E5%AE%89%E8%A3%85/index.html"><link rel="preconnect" href="//cdn.jsdelivr.net"/><link rel="preconnect" href="//hm.baidu.com"/><link rel="preconnect" href="//busuanzi.ibruce.info"/><link rel="stylesheet" href="/css/index.css"><link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@fortawesome/fontawesome-free/css/all.min.css"><script>
+    (() => {
+      
+    const saveToLocal = {
+      set: (key, value, ttl) => {
+        if (!ttl) return
+        const expiry = Date.now() + ttl * 86400000
+        localStorage.setItem(key, JSON.stringify({ value, expiry }))
+      },
+      get: key => {
+        const itemStr = localStorage.getItem(key)
+        if (!itemStr) return undefined
+        const { value, expiry } = JSON.parse(itemStr)
+        if (Date.now() > expiry) {
+          localStorage.removeItem(key)
+          return undefined
+        }
+        return value
+      }
+    }
+
+    window.btf = {
+      saveToLocal,
+      getScript: (url, attr = {}) => new Promise((resolve, reject) => {
+        const script = document.createElement('script')
+        script.src = url
+        script.async = true
+        Object.entries(attr).forEach(([key, val]) => script.setAttribute(key, val))
+        script.onload = script.onreadystatechange = () => {
+          if (!script.readyState || /loaded|complete/.test(script.readyState)) resolve()
+        }
+        script.onerror = reject
+        document.head.appendChild(script)
+      }),
+      getCSS: (url, id) => new Promise((resolve, reject) => {
+        const link = document.createElement('link')
+        link.rel = 'stylesheet'
+        link.href = url
+        if (id) link.id = id
+        link.onload = link.onreadystatechange = () => {
+          if (!link.readyState || /loaded|complete/.test(link.readyState)) resolve()
+        }
+        link.onerror = reject
+        document.head.appendChild(link)
+      }),
+      addGlobalFn: (key, fn, name = false, parent = window) => {
+        if (!false && key.startsWith('pjax')) return
+        const globalFn = parent.globalFn || {}
+        globalFn[key] = globalFn[key] || {}
+        globalFn[key][name || Object.keys(globalFn[key]).length] = fn
+        parent.globalFn = globalFn
+      }
+    }
+  
+      
+      const activateDarkMode = () => {
+        document.documentElement.setAttribute('data-theme', 'dark')
+        if (document.querySelector('meta[name="theme-color"]') !== null) {
+          document.querySelector('meta[name="theme-color"]').setAttribute('content', '#0d0d0d')
+        }
+      }
+      const activateLightMode = () => {
+        document.documentElement.setAttribute('data-theme', 'light')
+        if (document.querySelector('meta[name="theme-color"]') !== null) {
+          document.querySelector('meta[name="theme-color"]').setAttribute('content', '#ffffff')
+        }
+      }
+
+      btf.activateDarkMode = activateDarkMode
+      btf.activateLightMode = activateLightMode
+
+      const theme = saveToLocal.get('theme')
+    
+          theme === 'dark' ? activateDarkMode() : theme === 'light' ? activateLightMode() : null
+        
+      
+      const asideStatus = saveToLocal.get('aside-status')
+      if (asideStatus !== undefined) {
+        document.documentElement.classList.toggle('hide-aside', asideStatus === 'hide')
+      }
+    
+      
+    const detectApple = () => {
+      if (/iPad|iPhone|iPod|Macintosh/.test(navigator.userAgent)) {
+        document.documentElement.classList.add('apple')
+      }
+    }
+    detectApple()
+  
+    })()
+  </script><script>var _hmt = _hmt || [];
+(function() {
+  var hm = document.createElement("script");
+  hm.src = "https://hm.baidu.com/hm.js?d6348a489c9706b09ce89b2cd34384e0";
+  var s = document.getElementsByTagName("script")[0]; 
+  s.parentNode.insertBefore(hm, s);
+})();
+btf.addGlobalFn('pjaxComplete', () => {
+  _hmt.push(['_trackPageview',window.location.pathname])
+}, 'baidu_analytics')
+</script><script>const GLOBAL_CONFIG = {
+  root: '/',
+  algolia: undefined,
+  localSearch: {"path":"/search.xml","preload":false,"top_n_per_article":1,"unescape":false,"languages":{"hits_empty":"未找到符合您查询的内容：${query}","hits_stats":"共找到 ${hits} 篇文章"}},
+  translate: undefined,
+  highlight: {"plugin":"highlight.js","highlightCopy":true,"highlightLang":true,"highlightHeightLimit":false,"highlightFullpage":false,"highlightMacStyle":false},
+  copy: {
+    success: '复制成功',
+    error: '复制失败',
+    noSupport: '浏览器不支持'
+  },
+  relativeDate: {
+    homepage: false,
+    post: false
+  },
+  runtime: '天',
+  dateSuffix: {
+    just: '刚刚',
+    min: '分钟前',
+    hour: '小时前',
+    day: '天前',
+    month: '个月前'
+  },
+  copyright: undefined,
+  lightbox: 'null',
+  Snackbar: undefined,
+  infinitegrid: {
+    js: 'https://cdn.jsdelivr.net/npm/@egjs/infinitegrid/dist/infinitegrid.min.js',
+    buttonText: '加载更多'
+  },
+  isPhotoFigcaption: false,
+  islazyload: false,
+  isAnchor: false,
+  percent: {
+    toc: true,
+    rightside: false,
+  },
+  autoDarkmode: false
+}</script><script id="config-diff">var GLOBAL_CONFIG_SITE = {
+  title: '6.4.3.1 密码证件安装',
+  isPost: true,
+  isHome: false,
+  isHighlightShrink: false,
+  isToc: true,
+  isShuoshuo: false
+}</script><link href="https://fonts.googleapis.com/css2?family=Noto+Serif+SC:wght@400;700&display=swap" rel="stylesheet"><link rel="stylesheet" href="/config/css/custom_head.css"><meta name="generator" content="Hexo 7.3.0">
+<style>.github-emoji { position: relative; display: inline-block; width: 1.2em; min-height: 1.2em; overflow: hidden; vertical-align: top; color: transparent; }  .github-emoji > span { position: relative; z-index: 10; }  .github-emoji img, .github-emoji .fancybox { margin: 0 !important; padding: 0 !important; border: none !important; outline: none !important; text-decoration: none !important; user-select: none !important; cursor: auto !important; }  .github-emoji img { height: 1.2em !important; width: 1.2em !important; position: absolute !important; left: 50% !important; top: 50% !important; transform: translate(-50%, -50%) !important; user-select: none !important; cursor: auto !important; } .github-emoji-fallback { color: inherit; } .github-emoji-fallback img { opacity: 0 !important; }</style>
+</head><body><div id="web_bg" style="background-image: url(https://haowallpaper.com/link/common/file/previewFileImg/15942630369381760);"></div><div id="sidebar"><div id="menu-mask"></div><div id="sidebar-menus"><div class="avatar-img text-center"><img src="/config/img/avatar.jpg" onerror="onerror=null;src='/img/friend_404.gif'" alt="avatar"/></div><div class="site-data text-center"><a href="/archives/"><div class="headline">文章</div><div class="length-num">15</div></a><a href="/tags/"><div class="headline">标签</div><div class="length-num">23</div></a><a href="/categories/"><div class="headline">分类</div><div class="length-num">10</div></a></div><div class="menus_items"><div class="menus_item"><a class="site-page" href="/"><i class="fa-fw fas fa-home"></i><span> 主页</span></a></div><div class="menus_item"><span class="site-page group"><i class="fa-fw fa fa-book"></i><span> 博文</span><i class="fas fa-chevron-down"></i></span><ul class="menus_item_child"><li><a class="site-page child" href="/categories/"><i class="fa-fw fa fa-archive"></i><span> 分类</span></a></li><li><a class="site-page child" href="/tags/"><i class="fa-fw fa fa-tags"></i><span> 标签</span></a></li><li><a class="site-page child" href="/archives/"><i class="fa-fw fa fa-folder-open"></i><span> 归档</span></a></li></ul></div><div class="menus_item"><span class="site-page group"><i class="fa-fw fas fa-list"></i><span> 生活</span><i class="fas fa-chevron-down"></i></span><ul class="menus_item_child"><li><a class="site-page child" href="/share/"><i class="fa-fw fa fa-sticky-note"></i><span> 分享</span></a></li><li><a class="site-page child" href="/photos/"><i class="fa-fw fa fa-camera-retro"></i><span> 相册</span></a></li><li><a class="site-page child" href="/music/"><i class="fa-fw fa fa-music"></i><span> 音乐</span></a></li><li><a class="site-page child" href="/movie/"><i class="fa-fw fas fa-video"></i><span> 影视</span></a></li><li><a class="site-page child" href="/Game/"><i class="fa-fw fa fa fa-gamepad"></i><span> 游戏</span></a></li></ul></div><div class="menus_item"><a class="site-page" href="/comment/"><i class="fa-fw fa fa-paper-plane"></i><span> 留言板</span></a></div><div class="menus_item"><a class="site-page" href="/about/"><i class="fa-fw fa fa-address-card"></i><span> 关于博主</span></a></div></div></div></div><div class="post" id="body-wrap"><header class="post-bg" id="page-header" style="background-image: url(https://www.aymar.cn/images/article/wallhaven-96w8e8.webp);"><nav id="nav"><span id="blog-info"><a class="nav-site-title" href="/"><span class="site-name">热带雨林</span></a><a class="nav-page-title" href="/"><span class="site-name">6.4.3.1 密码证件安装</span></a></span><div id="menus"><div id="search-button"><span class="site-page social-icon search"><i class="fas fa-search fa-fw"></i><span> 搜索</span></span></div><div class="menus_items"><div class="menus_item"><a class="site-page" href="/"><i class="fa-fw fas fa-home"></i><span> 主页</span></a></div><div class="menus_item"><span class="site-page group"><i class="fa-fw fa fa-book"></i><span> 博文</span><i class="fas fa-chevron-down"></i></span><ul class="menus_item_child"><li><a class="site-page child" href="/categories/"><i class="fa-fw fa fa-archive"></i><span> 分类</span></a></li><li><a class="site-page child" href="/tags/"><i class="fa-fw fa fa-tags"></i><span> 标签</span></a></li><li><a class="site-page child" href="/archives/"><i class="fa-fw fa fa-folder-open"></i><span> 归档</span></a></li></ul></div><div class="menus_item"><span class="site-page group"><i class="fa-fw fas fa-list"></i><span> 生活</span><i class="fas fa-chevron-down"></i></span><ul class="menus_item_child"><li><a class="site-page child" href="/share/"><i class="fa-fw fa fa-sticky-note"></i><span> 分享</span></a></li><li><a class="site-page child" href="/photos/"><i class="fa-fw fa fa-camera-retro"></i><span> 相册</span></a></li><li><a class="site-page child" href="/music/"><i class="fa-fw fa fa-music"></i><span> 音乐</span></a></li><li><a class="site-page child" href="/movie/"><i class="fa-fw fas fa-video"></i><span> 影视</span></a></li><li><a class="site-page child" href="/Game/"><i class="fa-fw fa fa fa-gamepad"></i><span> 游戏</span></a></li></ul></div><div class="menus_item"><a class="site-page" href="/comment/"><i class="fa-fw fa fa-paper-plane"></i><span> 留言板</span></a></div><div class="menus_item"><a class="site-page" href="/about/"><i class="fa-fw fa fa-address-card"></i><span> 关于博主</span></a></div></div><div id="toggle-menu"><span class="site-page"><i class="fas fa-bars fa-fw"></i></span></div></div></nav><div id="post-info"><h1 class="post-title">6.4.3.1 密码证件安装</h1><div id="post-meta"><div class="meta-firstline"><span class="post-meta-date"><i class="far fa-calendar-alt fa-fw post-meta-icon"></i><span class="post-meta-label">发表于</span><time class="post-meta-date-created" datetime="2021-06-17T03:23:10.000Z" title="发表于 2021-06-17 11:23:10">2021-06-17</time><span class="post-meta-separator">|</span><i class="fas fa-history fa-fw post-meta-icon"></i><span class="post-meta-label">更新于</span><time class="post-meta-date-updated" datetime="2021-06-16T16:00:00.000Z" title="更新于 2021-06-17 00:00:00">2021-06-17</time></span><span class="post-meta-categories"><span class="post-meta-separator">|</span><i class="fas fa-inbox fa-fw post-meta-icon"></i><a class="post-meta-categories" href="/categories/%E6%95%B0%E6%8D%AE%E5%BA%93/">数据库</a><i class="fas fa-angle-right post-meta-separator"></i><i class="fas fa-inbox fa-fw post-meta-icon"></i><a class="post-meta-categories" href="/categories/%E6%95%B0%E6%8D%AE%E5%BA%93/mysql/">mysql</a></span></div><div class="meta-secondline"><span class="post-meta-separator">|</span><span class="post-meta-pv-cv" id="" data-flag-title=""><i class="far fa-eye fa-fw post-meta-icon"></i><span class="post-meta-label">浏览量:</span><span id="busuanzi_value_page_pv"><i class="fa-solid fa-spinner fa-spin"></i></span></span></div></div></div></header><main class="layout" id="content-inner"><div id="post"><article class="container post-content" id="article-container"><p>本节介绍如何安装&nbsp;<code>validate_password</code>密码验证插件。有关安装插件的一般信息，请参阅&nbsp;<a target="_blank" rel="noopener" href="https://dev.mysql.com/doc/refman/5.7/en/plugin-loading.html">第 5.5.1 节，“安装和卸载插件”</a>。</p>
+<p>笔记</p>
+<p>如果使用安装了MySQL 5.7&nbsp;<a target="_blank" rel="noopener" href="https://dev.mysql.com/downloads/repo/yum/">MySQL Yum repository</a>，&nbsp;<a target="_blank" rel="noopener" href="https://dev.mysql.com/downloads/repo/suse/">MySQL SLES Repository</a>，或&nbsp;<a target="_blank" rel="noopener" href="https://dev.mysql.com/doc/refman/5.7/en/linux-installation-rpm.html">Oracle提供的RPM包</a>，<code>validate_password</code>默认情况下，您启动MySQL服务器的第一次后使能。</p>
+<p>要被服务器使用，插件库文件必须位于 MySQL 插件目录（由<a target="_blank" rel="noopener" href="https://dev.mysql.com/doc/refman/5.7/en/server-system-variables.html#sysvar_plugin_dir"><code>plugin_dir</code></a>系统变量命名的目录）中。如有必要，通过设置<a target="_blank" rel="noopener" href="https://dev.mysql.com/doc/refman/5.7/en/server-system-variables.html#sysvar_plugin_dir"><code>plugin_dir</code></a>服务器启动时的值来配置插件目录位置 。</p>
+<p>插件库文件基本名称是&nbsp;<code>validate_password</code>. 文件名后缀因平台<code>.so</code>而异（例如，对于 Unix 和类 Unix 系统，<code>.dll</code>对于 Windows）。</p>
+<p>要在服务器启动时加载插件，请使用该&nbsp;<a target="_blank" rel="noopener" href="https://dev.mysql.com/doc/refman/5.7/en/server-options.html#option_mysqld_plugin-load-add"><code>--plugin-load-add</code></a>选项来命名包含它的库文件。使用这种插件加载方法，每次服务器启动时都必须给出该选项。例如，将这些行放在服务器&nbsp;<code>my.cnf</code>文件中，<code>.so</code>根据需要调整平台的 后缀：</p>
+<figure class="highlight ini"><table><tbody><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line"><span class="section">[mysqld]</span></span><br><span class="line"><span class="attr">plugin-load-add</span>=validate_password.so</span><br></pre></td></tr></tbody></table></figure>
+
+<p>修改<code>my.cnf</code>后重启服务器使新设置生效。</p>
+<p>或者，要在运行时加载插件，请使用此语句，<code>.so</code>根据需要调整平台的后缀：</p>
+<figure class="highlight sql"><table><tbody><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line">mysql<span class="operator">&gt;</span> <span class="keyword">show</span> variables <span class="keyword">like</span> <span class="string">'validate_password%'</span>; </span><br><span class="line"><span class="operator">+</span><span class="comment">--------------------------+-------+</span></span><br><span class="line"><span class="operator">|</span> Variable_name            <span class="operator">|</span> <span class="keyword">Value</span> <span class="operator">|</span></span><br><span class="line"><span class="operator">+</span><span class="comment">--------------------------+-------+</span></span><br><span class="line"><span class="operator">|</span> password_history         <span class="operator">|</span> <span class="number">0</span>     <span class="operator">|</span></span><br><span class="line"><span class="operator">|</span> password_require_current <span class="operator">|</span> OFF   <span class="operator">|</span></span><br><span class="line"><span class="operator">|</span> password_reuse_interval  <span class="operator">|</span> <span class="number">0</span>     <span class="operator">|</span></span><br><span class="line"><span class="operator">+</span><span class="comment">--------------------------+-------+</span></span><br><span class="line">mysql<span class="operator">&gt;</span> INSTALL PLUGIN validate_password SONAME <span class="string">'validate_password.so'</span>;</span><br></pre></td></tr></tbody></table></figure>
+
+<p><a target="_blank" rel="noopener" href="https://dev.mysql.com/doc/refman/5.7/en/install-plugin.html"><code>INSTALL PLUGIN</code></a>加载插件，并将其注册到<code>mysql.plugins</code>&nbsp;系统表中，以便为后续每次正常的服务器启动加载插件，而无需&nbsp;<a target="_blank" rel="noopener" href="https://dev.mysql.com/doc/refman/5.7/en/server-options.html#option_mysqld_plugin-load-add"><code>--plugin-load-add</code></a>.</p>
+<p>要验证插件安装，请检查&nbsp;<a target="_blank" rel="noopener" href="https://dev.mysql.com/doc/refman/5.7/en/information-schema-plugins-table.html"><code>INFORMATION_SCHEMA.PLUGINS</code></a>表或使用<a target="_blank" rel="noopener" href="https://dev.mysql.com/doc/refman/5.7/en/show-plugins.html"><code>SHOW PLUGINS</code></a>语句（请参阅<a target="_blank" rel="noopener" href="https://dev.mysql.com/doc/refman/5.7/en/obtaining-plugin-information.html">第 5.5.2 节，“获取服务器插件信息”</a>）。例如：</p>
+<figure class="highlight sql"><table><tbody><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line">mysql<span class="operator">&gt;</span> <span class="keyword">SELECT</span> PLUGIN_NAME, PLUGIN_STATUS</span><br><span class="line">       <span class="keyword">FROM</span> INFORMATION_SCHEMA.PLUGINS</span><br><span class="line">       <span class="keyword">WHERE</span> PLUGIN_NAME <span class="keyword">LIKE</span> <span class="string">'validate%'</span>;</span><br><span class="line"><span class="operator">+</span><span class="comment">-------------------+---------------+</span></span><br><span class="line"><span class="operator">|</span> PLUGIN_NAME       <span class="operator">|</span> PLUGIN_STATUS <span class="operator">|</span></span><br><span class="line"><span class="operator">+</span><span class="comment">-------------------+---------------+</span></span><br><span class="line"><span class="operator">|</span> validate_password <span class="operator">|</span> ACTIVE        <span class="operator">|</span></span><br><span class="line"><span class="operator">+</span><span class="comment">-------------------+---------------+</span></span><br></pre></td></tr></tbody></table></figure>
+
+<p>如果插件无法初始化，请检查服务器错误日志以获取诊断消息。</p>
+<p>如果插件之前已注册&nbsp;<a target="_blank" rel="noopener" href="https://dev.mysql.com/doc/refman/5.7/en/install-plugin.html"><code>INSTALL PLUGIN</code></a>或已加载&nbsp;<a target="_blank" rel="noopener" href="https://dev.mysql.com/doc/refman/5.7/en/server-options.html#option_mysqld_plugin-load-add"><code>--plugin-load-add</code></a>，则可以<code>--validate-password</code>在服务器启动时使用该选项来控制插件激活。例如，要在启动时加载插件并防止它在运行时被删除，请使用以下选项：</p>
+<figure class="highlight ini"><table><tbody><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line"><span class="section">[mysqld]</span></span><br><span class="line"><span class="attr">plugin-load-add</span>=validate_password.so</span><br><span class="line"><span class="attr">validate-password</span>=FORCE_PLUS_PERMANENT  </span><br><span class="line">或添加启动参数：</span><br><span class="line">mysqld  <span class="attr">--plugin-load-add</span>=validate_password.so --validate-password=FORCE_PLUS_PERMANENT</span><br></pre></td></tr></tbody></table></figure>
+
+<p>如果希望在没有密码验证插件的情况下阻止服务器运行，请使用&nbsp;<a target="_blank" rel="noopener" href="https://dev.mysql.com/doc/refman/5.7/en/validate-password-options-variables.html#option_mysqld_validate-password"><code>--validate-password</code></a>带值<code>FORCE</code>或<code>FORCE_PLUS_PERMANENT</code>，如果插件未成功初始化，强制启动服务器。</p>
+<figure class="highlight sql"><table><tbody><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br></pre></td><td class="code"><pre><span class="line">mysql<span class="operator">&gt;</span> <span class="keyword">show</span> variables <span class="keyword">like</span> <span class="string">'validate_password%'</span>; </span><br><span class="line"><span class="operator">+</span><span class="comment">--------------------------------------+--------+</span></span><br><span class="line"><span class="operator">|</span> Variable_name                        <span class="operator">|</span> <span class="keyword">Value</span>  <span class="operator">|</span></span><br><span class="line"><span class="operator">+</span><span class="comment">--------------------------------------+--------+</span></span><br><span class="line"><span class="operator">|</span> validate_password_check_user_name    <span class="operator">|</span> <span class="keyword">ON</span>     <span class="operator">|</span></span><br><span class="line"><span class="operator">|</span> validate_password_dictionary_file    <span class="operator">|</span>        <span class="operator">|</span></span><br><span class="line"><span class="operator">|</span> validate_password_length             <span class="operator">|</span> <span class="number">8</span>      <span class="operator">|</span></span><br><span class="line"><span class="operator">|</span> validate_password_mixed_case_count   <span class="operator">|</span> <span class="number">1</span>      <span class="operator">|</span></span><br><span class="line"><span class="operator">|</span> validate_password_number_count       <span class="operator">|</span> <span class="number">1</span>      <span class="operator">|</span></span><br><span class="line"><span class="operator">|</span> validate_password_policy             <span class="operator">|</span> MEDIUM <span class="operator">|</span></span><br><span class="line"><span class="operator">|</span> validate_password_special_char_count <span class="operator">|</span> <span class="number">1</span>      <span class="operator">|</span></span><br><span class="line"><span class="operator">+</span><span class="comment">--------------------------------------+--------+</span></span><br></pre></td></tr></tbody></table></figure>
+
+<h4 id="6-4-3-2-密码验证插件选项和变量"><a href="#6-4-3-2-密码验证插件选项和变量" class="headerlink" title="6.4.3.2 密码验证插件选项和变量"></a>6.4.3.2 密码验证插件选项和变量</h4><p>本节介绍了<code>validate_password</code>用于配置和监控其操作的选项、系统变量和状态变量。</p>
+<ul>
+<li><a target="_blank" rel="noopener" href="https://dev.mysql.com/doc/refman/5.7/en/validate-password-options-variables.html#validate-password-options">密码验证插件选项</a></li>
+<li><a target="_blank" rel="noopener" href="https://dev.mysql.com/doc/refman/5.7/en/validate-password-options-variables.html#validate-password-system-variables">密码验证插件系统变量</a></li>
+<li><a target="_blank" rel="noopener" href="https://dev.mysql.com/doc/refman/5.7/en/validate-password-options-variables.html#validate-password-status-variables">密码验证插件状态变量</a></li>
+</ul>
+<h5 id="密码验证插件选项"><a href="#密码验证插件选项" class="headerlink" title="密码验证插件选项"></a>密码验证插件选项</h5><p>要控制<code>validate_password</code>插件的激活 ，请使用此选项：</p>
+<ul>
+<li><p><a target="_blank" rel="noopener" href="https://dev.mysql.com/doc/refman/5.7/en/validate-password-options-variables.html#option_mysqld_validate-password"><code>--validate-password[=*</code>value<code>*]</code></a></p>
+<table>
+<thead>
+<tr>
+<th>命令行格式</th>
+<th><code>--validate-password[=value]</code></th>
+</tr>
+</thead>
+<tbody><tr>
+<td>类型</td>
+<td>Enumeration枚举</td>
+</tr>
+<tr>
+<td>默认值</td>
+<td><code>ON</code></td>
+</tr>
+<tr>
+<td>有效值</td>
+<td><code>ON``OFF``FORCE``FORCE_PLUS_PERMANENT</code></td>
+</tr>
+</tbody></table>
+<p>  此选项控制服务器<code>validate_password</code>在启动时加载 插件的方式。该值应该是插件加载选项可用的值之一，如&nbsp;<a target="_blank" rel="noopener" href="https://dev.mysql.com/doc/refman/5.7/en/plugin-loading.html">第 5.5.1 节，“安装和卸载插件”中所述</a>。例如，&nbsp;<a target="_blank" rel="noopener" href="https://dev.mysql.com/doc/refman/5.7/en/validate-password-options-variables.html#option_mysqld_validate-password"><code>--validate-password=FORCE_PLUS_PERMANENT</code></a>&nbsp;告诉服务器在启动时加载插件并防止它在服务器运行时被删除。</p>
+<p>  此选项仅在&nbsp;<code>validate_password</code>插件之前已注册<a target="_blank" rel="noopener" href="https://dev.mysql.com/doc/refman/5.7/en/install-plugin.html"><code>INSTALL PLUGIN</code></a>或加载时可用&nbsp;<a target="_blank" rel="noopener" href="https://dev.mysql.com/doc/refman/5.7/en/server-options.html#option_mysqld_plugin-load-add"><code>--plugin-load-add</code></a>。请参见&nbsp;<a target="_blank" rel="noopener" href="https://dev.mysql.com/doc/refman/5.7/en/validate-password-installation.html">第 6.4.3.1 节，“密码验证插件安装”</a>。</p>
+</li>
+</ul>
+<h5 id="密码验证插件系统变量"><a href="#密码验证插件系统变量" class="headerlink" title="密码验证插件系统变量"></a>密码验证插件系统变量</h5><p>如果<code>validate_password</code>启用了该插件，它会公开几个启用密码检查配置的系统变量：</p>
+<figure class="highlight sql"><table><tbody><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br></pre></td><td class="code"><pre><span class="line">mysql<span class="operator">&gt;</span> <span class="keyword">SHOW</span> VARIABLES <span class="keyword">LIKE</span> <span class="string">'validate_password%'</span>;</span><br><span class="line"><span class="operator">+</span><span class="comment">--------------------------------------+--------+</span></span><br><span class="line"><span class="operator">|</span> Variable_name                        <span class="operator">|</span> <span class="keyword">Value</span>  <span class="operator">|</span></span><br><span class="line"><span class="operator">+</span><span class="comment">--------------------------------------+--------+</span></span><br><span class="line"><span class="operator">|</span> validate_password_check_user_name    <span class="operator">|</span> OFF    <span class="operator">|</span></span><br><span class="line"><span class="operator">|</span> validate_password_dictionary_file    <span class="operator">|</span>        <span class="operator">|</span></span><br><span class="line"><span class="operator">|</span> validate_password_length             <span class="operator">|</span> <span class="number">8</span>      <span class="operator">|</span></span><br><span class="line"><span class="operator">|</span> validate_password_mixed_case_count   <span class="operator">|</span> <span class="number">1</span>      <span class="operator">|</span></span><br><span class="line"><span class="operator">|</span> validate_password_number_count       <span class="operator">|</span> <span class="number">1</span>      <span class="operator">|</span></span><br><span class="line"><span class="operator">|</span> validate_password_policy             <span class="operator">|</span> MEDIUM <span class="operator">|</span></span><br><span class="line"><span class="operator">|</span> validate_password_special_char_count <span class="operator">|</span> <span class="number">1</span>      <span class="operator">|</span></span><br><span class="line"><span class="operator">+</span><span class="comment">--------------------------------------+--------+</span></span><br></pre></td></tr></tbody></table></figure>
+
+<p>要更改检查密码的方式，您可以在服务器启动或运行时设置这些系统变量。下面的列表描述了每个变量的含义。</p>
+<ul>
+<li><p><a target="_blank" rel="noopener" href="https://dev.mysql.com/doc/refman/5.7/en/validate-password-options-variables.html#sysvar_validate_password_check_user_name"><code>validate_password_check_user_name</code></a></p>
+<table>
+<thead>
+<tr>
+<th>命令行格式</th>
+<th><code>--validate-password-check-user-name[={OFF|ON}]</code></th>
+</tr>
+</thead>
+<tbody><tr>
+<td>Introduced</td>
+<td>5.7.15</td>
+</tr>
+<tr>
+<td>系统变量System Variable</td>
+<td><code>validate_password_check_user_name</code></td>
+</tr>
+<tr>
+<td>范围Scope</td>
+<td>Global</td>
+</tr>
+<tr>
+<td>动态的Dynamic</td>
+<td>Yes</td>
+</tr>
+<tr>
+<td>类型</td>
+<td>Boolean</td>
+</tr>
+<tr>
+<td>默认值</td>
+<td><code>OFF</code></td>
+</tr>
+</tbody></table>
+<p>  是否<code>validate_password</code>将密码与当前会话的有效用户帐户的用户名部分进行比较，如果匹配则拒绝它们。除非<code>validate_password</code>已安装，否则此变量不可用 。</p>
+<p>  默认情况下，&nbsp;<a target="_blank" rel="noopener" href="https://dev.mysql.com/doc/refman/5.7/en/validate-password-options-variables.html#sysvar_validate_password_check_user_name"><code>validate_password_check_user_name</code></a>&nbsp;禁用。此变量控制与 的值无关的用户名匹配&nbsp;<a target="_blank" rel="noopener" href="https://dev.mysql.com/doc/refman/5.7/en/validate-password-options-variables.html#sysvar_validate_password_policy"><code>validate_password_policy</code></a>。</p>
+<p>  当&nbsp;<a target="_blank" rel="noopener" href="https://dev.mysql.com/doc/refman/5.7/en/validate-password-options-variables.html#sysvar_validate_password_check_user_name"><code>validate_password_check_user_name</code></a>&nbsp;启用时，它具有以下作用：</p>
+<ul>
+<li>检查发生在所有<code>validate_password</code>被调用的上下文中 ，包括使用诸如<a target="_blank" rel="noopener" href="https://dev.mysql.com/doc/refman/5.7/en/alter-user.html"><code>ALTER USER</code></a>或 之类的语句&nbsp;<a target="_blank" rel="noopener" href="https://dev.mysql.com/doc/refman/5.7/en/set-password.html"><code>SET PASSWORD</code></a>来更改当前用户的密码，以及调用诸如<a target="_blank" rel="noopener" href="https://dev.mysql.com/doc/refman/5.7/en/encryption-functions.html#function_password"><code>PASSWORD()</code></a>和 之类的函数&nbsp;<a target="_blank" rel="noopener" href="https://dev.mysql.com/doc/refman/5.7/en/encryption-functions.html#function_validate-password-strength"><code>VALIDATE_PASSWORD_STRENGTH()</code></a>。</li>
+<li>用于比较的用户名取自 当前会话的<a target="_blank" rel="noopener" href="https://dev.mysql.com/doc/refman/5.7/en/information-functions.html#function_user"><code>USER()</code></a>&nbsp;和<a target="_blank" rel="noopener" href="https://dev.mysql.com/doc/refman/5.7/en/information-functions.html#function_current-user"><code>CURRENT_USER()</code></a>函数的值。这意味着具有足够权限设置另一个用户的密码的用户可以将密码设置为该用户的名称，而不能将该用户的密码设置为执行该语句的用户的名称。例如，<code>'root'@'localhost'</code>可以设定密码&nbsp;<code>'jeffrey'@'localhost'</code>来&nbsp;<code>'jeffrey'</code>，但不能设置密码<code>'root</code>。</li>
+<li>仅使用<a target="_blank" rel="noopener" href="https://dev.mysql.com/doc/refman/5.7/en/information-functions.html#function_user"><code>USER()</code></a>和&nbsp;<a target="_blank" rel="noopener" href="https://dev.mysql.com/doc/refman/5.7/en/information-functions.html#function_current-user"><code>CURRENT_USER()</code></a>函数值的用户名部分 ，而不使用主机名部分。如果用户名为空，则不进行比较。</li>
+<li>如果密码与用户名或其反面相同，则会发生匹配并拒绝该密码。</li>
+<li>用户名匹配区分大小写。密码和用户名值作为二进制字符串逐字节进行比较。</li>
+<li>如果密码与用户名匹配，则<a target="_blank" rel="noopener" href="https://dev.mysql.com/doc/refman/5.7/en/encryption-functions.html#function_validate-password-strength"><code>VALIDATE_PASSWORD_STRENGTH()</code></a>&nbsp;无论其他<code>validate_password</code>系统变量如何设置，都 返回 0 。</li>
+</ul>
+</li>
+<li><p><a target="_blank" rel="noopener" href="https://dev.mysql.com/doc/refman/5.7/en/validate-password-options-variables.html#sysvar_validate_password_dictionary_file"><code>validate_password_dictionary_file</code></a></p>
+<table>
+<thead>
+<tr>
+<th>命令行格式</th>
+<th><code>--validate-password-dictionary-file=file_name</code></th>
+</tr>
+</thead>
+<tbody><tr>
+<td>System Variable</td>
+<td><code>validate_password_dictionary_file</code></td>
+</tr>
+<tr>
+<td>范围Scope</td>
+<td>Global</td>
+</tr>
+<tr>
+<td>动态的Dynamic</td>
+<td>Yes</td>
+</tr>
+<tr>
+<td>类型Type</td>
+<td>File name</td>
+</tr>
+</tbody></table>
+<p>  <code>validate_password</code>用于检查密码 的字典文件的路径名 。除非<code>validate_password</code>已安装，否则此变量不可用 。</p>
+<p>  默认情况下，这个变量有一个空值并且不执行字典检查。要进行字典检查，变量值必须为非空。如果文件被命名为相对路径，则它相对于服务器数据目录进行解释。文件内容应为小写，每行一个字。内容被视为具有<code>utf8</code>. 允许的最大文件大小为 1MB。</p>
+<p>  对于密码检查时使用的字典文件，密码策略必须设置为2（<code>STRONG</code>）；参见<a target="_blank" rel="noopener" href="https://dev.mysql.com/doc/refman/5.7/en/validate-password-options-variables.html#sysvar_validate_password_policy"><code>validate_password_policy</code></a>&nbsp;系统变量的描述 。假设这是真的，长度为 4 到 100 的密码的每个子字符串都与字典文件中的单词进行比较。任何匹配都会导致密码被拒绝。比较不区分大小写。</p>
+<p>  对于&nbsp;<a target="_blank" rel="noopener" href="https://dev.mysql.com/doc/refman/5.7/en/encryption-functions.html#function_validate-password-strength"><code>VALIDATE_PASSWORD_STRENGTH()</code></a>，根据所有策略（包括 ）检查密码&nbsp;<code>STRONG</code>，因此无论<a target="_blank" rel="noopener" href="https://dev.mysql.com/doc/refman/5.7/en/validate-password-options-variables.html#sysvar_validate_password_policy"><code>validate_password_policy</code></a>&nbsp;值如何，强度评估都包括字典检查 。</p>
+<p>  <a target="_blank" rel="noopener" href="https://dev.mysql.com/doc/refman/5.7/en/validate-password-options-variables.html#sysvar_validate_password_dictionary_file"><code>validate_password_dictionary_file</code></a>&nbsp;可以在运行时设置并分配一个值会导致在不重新启动服务器的情况下读取命名文件。</p>
+</li>
+<li><p><a target="_blank" rel="noopener" href="https://dev.mysql.com/doc/refman/5.7/en/validate-password-options-variables.html#sysvar_validate_password_length"><code>validate_password_length</code></a></p>
+<table>
+<thead>
+<tr>
+<th>命令行格式</th>
+<th><code>--validate-password-length=#</code></th>
+</tr>
+</thead>
+<tbody><tr>
+<td>系统变量</td>
+<td><code>validate_password_length</code></td>
+</tr>
+<tr>
+<td>范围</td>
+<td>Global</td>
+</tr>
+<tr>
+<td>动态的</td>
+<td>Yes</td>
+</tr>
+<tr>
+<td>类型</td>
+<td>整数Integer</td>
+</tr>
+<tr>
+<td>默认值</td>
+<td><code>8</code></td>
+</tr>
+<tr>
+<td>最小值</td>
+<td><code>0</code></td>
+</tr>
+</tbody></table>
+<p>  <code>validate_password</code>需要密码 的最少字符数 。除非<code>validate_password</code>已安装，否则此变量不可用 。</p>
+<p>  该&nbsp;<a target="_blank" rel="noopener" href="https://dev.mysql.com/doc/refman/5.7/en/validate-password-options-variables.html#sysvar_validate_password_length"><code>validate_password_length</code></a>&nbsp;最小值是其他几个相关的系统变量的函数。该值不能设置为小于此表达式的值：</p>
+<figure class="highlight plaintext"><table><tbody><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">validate_password_number_count</span><br><span class="line">+ validate_password_special_char_count</span><br><span class="line">+ (2 * validate_password_mixed_case_count)</span><br></pre></td></tr></tbody></table></figure>
+
+<p>  如果 由于前面的约束而<code>validate_password</code>调整 的值&nbsp;<a target="_blank" rel="noopener" href="https://dev.mysql.com/doc/refman/5.7/en/validate-password-options-variables.html#sysvar_validate_password_length"><code>validate_password_length</code></a>，则会将消息写入错误日志。</p>
+</li>
+<li><p><a target="_blank" rel="noopener" href="https://dev.mysql.com/doc/refman/5.7/en/validate-password-options-variables.html#sysvar_validate_password_mixed_case_count"><code>validate_password_mixed_case_count</code></a></p>
+<table>
+<thead>
+<tr>
+<th>命令行格式</th>
+<th><code>--validate-password-mixed-case-count=#</code></th>
+</tr>
+</thead>
+<tbody><tr>
+<td>系统变量</td>
+<td><code>validate_password_mixed_case_count</code></td>
+</tr>
+<tr>
+<td>范围</td>
+<td>Global</td>
+</tr>
+<tr>
+<td>动态的</td>
+<td>Yes</td>
+</tr>
+<tr>
+<td>类型</td>
+<td>整数Integer</td>
+</tr>
+<tr>
+<td>默认值</td>
+<td><code>1</code></td>
+</tr>
+<tr>
+<td>最小值</td>
+<td><code>0</code></td>
+</tr>
+</tbody></table>
+<p>  <code>validate_password</code>如果密码策略是<code>MEDIUM</code>或更强 ，则要求密码具有 的最小小写和大写字符数。除非<code>validate_password</code>已安装，否则此变量不可用。</p>
+<p>  对于给定的&nbsp;<a target="_blank" rel="noopener" href="https://dev.mysql.com/doc/refman/5.7/en/validate-password-options-variables.html#sysvar_validate_password_mixed_case_count"><code>validate_password_mixed_case_count</code></a>&nbsp;值，密码必须有那么多小写字符和那么多大写字符。</p>
+</li>
+<li><p><a target="_blank" rel="noopener" href="https://dev.mysql.com/doc/refman/5.7/en/validate-password-options-variables.html#sysvar_validate_password_number_count"><code>validate_password_number_count</code></a></p>
+<table>
+<thead>
+<tr>
+<th>命令行格式</th>
+<th><code>--validate-password-number-count=#</code></th>
+</tr>
+</thead>
+<tbody><tr>
+<td>系统变量</td>
+<td><code>validate_password_number_count</code></td>
+</tr>
+<tr>
+<td>范围</td>
+<td>Global</td>
+</tr>
+<tr>
+<td>动态的</td>
+<td>Yes</td>
+</tr>
+<tr>
+<td>类型</td>
+<td>整数Integer</td>
+</tr>
+<tr>
+<td>默认值</td>
+<td><code>1</code></td>
+</tr>
+<tr>
+<td>最小值</td>
+<td><code>0</code></td>
+</tr>
+</tbody></table>
+<p>  <code>validate_password</code>如果密码策略是<code>MEDIUM</code>&nbsp;或更强 ，则要求密码具有的最少数字（数字）字符数 。除非<code>validate_password</code>已安装，否则此变量不可用 。</p>
+</li>
+<li><p><a target="_blank" rel="noopener" href="https://dev.mysql.com/doc/refman/5.7/en/validate-password-options-variables.html#sysvar_validate_password_policy"><code>validate_password_policy</code></a></p>
+<p>  <strong>set global validate_password_policy=0;</strong></p>
+<table>
+<thead>
+<tr>
+<th>命令行格式</th>
+<th><code>--validate-password-policy=value</code></th>
+</tr>
+</thead>
+<tbody><tr>
+<td>系统变量</td>
+<td><code>validate_password_policy</code></td>
+</tr>
+<tr>
+<td>范围</td>
+<td>Global</td>
+</tr>
+<tr>
+<td>动态的</td>
+<td>Yes</td>
+</tr>
+<tr>
+<td>类型</td>
+<td>枚举 Enumeration</td>
+</tr>
+<tr>
+<td>默认值</td>
+<td><code>1</code></td>
+</tr>
+<tr>
+<td>有效值</td>
+<td>0 1 2 LOW MEDIUM HIGH</td>
+</tr>
+</tbody></table>
+<p>  由 强制执行的密码策略&nbsp;<code>validate_password</code>。除非<code>validate_password</code>已安装，否则此变量不可用。</p>
+<p>  <a target="_blank" rel="noopener" href="https://dev.mysql.com/doc/refman/5.7/en/validate-password-options-variables.html#sysvar_validate_password_policy"><code>validate_password_policy</code></a>&nbsp;影响<code>validate_password</code>其其他策略设置系统变量的使用方式，除了根据用户名检查密码，这是由&nbsp;<a target="_blank" rel="noopener" href="https://dev.mysql.com/doc/refman/5.7/en/validate-password-options-variables.html#sysvar_validate_password_check_user_name"><code>validate_password_check_user_name</code></a>.</p>
+<p>  <a target="_blank" rel="noopener" href="https://dev.mysql.com/doc/refman/5.7/en/validate-password-options-variables.html#sysvar_validate_password_policy"><code>validate_password_policy</code></a>&nbsp;可以使用数值 0、1、2 或相应的符号值<code>LOW</code>、&nbsp;<code>MEDIUM</code>、来指定 该 值<code>STRONG</code>。下表描述了为每个策略执行的测试。对于长度测试，需要的长度是<a target="_blank" rel="noopener" href="https://dev.mysql.com/doc/refman/5.7/en/validate-password-options-variables.html#sysvar_validate_password_length"><code>validate_password_length</code></a>&nbsp;系统变量的值 。类似地，其他测试所需的值由其他 变量给出 。&nbsp;<code>validate_password_*</code>xxx<code>*</code></p>
+<table>
+<thead>
+<tr>
+<th>策略</th>
+<th>执行的测试</th>
+</tr>
+</thead>
+<tbody><tr>
+<td><code>0</code>&nbsp;或者&nbsp;<code>LOW</code></td>
+<td>长度</td>
+</tr>
+<tr>
+<td><code>1</code>&nbsp;或者&nbsp;<code>MEDIUM</code></td>
+<td>长度; 数字、小写/大写和特殊字符</td>
+</tr>
+<tr>
+<td><code>2</code>&nbsp;或者&nbsp;<code>STRONG</code></td>
+<td>长度; 数字、小写/大写和特殊字符；字典文件</td>
+</tr>
+</tbody></table>
+</li>
+<li><p><a target="_blank" rel="noopener" href="https://dev.mysql.com/doc/refman/5.7/en/validate-password-options-variables.html#sysvar_validate_password_special_char_count"><code>validate_password_special_char_count</code></a></p>
+<table>
+<thead>
+<tr>
+<th>命令行格式</th>
+<th><code>--validate-password-special-char-count=#</code></th>
+</tr>
+</thead>
+<tbody><tr>
+<td>系统变量</td>
+<td><code>validate_password_special_char_count</code></td>
+</tr>
+<tr>
+<td>范围</td>
+<td>Global</td>
+</tr>
+<tr>
+<td>动态的</td>
+<td>Yes</td>
+</tr>
+<tr>
+<td>类型</td>
+<td>整数Integer</td>
+</tr>
+<tr>
+<td>默认值</td>
+<td><code>1</code></td>
+</tr>
+<tr>
+<td>最小值</td>
+<td><code>0</code></td>
+</tr>
+</tbody></table>
+<p>  <code>validate_password</code>如果密码策略是<code>MEDIUM</code>&nbsp;或更强 ，则要求密码具有的最小非字母数字字符数 。除非<code>validate_password</code>已安装，否则此变量不可用 。</p>
+</li>
+</ul>
+<h5 id="密码验证插件状态变量"><a href="#密码验证插件状态变量" class="headerlink" title="密码验证插件状态变量"></a>密码验证插件状态变量</h5><p>如果<code>validate_password</code>启用插件，它会公开提供操作信息的状态变量：</p>
+<figure class="highlight sql"><table><tbody><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line">mysql<span class="operator">&gt;</span> <span class="keyword">SHOW</span> STATUS <span class="keyword">LIKE</span> <span class="string">'validate_password%'</span>;</span><br><span class="line"><span class="operator">+</span><span class="comment">-----------------------------------------------+---------------------+</span></span><br><span class="line"><span class="operator">|</span> Variable_name                                 <span class="operator">|</span> <span class="keyword">Value</span>               <span class="operator">|</span></span><br><span class="line"><span class="operator">+</span><span class="comment">-----------------------------------------------+---------------------+</span></span><br><span class="line"><span class="operator">|</span> validate_password.dictionary_file_last_parsed <span class="operator">|</span> <span class="number">2019</span><span class="number">-10</span><span class="number">-03</span> <span class="number">08</span>:<span class="number">33</span>:<span class="number">49</span> <span class="operator">|</span></span><br><span class="line"><span class="operator">|</span> validate_password_dictionary_file_words_count <span class="operator">|</span> <span class="number">1902</span>                <span class="operator">|</span></span><br><span class="line"><span class="operator">+</span><span class="comment">-----------------------------------------------+---------------------+</span></span><br></pre></td></tr></tbody></table></figure>
+
+<p>下面的列表描述了每个状态变量的含义。</p>
+<ul>
+<li><p><a target="_blank" rel="noopener" href="https://dev.mysql.com/doc/refman/5.7/en/validate-password-options-variables.html#statvar_validate_password_dictionary_file_last_parsed"><code>validate_password_dictionary_file_last_parsed</code></a></p>
+<p>  上次解析字典文件的时间。</p>
+</li>
+<li><p><a target="_blank" rel="noopener" href="https://dev.mysql.com/doc/refman/5.7/en/validate-password-options-variables.html#statvar_validate_password_dictionary_file_words_count"><code>validate_password_dictionary_file_words_count</code></a></p>
+<p>  从字典文件中读取的单词数。</p>
+</li>
+</ul>
+</article><div class="post-copyright"><div class="post-copyright__author"><span class="post-copyright-meta"><i class="fas fa-circle-user fa-fw"></i>文章作者: </span><span class="post-copyright-info"><a href="https://blog.aymar.cn">aymar</a></span></div><div class="post-copyright__type"><span class="post-copyright-meta"><i class="fas fa-square-arrow-up-right fa-fw"></i>文章链接: </span><span class="post-copyright-info"><a href="https://blog.aymar.cn/2021/06/17/%E6%95%B0%E6%8D%AE%E5%BA%93%EF%BC%88Database%EF%BC%89/mysql/6.4.3.1%20%E5%AF%86%E7%A0%81%E9%AA%8C%E8%AF%81%E6%8F%92%E4%BB%B6%E5%AE%89%E8%A3%85/">https://blog.aymar.cn/2021/06/17/%E6%95%B0%E6%8D%AE%E5%BA%93%EF%BC%88Database%EF%BC%89/mysql/6.4.3.1%20%E5%AF%86%E7%A0%81%E9%AA%8C%E8%AF%81%E6%8F%92%E4%BB%B6%E5%AE%89%E8%A3%85/</a></span></div><div class="post-copyright__notice"><span class="post-copyright-meta"><i class="fas fa-circle-exclamation fa-fw"></i>版权声明: </span><span class="post-copyright-info">本博客所有文章除特别声明外，均采用 <a href="https://creativecommons.org/licenses/by-nc-sa/4.0/" target="_blank">CC BY-NC-SA 4.0</a> 许可协议。转载请注明来源 <a href="https://blog.aymar.cn" target="_blank">热带雨林</a>！</span></div></div><div class="tag_share"><div class="post-meta__tag-list"><a class="post-meta__tags" href="/tags/mysql/">mysql</a></div><div class="post-share"><div class="social-share" data-image="https://www.aymar.cn/images/article/wallhaven-96w8e8.webp" data-sites="facebook,twitter,wechat,weibo,qq"></div><link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/butterfly-extsrc/sharejs/dist/css/share.min.css" media="print" onload="this.media='all'"><script src="https://cdn.jsdelivr.net/npm/butterfly-extsrc/sharejs/dist/js/social-share.min.js" defer></script></div></div><nav class="pagination-post" id="pagination"><a class="pagination-related" href="/2021/06/23/%E4%BA%91%E8%AE%A1%E7%AE%97%EF%BC%88Cloud%20Service%EF%BC%89/k8s/%E8%BD%AC%E8%BD%BD%20%E4%BD%BF%E7%94%A8Kind%E5%BF%AB%E9%80%9F%E5%88%9B%E5%BB%BAK8S%E5%AD%A6%E4%B9%A0%E7%8E%AF%E5%A2%83/" title="转载 使用Kind快速创建K8S学习环境"><img class="cover" src="https://www.aymar.cn/images/article/wallhaven-dgojvj.webp" onerror="onerror=null;src='/img/404.jpg'" alt="cover of previous post"><div class="info"><div class="info-1"><div class="info-item-1">上一篇</div><div class="info-item-2">转载 使用Kind快速创建K8S学习环境</div></div><div class="info-2"><div class="info-item-1">使用Kind快速创建K8S学习环境原文链接：kind：Kubernetes in Docker，单机运行 Kubernetes 群集的最佳方案？，查看最新版。 是否没有足够的机器运行 Kubernetes 测试环境，个人电脑配置不高的话，运行多个节点的虚拟化有点力不从心，国内公有云主机一般不支持嵌套虚拟化，一套 3M+3N 的群集环境成本太高。VMware Fusion 12.0 发布，将 Kind 带入了我们的视野，这是 Google 官方的一个工具，可能是在单机运行 Kubernetes 群集的最佳方案。笔者在一台 1C 2G 的公有云虚机上运行 Kind，也不会因为计算资源有限而无法完成。 1. 简介kind 是 Kubernetes in Docker 的简写，是一个使用 Docker 容器作为 Nodes，在本地创建和运行 Kubernetes 群集的工具。适用于在本机创建 Kubernetes 群集环境进行开发和测试。 官网：https://kind.sigs.k8s.io/ kind...</div></div></div></a><a class="pagination-related" href="/2021/06/17/%E8%BD%AF%E4%BB%B6%EF%BC%88Software%EF%BC%89/wordpress/%E5%A6%82%E4%BD%95%E4%BD%BF%E7%94%A8%20Docker%20Compose%20%E5%AE%89%E8%A3%85%20WordPress/" title="如何使用 Docker Compose 安装 WordPress"><img class="cover" src="https://www.aymar.cn/images/article/wallhaven-r2yjg1.webp" onerror="onerror=null;src='/img/404.jpg'" alt="cover of next post"><div class="info text-right"><div class="info-1"><div class="info-item-1">下一篇</div><div class="info-item-2">如何使用 Docker Compose 安装 WordPress</div></div><div class="info-2"><div class="info-item-1">介绍WordPress是一个免费的开源内容管理系统 (CMS)，它构建在MySQL数据库上，并使用PHP处理。由于其可扩展的插件架构和模板系统，以及其大部分管理可以通过 Web 界面完成的事实，WordPress 是创建不同类型网站（从博客到产品页面再到电子商务网站）的流行选择。 运行 WordPress 通常需要安装LAMP（Linux、Apache、MySQL 和 PHP）或LEMP（Linux、Nginx、MySQL 和 PHP）堆栈，这可能非常耗时。但是，通过使用Docker和Docker Compose等工具，您可以简化设置首选堆栈和安装 WordPress 的过程。您可以使用_图像_，而不是手动安装单个组件，它将库、配置文件和环境变量等标准化，并在_容器中_运行这些图像，在共享操作系统上运行的隔离进程。此外，通过使用 Compose，您可以协调多个容器（例如应用程序和数据库）以相互通信。 在本教程中，您将构建一个多容器 WordPress 安装。您的容器将包括一个 MySQL 数据库、一个 Nginx Web 服务器和 WordPress...</div></div></div></a></nav><div class="relatedPosts"><div class="headline"><i class="fas fa-thumbs-up fa-fw"></i><span>相关推荐</span></div><div class="relatedPosts-list"><a class="pagination-related" href="/2021/06/11/%E4%BA%91%E8%AE%A1%E7%AE%97%EF%BC%88Cloud%20Service%EF%BC%89/%E5%AE%B9%E5%99%A8/dokcer-compose/Docker-compose%20%E5%90%8C%E6%97%B6%E5%88%9B%E5%BB%BA%E5%A4%9A%E4%B8%AAmysql%E6%95%B0%E6%8D%AE%E5%BA%93/" title="Docker-compose 同时创建多个mysql数据库"><img class="cover" src="https://www.aymar.cn/images/article/wallhaven-ne7lr8.webp" alt="cover"><div class="info text-center"><div class="info-1"><div class="info-item-1"><i class="far fa-calendar-alt fa-fw"></i> 2021-06-11</div><div class="info-item-2">Docker-compose 同时创建多个mysql数据库</div></div><div class="info-2"><div class="info-item-1">添加环境变量：DATABASES=db1,db2,db3,db4,db5 方法一：12345678entrypoint:      bash -c "DBs=($${DATABASES//,/ });      for db in $${DBs[@]};       do          echo   "'"CREATE DATABASE IF NOT EXISTS $$db;"'" &gt;&gt; /docker-entrypoint-initdb.d/create_databases.sql;      done;      /usr/local/bin/docker-entrypoint.sh --character-set-server=utf8mb4 --collation-server=utf8mb4_unicode_ci      "    方法二:12345678entrypoint:：    sh -c "         echo '             CREATE DATABASE IF NOT EXISTS db1;             ...</div></div></div></a></div></div><hr class="custom-hr"/><div id="post-comment"><div class="comment-head"><div class="comment-headline"><i class="fas fa-comments fa-fw"></i><span> 评论</span></div></div><div class="comment-wrap"><div><div id="gitalk-container"></div></div></div></div></div><div class="aside-content" id="aside-content"><div class="card-widget card-info text-center"><div class="avatar-img"><img src="/config/img/avatar.jpg" onerror="this.onerror=null;this.src='/img/friend_404.gif'" alt="avatar"/></div><div class="author-info-name">aymar</div><div class="author-info-description">知之者不如好之者，好之者不如乐之者。</div><div class="site-data"><a href="/archives/"><div class="headline">文章</div><div class="length-num">15</div></a><a href="/tags/"><div class="headline">标签</div><div class="length-num">23</div></a><a href="/categories/"><div class="headline">分类</div><div class="length-num">10</div></a></div><a id="card-info-btn" target="_blank" rel="noopener" href="https://github.com/xxxxxx"><i class="fab fa-github"></i><span>Follow Me</span></a></div><div class="card-widget card-announcement"><div class="item-headline"><i class="fas fa-bullhorn fa-shake"></i><span>公告</span></div><div class="announcement_content">亲爱的读者朋友们， 欢迎来到我的博客！非常感谢大家对我的支持和关注。 在这里，我将分享各种有趣的内容，包括技术文章、生活点滴、旅行故事、书籍推荐等等。无论你是技术爱好者、旅行达人，还是喜欢阅读和学习的新手，我希望你都能在这里找到你感兴趣的内容。 我会不定期更新博客，带来更多精彩的内容。同时，我也非常期待与大家互动交流，如果你有任何建议或想法，欢迎在评论区留言或者通过邮件与我联系。</div></div><div class="sticky_layout"><div class="card-widget" id="card-toc"><div class="item-headline"><i class="fas fa-stream"></i><span>目录</span><span class="toc-percentage"></span></div><div class="toc-content"><ol class="toc"><li class="toc-item toc-level-4"><a class="toc-link" href="#6-4-3-2-%E5%AF%86%E7%A0%81%E9%AA%8C%E8%AF%81%E6%8F%92%E4%BB%B6%E9%80%89%E9%A1%B9%E5%92%8C%E5%8F%98%E9%87%8F"><span class="toc-number">1.</span> <span class="toc-text">6.4.3.2 密码验证插件选项和变量</span></a><ol class="toc-child"><li class="toc-item toc-level-5"><a class="toc-link" href="#%E5%AF%86%E7%A0%81%E9%AA%8C%E8%AF%81%E6%8F%92%E4%BB%B6%E9%80%89%E9%A1%B9"><span class="toc-number">1.1.</span> <span class="toc-text">密码验证插件选项</span></a></li><li class="toc-item toc-level-5"><a class="toc-link" href="#%E5%AF%86%E7%A0%81%E9%AA%8C%E8%AF%81%E6%8F%92%E4%BB%B6%E7%B3%BB%E7%BB%9F%E5%8F%98%E9%87%8F"><span class="toc-number">1.2.</span> <span class="toc-text">密码验证插件系统变量</span></a></li><li class="toc-item toc-level-5"><a class="toc-link" href="#%E5%AF%86%E7%A0%81%E9%AA%8C%E8%AF%81%E6%8F%92%E4%BB%B6%E7%8A%B6%E6%80%81%E5%8F%98%E9%87%8F"><span class="toc-number">1.3.</span> <span class="toc-text">密码验证插件状态变量</span></a></li></ol></li></ol></div></div><div class="card-widget card-recent-post"><div class="item-headline"><i class="fas fa-history"></i><span>最新文章</span></div><div class="aside-list"><div class="aside-list-item"><a class="thumbnail" href="/2025/02/05/%E4%BA%BA%E5%B7%A5%E6%99%BA%E8%83%BD%EF%BC%88AI%EF%BC%89/Windows%E6%9C%AC%E5%9C%B0%E9%83%A8%E7%BD%B2DeepSeek-r1/" title="Windows本地部署DeepSeek-r1"><img src="https://www.aymar.cn/images/article/wallhaven-96w8e8.webp" onerror="this.onerror=null;this.src='/img/404.jpg'" alt="Windows本地部署DeepSeek-r1"/></a><div class="content"><a class="title" href="/2025/02/05/%E4%BA%BA%E5%B7%A5%E6%99%BA%E8%83%BD%EF%BC%88AI%EF%BC%89/Windows%E6%9C%AC%E5%9C%B0%E9%83%A8%E7%BD%B2DeepSeek-r1/" title="Windows本地部署DeepSeek-r1">Windows本地部署DeepSeek-r1</a><time datetime="2025-02-04T16:00:00.000Z" title="发表于 2025-02-05 00:00:00">2025-02-05</time></div></div><div class="aside-list-item"><a class="thumbnail" href="/2021/06/25/%E8%BD%AF%E4%BB%B6%EF%BC%88Software%EF%BC%89/%E7%BC%96%E7%A8%8B%E5%BC%80%E5%8F%91/shell/Bash%20Reference%20Manual/" title="Bash Reference Manual"><img src="https://www.aymar.cn/images/article/wallhaven-13mk9v.webp" onerror="this.onerror=null;this.src='/img/404.jpg'" alt="Bash Reference Manual"/></a><div class="content"><a class="title" href="/2021/06/25/%E8%BD%AF%E4%BB%B6%EF%BC%88Software%EF%BC%89/%E7%BC%96%E7%A8%8B%E5%BC%80%E5%8F%91/shell/Bash%20Reference%20Manual/" title="Bash Reference Manual">Bash Reference Manual</a><time datetime="2021-06-24T16:00:00.000Z" title="发表于 2021-06-25 00:00:00">2021-06-25</time></div></div><div class="aside-list-item"><a class="thumbnail" href="/2021/06/23/%E4%BA%91%E8%AE%A1%E7%AE%97%EF%BC%88Cloud%20Service%EF%BC%89/k8s/%E8%BD%AC%E8%BD%BD%20%E4%BD%BF%E7%94%A8Kind%E5%BF%AB%E9%80%9F%E5%88%9B%E5%BB%BAK8S%E5%AD%A6%E4%B9%A0%E7%8E%AF%E5%A2%83/" title="转载 使用Kind快速创建K8S学习环境"><img src="https://www.aymar.cn/images/article/wallhaven-dgojvj.webp" onerror="this.onerror=null;this.src='/img/404.jpg'" alt="转载 使用Kind快速创建K8S学习环境"/></a><div class="content"><a class="title" href="/2021/06/23/%E4%BA%91%E8%AE%A1%E7%AE%97%EF%BC%88Cloud%20Service%EF%BC%89/k8s/%E8%BD%AC%E8%BD%BD%20%E4%BD%BF%E7%94%A8Kind%E5%BF%AB%E9%80%9F%E5%88%9B%E5%BB%BAK8S%E5%AD%A6%E4%B9%A0%E7%8E%AF%E5%A2%83/" title="转载 使用Kind快速创建K8S学习环境">转载 使用Kind快速创建K8S学习环境</a><time datetime="2021-06-22T16:00:00.000Z" title="发表于 2021-06-23 00:00:00">2021-06-23</time></div></div><div class="aside-list-item"><a class="thumbnail" href="/2021/06/17/%E6%95%B0%E6%8D%AE%E5%BA%93%EF%BC%88Database%EF%BC%89/mysql/6.4.3.1%20%E5%AF%86%E7%A0%81%E9%AA%8C%E8%AF%81%E6%8F%92%E4%BB%B6%E5%AE%89%E8%A3%85/" title="6.4.3.1 密码证件安装"><img src="https://www.aymar.cn/images/article/wallhaven-96w8e8.webp" onerror="this.onerror=null;this.src='/img/404.jpg'" alt="6.4.3.1 密码证件安装"/></a><div class="content"><a class="title" href="/2021/06/17/%E6%95%B0%E6%8D%AE%E5%BA%93%EF%BC%88Database%EF%BC%89/mysql/6.4.3.1%20%E5%AF%86%E7%A0%81%E9%AA%8C%E8%AF%81%E6%8F%92%E4%BB%B6%E5%AE%89%E8%A3%85/" title="6.4.3.1 密码证件安装">6.4.3.1 密码证件安装</a><time datetime="2021-06-17T03:23:10.000Z" title="发表于 2021-06-17 11:23:10">2021-06-17</time></div></div><div class="aside-list-item"><a class="thumbnail" href="/2021/06/17/%E8%BD%AF%E4%BB%B6%EF%BC%88Software%EF%BC%89/wordpress/%E5%A6%82%E4%BD%95%E4%BD%BF%E7%94%A8%20Docker%20Compose%20%E5%AE%89%E8%A3%85%20WordPress/" title="如何使用 Docker Compose 安装 WordPress"><img src="https://www.aymar.cn/images/article/wallhaven-r2yjg1.webp" onerror="this.onerror=null;this.src='/img/404.jpg'" alt="如何使用 Docker Compose 安装 WordPress"/></a><div class="content"><a class="title" href="/2021/06/17/%E8%BD%AF%E4%BB%B6%EF%BC%88Software%EF%BC%89/wordpress/%E5%A6%82%E4%BD%95%E4%BD%BF%E7%94%A8%20Docker%20Compose%20%E5%AE%89%E8%A3%85%20WordPress/" title="如何使用 Docker Compose 安装 WordPress">如何使用 Docker Compose 安装 WordPress</a><time datetime="2021-06-16T16:00:00.000Z" title="发表于 2021-06-17 00:00:00">2021-06-17</time></div></div></div></div></div></div></main><footer id="footer"><div id="footer-wrap"><div class="footer_custom_text">©2014 - ©2024 aymar. All rights reserved.</div></div></footer></div><div id="rightside"><div id="rightside-config-hide"><button id="readmode" type="button" title="阅读模式"><i class="fas fa-book-open"></i></button><button id="darkmode" type="button" title="日间和夜间模式切换"><i class="fas fa-adjust"></i></button><button id="hide-aside-btn" type="button" title="单栏和双栏切换"><i class="fas fa-arrows-alt-h"></i></button></div><div id="rightside-config-show"><button id="rightside-config" type="button" title="设置"><i class="fas fa-cog fa-spin"></i></button><button class="close" id="mobile-toc-button" type="button" title="目录"><i class="fas fa-list-ul"></i></button><a id="to_comment" href="#post-comment" title="前往评论"><i class="fas fa-comments"></i></a><button id="go-up" type="button" title="回到顶部"><span class="scroll-percent"></span><i class="fas fa-arrow-up"></i></button></div></div><div><script src="/js/utils.js"></script><script src="/js/main.js"></script><div class="js-pjax"><script>(() => {
+  const isShuoshuo = GLOBAL_CONFIG_SITE.isShuoshuo
+  const option = {"language":"zh-CN","perPage":50,"pagerDirection":"last","createIssueManually":false,"proxy":"https://gitalk.aymar.cn/https://github.com/login/oauth/access_token"}
+
+  const commentCount = n => {
+    const isCommentCount = document.querySelector('#post-meta .gitalk-comment-count')
+    if (isCommentCount) {
+      isCommentCount.textContent= n
+    }
+  }
+
+  const initGitalk = (el, path) => {
+    if (isShuoshuo) {
+      window.shuoshuoComment.destroyGitalk = () => {
+        if (el.children.length) {
+          el.innerHTML = ''
+          el.classList.add('no-comment')
+        }
+      }
+    }
+
+    const gitalk = new Gitalk({
+      clientID: '3911bd8dbdeee631dbc3',
+      clientSecret: '0e7b2a06fc06a1cae2293d84a7f83fe1213023c9',
+      repo: 'pping.github.io',
+      owner: 'pping',
+      admin: ['pping'],
+      updateCountCallback: commentCount,
+      ...option,
+      id: isShuoshuo ? path : (option && option.id) || 'c5eaf624e7757052329830a4167a2628'
+    })
+
+    gitalk.render('gitalk-container')
+  }
+
+  const loadGitalk = async(el, path) => {
+    if (typeof Gitalk === 'function') initGitalk(el, path)
+    else {
+      await btf.getCSS('https://cdn.jsdelivr.net/npm/gitalk/dist/gitalk.min.css')
+      await btf.getScript('https://cdn.jsdelivr.net/npm/gitalk/dist/gitalk.min.js')
+      initGitalk(el, path)
+    }
+  }
+
+  if (isShuoshuo) {
+    'Gitalk' === 'Gitalk'
+      ? window.shuoshuoComment = { loadComment: loadGitalk }
+      : window.loadOtherComment = loadGitalk
+    return
+  }
+
+  if ('Gitalk' === 'Gitalk' || !false) {
+    if (false) btf.loadComment(document.getElementById('gitalk-container'), loadGitalk)
+    else loadGitalk()
+  } else {
+    window.loadOtherComment = loadGitalk
+  }
+})()</script></div><link rel="stylesheet" href="/config/css/custom_bottom.css"><script async data-pjax src="//busuanzi.ibruce.info/busuanzi/2.3/busuanzi.pure.mini.js"></script><div id="local-search"><div class="search-dialog"><nav class="search-nav"><span class="search-dialog-title">搜索</span><span id="loading-status"></span><button class="search-close-button"><i class="fas fa-times"></i></button></nav><div class="text-center" id="loading-database"><i class="fas fa-spinner fa-pulse"></i><span>  数据加载中</span></div><div class="search-wrap"><div id="local-search-input"><div class="local-search-box"><input class="local-search-box--input" placeholder="人工智能" type="text"/></div></div><hr/><div id="local-search-results"></div><div id="local-search-stats-wrap"></div></div></div><div id="search-mask"></div><script src="/js/search/local-search.js"></script></div></div></body></html>
