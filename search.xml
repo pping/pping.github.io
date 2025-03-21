@@ -13,19 +13,6 @@
       </tags>
   </entry>
   <entry>
-    <title>转载 使用Kind快速创建K8S学习环境</title>
-    <url>/2021/06/23/%E4%BA%91%E8%AE%A1%E7%AE%97%EF%BC%88Cloud%20Service%EF%BC%89/k8s/%E8%BD%AC%E8%BD%BD%20%E4%BD%BF%E7%94%A8Kind%E5%BF%AB%E9%80%9F%E5%88%9B%E5%BB%BAK8S%E5%AD%A6%E4%B9%A0%E7%8E%AF%E5%A2%83/</url>
-    <content><![CDATA[]]></content>
-      <categories>
-        <category>kubernetes</category>
-      </categories>
-      <tags>
-        <tag>kubernetes</tag>
-        <tag>k8s</tag>
-        <tag>kind</tag>
-      </tags>
-  </entry>
-  <entry>
     <title>6.4.3.1 密码证件安装</title>
     <url>/2021/06/17/%E6%95%B0%E6%8D%AE%E5%BA%93%EF%BC%88Database%EF%BC%89/mysql/6.4.3.1%20%E5%AF%86%E7%A0%81%E9%AA%8C%E8%AF%81%E6%8F%92%E4%BB%B6%E5%AE%89%E8%A3%85/</url>
     <content><![CDATA[]]></content>
@@ -38,6 +25,17 @@
       </tags>
   </entry>
   <entry>
+    <title>缩略语 、术语表</title>
+    <url>/2021/02/25/%E7%BD%91%E7%BB%9C%EF%BC%88network%EF%BC%89/%E6%A0%B8%E5%BF%83%E7%BD%91/%E7%BC%A9%E7%95%A5%E8%AF%AD%20%E3%80%81%E6%9C%AF%E8%AF%AD%E8%A1%A8/</url>
+    <content><![CDATA[]]></content>
+      <categories>
+        <category>IMS</category>
+      </categories>
+      <tags>
+        <tag>IMS</tag>
+      </tags>
+  </entry>
+  <entry>
     <title>git@github.com Permission denied (publickey).</title>
     <url>/2021/02/23/%E8%BD%AF%E4%BB%B6%EF%BC%88Software%EF%BC%89/git/git@github.com%20%20Permission%20denied%20(publickey)/</url>
     <content><![CDATA[]]></content>
@@ -47,11 +45,16 @@
       </tags>
   </entry>
   <entry>
-    <title>pacman -Syu 升级失败</title>
-    <url>/2021/02/23/%E8%BD%AF%E4%BB%B6%EF%BC%88Software%EF%BC%89/pacman/pacman%20-Syu%20%E5%8D%87%E7%BA%A7%E5%A4%B1%E8%B4%A5/</url>
+    <title>转载 使用Kind快速创建K8S学习环境</title>
+    <url>/2021/06/23/%E4%BA%91%E8%AE%A1%E7%AE%97%EF%BC%88Cloud%20Service%EF%BC%89/k8s/%E8%BD%AC%E8%BD%BD%20%E4%BD%BF%E7%94%A8Kind%E5%BF%AB%E9%80%9F%E5%88%9B%E5%BB%BAK8S%E5%AD%A6%E4%B9%A0%E7%8E%AF%E5%A2%83/</url>
     <content><![CDATA[]]></content>
+      <categories>
+        <category>kubernetes</category>
+      </categories>
       <tags>
-        <tag>pcman</tag>
+        <tag>kubernetes</tag>
+        <tag>k8s</tag>
+        <tag>kind</tag>
       </tags>
   </entry>
   <entry>
@@ -93,27 +96,11 @@
       </tags>
   </entry>
   <entry>
-    <title>如何使用 Docker Compose 安装 WordPress</title>
-    <url>/2021/06/17/%E8%BD%AF%E4%BB%B6%EF%BC%88Software%EF%BC%89/wordpress/%E5%A6%82%E4%BD%95%E4%BD%BF%E7%94%A8%20Docker%20Compose%20%E5%AE%89%E8%A3%85%20WordPress/</url>
+    <title>pacman -Syu 升级失败</title>
+    <url>/2021/02/23/%E8%BD%AF%E4%BB%B6%EF%BC%88Software%EF%BC%89/pacman/pacman%20-Syu%20%E5%8D%87%E7%BA%A7%E5%A4%B1%E8%B4%A5/</url>
     <content><![CDATA[]]></content>
-      <categories>
-        <category>docker</category>
-      </categories>
       <tags>
-        <tag>docker</tag>
-        <tag>linux</tag>
-        <tag>转载</tag>
-      </tags>
-  </entry>
-  <entry>
-    <title>缩略语 、术语表</title>
-    <url>/2021/02/25/%E7%BD%91%E7%BB%9C%EF%BC%88network%EF%BC%89/%E6%A0%B8%E5%BF%83%E7%BD%91/%E7%BC%A9%E7%95%A5%E8%AF%AD%20%E3%80%81%E6%9C%AF%E8%AF%AD%E8%A1%A8/</url>
-    <content><![CDATA[]]></content>
-      <categories>
-        <category>IMS</category>
-      </categories>
-      <tags>
-        <tag>IMS</tag>
+        <tag>pcman</tag>
       </tags>
   </entry>
   <entry>
@@ -127,6 +114,19 @@
       <tags>
         <tag>mysql</tag>
         <tag>docker</tag>
+      </tags>
+  </entry>
+  <entry>
+    <title>如何使用 Docker Compose 安装 WordPress</title>
+    <url>/2021/06/17/%E8%BD%AF%E4%BB%B6%EF%BC%88Software%EF%BC%89/wordpress/%E5%A6%82%E4%BD%95%E4%BD%BF%E7%94%A8%20Docker%20Compose%20%E5%AE%89%E8%A3%85%20WordPress/</url>
+    <content><![CDATA[]]></content>
+      <categories>
+        <category>docker</category>
+      </categories>
+      <tags>
+        <tag>docker</tag>
+        <tag>linux</tag>
+        <tag>转载</tag>
       </tags>
   </entry>
   <entry>
