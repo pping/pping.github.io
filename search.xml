@@ -13,18 +13,6 @@
       </tags>
   </entry>
   <entry>
-    <title>6.4.3.1 密码证件安装</title>
-    <url>/2021/06/17/%E6%95%B0%E6%8D%AE%E5%BA%93%EF%BC%88Database%EF%BC%89/mysql/6.4.3.1%20%E5%AF%86%E7%A0%81%E9%AA%8C%E8%AF%81%E6%8F%92%E4%BB%B6%E5%AE%89%E8%A3%85/</url>
-    <content><![CDATA[]]></content>
-      <categories>
-        <category>数据库</category>
-        <category>mysql</category>
-      </categories>
-      <tags>
-        <tag>mysql</tag>
-      </tags>
-  </entry>
-  <entry>
     <title>转载 使用Kind快速创建K8S学习环境</title>
     <url>/2021/06/23/%E4%BA%91%E8%AE%A1%E7%AE%97%EF%BC%88Cloud%20Service%EF%BC%89/k8s/%E8%BD%AC%E8%BD%BD%20%E4%BD%BF%E7%94%A8Kind%E5%BF%AB%E9%80%9F%E5%88%9B%E5%BB%BAK8S%E5%AD%A6%E4%B9%A0%E7%8E%AF%E5%A2%83/</url>
     <content><![CDATA[]]></content>
@@ -38,11 +26,35 @@
       </tags>
   </entry>
   <entry>
-    <title>pacman -Syu 升级失败</title>
-    <url>/2021/02/23/%E8%BD%AF%E4%BB%B6%EF%BC%88Software%EF%BC%89/pacman/pacman%20-Syu%20%E5%8D%87%E7%BA%A7%E5%A4%B1%E8%B4%A5/</url>
+    <title>6.4.3.1 密码证件安装</title>
+    <url>/2021/06/17/%E6%95%B0%E6%8D%AE%E5%BA%93%EF%BC%88Database%EF%BC%89/mysql/6.4.3.1%20%E5%AF%86%E7%A0%81%E9%AA%8C%E8%AF%81%E6%8F%92%E4%BB%B6%E5%AE%89%E8%A3%85/</url>
+    <content><![CDATA[]]></content>
+      <categories>
+        <category>数据库</category>
+        <category>mysql</category>
+      </categories>
+      <tags>
+        <tag>mysql</tag>
+      </tags>
+  </entry>
+  <entry>
+    <title>git@github.com Permission denied (publickey).</title>
+    <url>/2021/02/23/%E8%BD%AF%E4%BB%B6%EF%BC%88Software%EF%BC%89/git/git@github.com%20%20Permission%20denied%20(publickey)/</url>
     <content><![CDATA[]]></content>
       <tags>
-        <tag>pcman</tag>
+        <tag>github</tag>
+        <tag>git</tag>
+      </tags>
+  </entry>
+  <entry>
+    <title>缩略语 、术语表</title>
+    <url>/2021/02/25/%E7%BD%91%E7%BB%9C%EF%BC%88network%EF%BC%89/%E6%A0%B8%E5%BF%83%E7%BD%91/%E7%BC%A9%E7%95%A5%E8%AF%AD%20%E3%80%81%E6%9C%AF%E8%AF%AD%E8%A1%A8/</url>
+    <content><![CDATA[]]></content>
+      <categories>
+        <category>IMS</category>
+      </categories>
+      <tags>
+        <tag>IMS</tag>
       </tags>
   </entry>
   <entry>
@@ -58,37 +70,17 @@
       </tags>
   </entry>
   <entry>
-    <title>缩略语 、术语表</title>
-    <url>/2021/02/25/%E7%BD%91%E7%BB%9C%EF%BC%88network%EF%BC%89/%E6%A0%B8%E5%BF%83%E7%BD%91/%E7%BC%A9%E7%95%A5%E8%AF%AD%20%E3%80%81%E6%9C%AF%E8%AF%AD%E8%A1%A8/</url>
+    <title>pacman -Syu 升级失败</title>
+    <url>/2021/02/23/%E8%BD%AF%E4%BB%B6%EF%BC%88Software%EF%BC%89/pacman/pacman%20-Syu%20%E5%8D%87%E7%BA%A7%E5%A4%B1%E8%B4%A5/</url>
     <content><![CDATA[]]></content>
-      <categories>
-        <category>IMS</category>
-      </categories>
       <tags>
-        <tag>IMS</tag>
+        <tag>pcman</tag>
       </tags>
   </entry>
   <entry>
     <title>No such file or directory in Unknown on line 0</title>
     <url>/2021/06/10/%E8%BD%AF%E4%BB%B6%EF%BC%88Software%EF%BC%89/nginx/No%20such%20file%20or%20directory%20in%20Unknown%20on%20line%200/</url>
     <content><![CDATA[]]></content>
-  </entry>
-  <entry>
-    <title>git@github.com Permission denied (publickey).</title>
-    <url>/2021/02/23/%E8%BD%AF%E4%BB%B6%EF%BC%88Software%EF%BC%89/git/git@github.com%20%20Permission%20denied%20(publickey)/</url>
-    <content><![CDATA[]]></content>
-      <tags>
-        <tag>github</tag>
-        <tag>git</tag>
-      </tags>
-  </entry>
-  <entry>
-    <title>aria2c 添加 BT-Tracker</title>
-    <url>/2021/02/20/%E8%BD%AF%E4%BB%B6%EF%BC%88Software%EF%BC%89/%E4%B8%8B%E8%BD%BD/aria2c%20%E6%B7%BB%E5%8A%A0%20BT-Tracker/</url>
-    <content><![CDATA[]]></content>
-      <tags>
-        <tag>aria2c</tag>
-      </tags>
   </entry>
   <entry>
     <title>如何使用 Docker Compose 安装 WordPress</title>
@@ -101,6 +93,14 @@
         <tag>docker</tag>
         <tag>linux</tag>
         <tag>转载</tag>
+      </tags>
+  </entry>
+  <entry>
+    <title>aria2c 添加 BT-Tracker</title>
+    <url>/2021/02/20/%E8%BD%AF%E4%BB%B6%EF%BC%88Software%EF%BC%89/%E4%B8%8B%E8%BD%BD/aria2c%20%E6%B7%BB%E5%8A%A0%20BT-Tracker/</url>
+    <content><![CDATA[]]></content>
+      <tags>
+        <tag>aria2c</tag>
       </tags>
   </entry>
   <entry>
@@ -130,6 +130,17 @@
       </tags>
   </entry>
   <entry>
+    <title>缩略语 、术语表</title>
+    <url>/2021/02/22/%E8%BD%AF%E4%BB%B6%EF%BC%88Software%EF%BC%89/%E7%BC%96%E7%A8%8B%E5%BC%80%E5%8F%91/IDE/eclipse%20%E5%AE%98%E6%96%B9%E4%B8%AD%E6%96%87%E8%AF%AD%E8%A8%80%E5%8C%85%E5%AE%89%E8%A3%85%E6%AD%A5%E9%AA%A4/</url>
+    <content><![CDATA[]]></content>
+      <categories>
+        <category>Tools</category>
+      </categories>
+      <tags>
+        <tag>eclipse</tag>
+      </tags>
+  </entry>
+  <entry>
     <title>perl + eclips</title>
     <url>/2013/07/15/%E8%BD%AF%E4%BB%B6%EF%BC%88Software%EF%BC%89/%E7%BC%96%E7%A8%8B%E5%BC%80%E5%8F%91/perl/perl%20+%20eclips/</url>
     <content><![CDATA[]]></content>
@@ -139,17 +150,6 @@
       <tags>
         <tag>eclips</tag>
         <tag>perl</tag>
-      </tags>
-  </entry>
-  <entry>
-    <title>缩略语 、术语表</title>
-    <url>/2021/02/22/%E8%BD%AF%E4%BB%B6%EF%BC%88Software%EF%BC%89/%E7%BC%96%E7%A8%8B%E5%BC%80%E5%8F%91/IDE/eclipse%20%E5%AE%98%E6%96%B9%E4%B8%AD%E6%96%87%E8%AF%AD%E8%A8%80%E5%8C%85%E5%AE%89%E8%A3%85%E6%AD%A5%E9%AA%A4/</url>
-    <content><![CDATA[]]></content>
-      <categories>
-        <category>Tools</category>
-      </categories>
-      <tags>
-        <tag>eclipse</tag>
       </tags>
   </entry>
   <entry>
