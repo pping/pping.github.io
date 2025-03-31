@@ -1,0 +1,262 @@
+<!DOCTYPE html><html lang="zh-CN" data-theme="light"><head><meta charset="UTF-8"><meta http-equiv="X-UA-Compatible" content="IE=edge"><meta name="viewport" content="width=device-width, initial-scale=1.0,viewport-fit=cover"><title>k8s安装部署指南（3） | 热带雨林</title><meta name="author" content="aymar"><meta name="copyright" content="aymar"><meta name="format-detection" content="telephone=no"><meta name="theme-color" content="#ffffff"><meta name="description" content="1 安装Kubernetes(1)上传离线镜像到服务器；略 (2)&nbsp;镜像导入ls |grep .tar |xargs -I &nbsp;{} sealos load -i {}检查步骤：略 (3)安装依赖socat略 1.1 集群安装命令123$ sealos run registry.cn-shanghai.aliyuncs.com&#x2F;labring&#x2F;kubernetes:v1.29.9">
+<meta property="og:type" content="article">
+<meta property="og:title" content="k8s安装部署指南（3）">
+<meta property="og:url" content="https://blog.aymar.cn/articles/%E4%BA%91%E8%AE%A1%E7%AE%97%EF%BC%88Cloud%20Service%EF%BC%89/k8s/k8s%E5%AE%89%E8%A3%85%E9%83%A8%E7%BD%B2%E6%8C%87%E5%8D%97%EF%BC%883%EF%BC%89/index.html">
+<meta property="og:site_name" content="热带雨林">
+<meta property="og:description" content="1 安装Kubernetes(1)上传离线镜像到服务器；略 (2)&nbsp;镜像导入ls |grep .tar |xargs -I &nbsp;{} sealos load -i {}检查步骤：略 (3)安装依赖socat略 1.1 集群安装命令123$ sealos run registry.cn-shanghai.aliyuncs.com&#x2F;labring&#x2F;kubernetes:v1.29.9">
+<meta property="og:locale" content="zh_CN">
+<meta property="og:image" content="https://haowallpaper.com/link/common/file/previewFileImg/15719455806689600">
+<meta property="article:published_time" content="2021-04-12T16:00:00.000Z">
+<meta property="article:modified_time" content="2021-04-12T16:00:00.000Z">
+<meta property="article:author" content="aymar">
+<meta property="article:tag" content="k8s">
+<meta property="article:tag" content="sealos">
+<meta property="article:tag" content="chrony">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:image" content="https://haowallpaper.com/link/common/file/previewFileImg/15719455806689600"><link rel="shortcut icon" href="/config/img/favicon.png"><link rel="canonical" href="https://blog.aymar.cn/articles/%E4%BA%91%E8%AE%A1%E7%AE%97%EF%BC%88Cloud%20Service%EF%BC%89/k8s/k8s%E5%AE%89%E8%A3%85%E9%83%A8%E7%BD%B2%E6%8C%87%E5%8D%97%EF%BC%883%EF%BC%89/index.html"><link rel="preconnect" href="//cdn.jsdelivr.net"/><link rel="preconnect" href="//hm.baidu.com"/><link rel="preconnect" href="//busuanzi.ibruce.info"/><link rel="stylesheet" href="/css/index.css"><link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@fortawesome/fontawesome-free/css/all.min.css"><script>
+    (() => {
+      
+    const saveToLocal = {
+      set: (key, value, ttl) => {
+        if (!ttl) return
+        const expiry = Date.now() + ttl * 86400000
+        localStorage.setItem(key, JSON.stringify({ value, expiry }))
+      },
+      get: key => {
+        const itemStr = localStorage.getItem(key)
+        if (!itemStr) return undefined
+        const { value, expiry } = JSON.parse(itemStr)
+        if (Date.now() > expiry) {
+          localStorage.removeItem(key)
+          return undefined
+        }
+        return value
+      }
+    }
+
+    window.btf = {
+      saveToLocal,
+      getScript: (url, attr = {}) => new Promise((resolve, reject) => {
+        const script = document.createElement('script')
+        script.src = url
+        script.async = true
+        Object.entries(attr).forEach(([key, val]) => script.setAttribute(key, val))
+        script.onload = script.onreadystatechange = () => {
+          if (!script.readyState || /loaded|complete/.test(script.readyState)) resolve()
+        }
+        script.onerror = reject
+        document.head.appendChild(script)
+      }),
+      getCSS: (url, id) => new Promise((resolve, reject) => {
+        const link = document.createElement('link')
+        link.rel = 'stylesheet'
+        link.href = url
+        if (id) link.id = id
+        link.onload = link.onreadystatechange = () => {
+          if (!link.readyState || /loaded|complete/.test(link.readyState)) resolve()
+        }
+        link.onerror = reject
+        document.head.appendChild(link)
+      }),
+      addGlobalFn: (key, fn, name = false, parent = window) => {
+        if (!false && key.startsWith('pjax')) return
+        const globalFn = parent.globalFn || {}
+        globalFn[key] = globalFn[key] || {}
+        globalFn[key][name || Object.keys(globalFn[key]).length] = fn
+        parent.globalFn = globalFn
+      }
+    }
+  
+      
+      const activateDarkMode = () => {
+        document.documentElement.setAttribute('data-theme', 'dark')
+        if (document.querySelector('meta[name="theme-color"]') !== null) {
+          document.querySelector('meta[name="theme-color"]').setAttribute('content', '#0d0d0d')
+        }
+      }
+      const activateLightMode = () => {
+        document.documentElement.setAttribute('data-theme', 'light')
+        if (document.querySelector('meta[name="theme-color"]') !== null) {
+          document.querySelector('meta[name="theme-color"]').setAttribute('content', '#ffffff')
+        }
+      }
+
+      btf.activateDarkMode = activateDarkMode
+      btf.activateLightMode = activateLightMode
+
+      const theme = saveToLocal.get('theme')
+    
+          theme === 'dark' ? activateDarkMode() : theme === 'light' ? activateLightMode() : null
+        
+      
+      const asideStatus = saveToLocal.get('aside-status')
+      if (asideStatus !== undefined) {
+        document.documentElement.classList.toggle('hide-aside', asideStatus === 'hide')
+      }
+    
+      
+    const detectApple = () => {
+      if (/iPad|iPhone|iPod|Macintosh/.test(navigator.userAgent)) {
+        document.documentElement.classList.add('apple')
+      }
+    }
+    detectApple()
+  
+    })()
+  </script><script>var _hmt = _hmt || [];
+(function() {
+  var hm = document.createElement("script");
+  hm.src = "https://hm.baidu.com/hm.js?d6348a489c9706b09ce89b2cd34384e0";
+  var s = document.getElementsByTagName("script")[0]; 
+  s.parentNode.insertBefore(hm, s);
+})();
+btf.addGlobalFn('pjaxComplete', () => {
+  _hmt.push(['_trackPageview',window.location.pathname])
+}, 'baidu_analytics')
+</script><script>const GLOBAL_CONFIG = {
+  root: '/',
+  algolia: undefined,
+  localSearch: {"path":"/search.xml","preload":false,"top_n_per_article":1,"unescape":false,"languages":{"hits_empty":"未找到符合您查询的内容：${query}","hits_stats":"共找到 ${hits} 篇文章"}},
+  translate: undefined,
+  highlight: {"plugin":"highlight.js","highlightCopy":true,"highlightLang":true,"highlightHeightLimit":false,"highlightFullpage":false,"highlightMacStyle":false},
+  copy: {
+    success: '复制成功',
+    error: '复制失败',
+    noSupport: '浏览器不支持'
+  },
+  relativeDate: {
+    homepage: false,
+    post: false
+  },
+  runtime: '天',
+  dateSuffix: {
+    just: '刚刚',
+    min: '分钟前',
+    hour: '小时前',
+    day: '天前',
+    month: '个月前'
+  },
+  copyright: undefined,
+  lightbox: 'null',
+  Snackbar: undefined,
+  infinitegrid: {
+    js: 'https://cdn.jsdelivr.net/npm/@egjs/infinitegrid/dist/infinitegrid.min.js',
+    buttonText: '加载更多'
+  },
+  isPhotoFigcaption: false,
+  islazyload: false,
+  isAnchor: false,
+  percent: {
+    toc: true,
+    rightside: false,
+  },
+  autoDarkmode: false
+}</script><script id="config-diff">var GLOBAL_CONFIG_SITE = {
+  title: 'k8s安装部署指南（3）',
+  isPost: true,
+  isHome: false,
+  isHighlightShrink: false,
+  isToc: true,
+  isShuoshuo: false
+}</script><link href="https://fonts.googleapis.com/css2?family=Noto+Serif+SC:wght@400;700&display=swap" rel="stylesheet"><link rel="stylesheet" href="/config/css/custom_head.css"><meta name="generator" content="Hexo 7.3.0">
+<style>.github-emoji { position: relative; display: inline-block; width: 1.2em; min-height: 1.2em; overflow: hidden; vertical-align: top; color: transparent; }  .github-emoji > span { position: relative; z-index: 10; }  .github-emoji img, .github-emoji .fancybox { margin: 0 !important; padding: 0 !important; border: none !important; outline: none !important; text-decoration: none !important; user-select: none !important; cursor: auto !important; }  .github-emoji img { height: 1.2em !important; width: 1.2em !important; position: absolute !important; left: 50% !important; top: 50% !important; transform: translate(-50%, -50%) !important; user-select: none !important; cursor: auto !important; } .github-emoji-fallback { color: inherit; } .github-emoji-fallback img { opacity: 0 !important; }</style>
+</head><body><div id="web_bg" style="background-image: url(https://haowallpaper.com/link/common/file/previewFileImg/15942630369381760);"></div><div id="sidebar"><div id="menu-mask"></div><div id="sidebar-menus"><div class="avatar-img text-center"><img src="/config/img/avatar.jpg" onerror="onerror=null;src='/img/friend_404.gif'" alt="avatar"/></div><div class="site-data text-center"><a href="/archives/"><div class="headline">文章</div><div class="length-num">55</div></a><a href="/tags/"><div class="headline">标签</div><div class="length-num">48</div></a><a href="/categories/"><div class="headline">分类</div><div class="length-num">23</div></a></div><div class="menus_items"><div class="menus_item"><a class="site-page" href="/"><i class="fa-fw fas fa-home"></i><span> 主页</span></a></div><div class="menus_item"><span class="site-page group"><i class="fa-fw fa fa-book"></i><span> 博文</span><i class="fas fa-chevron-down"></i></span><ul class="menus_item_child"><li><a class="site-page child" href="/categories/"><i class="fa-fw fa fa-archive"></i><span> 分类</span></a></li><li><a class="site-page child" href="/tags/"><i class="fa-fw fa fa-tags"></i><span> 标签</span></a></li><li><a class="site-page child" href="/archives/"><i class="fa-fw fa fa-folder-open"></i><span> 归档</span></a></li></ul></div><div class="menus_item"><span class="site-page group"><i class="fa-fw fas fa-list"></i><span> 生活</span><i class="fas fa-chevron-down"></i></span><ul class="menus_item_child"><li><a class="site-page child" href="/share/"><i class="fa-fw fa fa-sticky-note"></i><span> 分享</span></a></li><li><a class="site-page child" href="/photos/"><i class="fa-fw fa fa-camera-retro"></i><span> 相册</span></a></li><li><a class="site-page child" href="/music/"><i class="fa-fw fa fa-music"></i><span> 音乐</span></a></li><li><a class="site-page child" href="/movie/"><i class="fa-fw fas fa-video"></i><span> 影视</span></a></li><li><a class="site-page child" href="/Game/"><i class="fa-fw fa fa fa-gamepad"></i><span> 游戏</span></a></li></ul></div><div class="menus_item"><a class="site-page" href="/comment/"><i class="fa-fw fa fa-paper-plane"></i><span> 留言板</span></a></div><div class="menus_item"><a class="site-page" href="/about/"><i class="fa-fw fa fa-address-card"></i><span> 关于博主</span></a></div></div></div></div><div class="post" id="body-wrap"><header class="post-bg" id="page-header" style="background-image: url(https://haowallpaper.com/link/common/file/previewFileImg/15719455806689600);"><nav id="nav"><span id="blog-info"><a class="nav-site-title" href="/"><span class="site-name">热带雨林</span></a><a class="nav-page-title" href="/"><span class="site-name">k8s安装部署指南（3）</span></a></span><div id="menus"><div id="search-button"><span class="site-page social-icon search"><i class="fas fa-search fa-fw"></i><span> 搜索</span></span></div><div class="menus_items"><div class="menus_item"><a class="site-page" href="/"><i class="fa-fw fas fa-home"></i><span> 主页</span></a></div><div class="menus_item"><span class="site-page group"><i class="fa-fw fa fa-book"></i><span> 博文</span><i class="fas fa-chevron-down"></i></span><ul class="menus_item_child"><li><a class="site-page child" href="/categories/"><i class="fa-fw fa fa-archive"></i><span> 分类</span></a></li><li><a class="site-page child" href="/tags/"><i class="fa-fw fa fa-tags"></i><span> 标签</span></a></li><li><a class="site-page child" href="/archives/"><i class="fa-fw fa fa-folder-open"></i><span> 归档</span></a></li></ul></div><div class="menus_item"><span class="site-page group"><i class="fa-fw fas fa-list"></i><span> 生活</span><i class="fas fa-chevron-down"></i></span><ul class="menus_item_child"><li><a class="site-page child" href="/share/"><i class="fa-fw fa fa-sticky-note"></i><span> 分享</span></a></li><li><a class="site-page child" href="/photos/"><i class="fa-fw fa fa-camera-retro"></i><span> 相册</span></a></li><li><a class="site-page child" href="/music/"><i class="fa-fw fa fa-music"></i><span> 音乐</span></a></li><li><a class="site-page child" href="/movie/"><i class="fa-fw fas fa-video"></i><span> 影视</span></a></li><li><a class="site-page child" href="/Game/"><i class="fa-fw fa fa fa-gamepad"></i><span> 游戏</span></a></li></ul></div><div class="menus_item"><a class="site-page" href="/comment/"><i class="fa-fw fa fa-paper-plane"></i><span> 留言板</span></a></div><div class="menus_item"><a class="site-page" href="/about/"><i class="fa-fw fa fa-address-card"></i><span> 关于博主</span></a></div></div><div id="toggle-menu"><span class="site-page"><i class="fas fa-bars fa-fw"></i></span></div></div></nav><div id="post-info"><h1 class="post-title">k8s安装部署指南（3）</h1><div id="post-meta"><div class="meta-firstline"><span class="post-meta-date"><i class="far fa-calendar-alt fa-fw post-meta-icon"></i><span class="post-meta-label">发表于</span><time class="post-meta-date-created" datetime="2021-04-12T16:00:00.000Z" title="发表于 2021-04-13 00:00:00">2021-04-13</time><span class="post-meta-separator">|</span><i class="fas fa-history fa-fw post-meta-icon"></i><span class="post-meta-label">更新于</span><time class="post-meta-date-updated" datetime="2021-04-12T16:00:00.000Z" title="更新于 2021-04-13 00:00:00">2021-04-13</time></span><span class="post-meta-categories"><span class="post-meta-separator">|</span><i class="fas fa-inbox fa-fw post-meta-icon"></i><a class="post-meta-categories" href="/categories/%E4%BA%91%E5%B9%B3%E5%8F%B0/">云平台</a><i class="fas fa-angle-right post-meta-separator"></i><i class="fas fa-inbox fa-fw post-meta-icon"></i><a class="post-meta-categories" href="/categories/%E4%BA%91%E5%B9%B3%E5%8F%B0/k8s/">k8s</a></span></div><div class="meta-secondline"><span class="post-meta-separator">|</span><span class="post-meta-pv-cv" id="" data-flag-title=""><i class="far fa-eye fa-fw post-meta-icon"></i><span class="post-meta-label">浏览量:</span><span id="busuanzi_value_page_pv"><i class="fa-solid fa-spinner fa-spin"></i></span></span></div></div></div></header><main class="layout" id="content-inner"><div id="post"><article class="container post-content" id="article-container"><h1 id="1-安装Kubernetes"><a href="#1-安装Kubernetes" class="headerlink" title="1 安装Kubernetes"></a>1 <strong>安装Kubernetes</strong></h1><p><strong>(1)上传离线镜像到服务器；</strong><br>略</p>
+<p><strong>(2)&nbsp;镜像导入</strong><br><code>ls |grep .tar |xargs -I &nbsp;{} sealos load -i {}</code><br>检查步骤：略</p>
+<p><strong>(3)安装依赖socat</strong><br>略</p>
+<h2 id="1-1-集群安装命令"><a href="#1-1-集群安装命令" class="headerlink" title="1.1 集群安装命令"></a>1.1 集群安装命令</h2><figure class="highlight plaintext"><table><tbody><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">$ sealos run registry.cn-shanghai.aliyuncs.com/labring/kubernetes:v1.29.9 registry.cn-shanghai.aliyuncs.com/labring/helm:v3.9.4 registry.cn-shanghai.aliyuncs.com/labring/cilium:v1.13.4 \</span><br><span class="line">     --masters 192.168.64.2,192.168.64.22,192.168.64.20 \</span><br><span class="line">     --nodes 192.168.64.21,192.168.64.19 -p [your-ssh-passwd]</span><br></pre></td></tr></tbody></table></figure>
+
+<figure class="highlight plaintext"><table><tbody><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line">sealos run labring/kubernetes-docker:v1.25.0 \</span><br><span class="line">labring/calico:v3.24.1 labring/coredns:v0.0.1  \</span><br><span class="line">--masters 1.1.1.11,1.1.1.12,1.1.1.13 \</span><br><span class="line">--nodes 1.1.1.14,1.1.1.15,1.1.1.16 \</span><br><span class="line">-p [your-ssh-passwd\]</span><br><span class="line"></span><br></pre></td></tr></tbody></table></figure>
+
+
+<h1 id="2-参考"><a href="#2-参考" class="headerlink" title="2 参考"></a>2 参考</h1><h2 id="2-1-安装sealos-https-sealos-run-docs-k8s-quick-start-install-cli"><a href="#2-1-安装sealos-https-sealos-run-docs-k8s-quick-start-install-cli" class="headerlink" title="2.1 安装sealos https://sealos.run/docs/k8s/quick-start/install-cli"></a>2.1 <strong>安装sealos</strong> <a target="_blank" rel="noopener" href="https://sealos.run/docs/k8s/quick-start/install-cli">https://sealos.run/docs/k8s/quick-start/install-cli</a></h2><p>本文详细介绍了如何下载和安装Sealos命令行工具，包括版本选择、二进制下载、包管理工具安装和源码安装等多种方法，助您快速部署Kubernetes集群。</p>
+<p>你可以通过运行命令来获取版本列表：</p>
+<figure class="highlight plaintext"><table><tbody><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">$ curl --silent "https://api.github.com/repos/labring/sealos/releases" | jq -r '.[].tag_name'</span><br></pre></td></tr></tbody></table></figure>
+
+<blockquote>
+<p>注意：在选择版本时，建议使用稳定版本例如&nbsp;<code>v4.3.0</code>。像&nbsp;<code>v4.3.0-rc1</code>、<code>v4.3.0-alpha1</code>&nbsp;这样的版本是预发布版，请谨慎使用。</p>
+</blockquote>
+<p>设置&nbsp;<code>VERSION</code>&nbsp;环境变量为 latest 版本号，或者将&nbsp;<code>VERSION</code>&nbsp;替换为您要安装的 Sealos 版本：</p>
+<figure class="highlight plaintext"><table><tbody><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">$ VERSION=`curl -s https://api.github.com/repos/labring/sealos/releases/latest | grep -oE '"tag_name": "[^"]+"' | head -n1 | cut -d'"' -f4`</span><br></pre></td></tr></tbody></table></figure>
+
+<p>另外由于国内网络的特殊原因，访问 GitHub 可能会受限，建议先到以下几个网站寻找最新可用的 GitHub 代理：</p>
+<ul>
+<li><a target="_blank" rel="noopener" href="https://ghproxy.link/">https://ghproxy.link/</a></li>
+<li><a target="_blank" rel="noopener" href="https://ghproxy.net/">https://ghproxy.net/</a></li>
+</ul>
+<p>找到可用的 GitHub 代理之后，将其设置为环境变量&nbsp;<code>PROXY_PREFIX</code>，例如：</p>
+<figure class="highlight plaintext"><table><tbody><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">export PROXY_PREFIX=https://ghfast.top</span><br></pre></td></tr></tbody></table></figure>
+
+<h2 id="2-2-二进制自动下载"><a href="#2-2-二进制自动下载" class="headerlink" title="2.2 二进制自动下载"></a>2.2 <a target="_blank" rel="noopener" href="https://sealos.run/docs/k8s/quick-start/install-cli#%E4%BA%8C%E8%BF%9B%E5%88%B6%E8%87%AA%E5%8A%A8%E4%B8%8B%E8%BD%BD">二进制自动下载</a></h2><figure class="highlight plaintext"><table><tbody><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">$ curl -sfL ${PROXY_PREFIX}/https://raw.githubusercontent.com/labring/sealos/main/scripts/install.sh | PROXY_PREFIX=${PROXY_PREFIX} sh -s ${VERSION} labring/sealos</span><br></pre></td></tr></tbody></table></figure>
+
+<h2 id="2-3-二进制手动下载"><a href="#2-3-二进制手动下载" class="headerlink" title="2.3 二进制手动下载"></a>2.3 <a target="_blank" rel="noopener" href="https://sealos.run/docs/k8s/quick-start/install-cli#%E4%BA%8C%E8%BF%9B%E5%88%B6%E6%89%8B%E5%8A%A8%E4%B8%8B%E8%BD%BD">二进制手动下载</a></h2><p>amd64arm64</p>
+<figure class="highlight plaintext"><table><tbody><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">$ wget ${PROXY_PREFIX}/https://github.com/labring/sealos/releases/download/${VERSION}/sealos_${VERSION#v}_linux_amd64.tar.gz \&amp;&amp; tar zxvf sealos_${VERSION#v}_linux_amd64.tar.gz sealos &amp;&amp; chmod +x sealos &amp;&amp; mv sealos /usr/bin</span><br></pre></td></tr></tbody></table></figure>
+
+<h2 id="2-4-包管理工具安装"><a href="#2-4-包管理工具安装" class="headerlink" title="2.4 包管理工具安装"></a>2.4 <a target="_blank" rel="noopener" href="https://sealos.run/docs/k8s/quick-start/install-cli#%E5%8C%85%E7%AE%A1%E7%90%86%E5%B7%A5%E5%85%B7%E5%AE%89%E8%A3%85">包管理工具安装</a></h2><h3 id="2-4-1-DEB-源"><a href="#2-4-1-DEB-源" class="headerlink" title="2.4.1 DEB 源"></a>2.4.1 <a target="_blank" rel="noopener" href="https://sealos.run/docs/k8s/quick-start/install-cli#deb-%E6%BA%90">DEB 源</a></h3><figure class="highlight plaintext"><table><tbody><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">$ echo "deb [trusted=yes] https://apt.fury.io/labring/ /" | sudo tee /etc/apt/sources.list.d/labring.list$ sudo apt update$ sudo apt install sealos</span><br></pre></td></tr></tbody></table></figure>
+
+<h3 id="2-4-2-RPM-源"><a href="#2-4-2-RPM-源" class="headerlink" title="2.4.2 RPM 源"></a>2.4.2 <a target="_blank" rel="noopener" href="https://sealos.run/docs/k8s/quick-start/install-cli#rpm-%E6%BA%90">RPM 源</a></h3><figure class="highlight plaintext"><table><tbody><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">$ sudo cat &gt; /etc/yum.repos.d/labring.repo &lt;&lt; EOF[fury]name=labring Yum Repobaseurl=https://yum.fury.io/labring/enabled=1gpgcheck=0EOF$ sudo yum clean all$ sudo yum install sealos</span><br></pre></td></tr></tbody></table></figure>
+
+<h2 id="2-5-源码安装"><a href="#2-5-源码安装" class="headerlink" title="2.5 源码安装"></a>2.5 <a target="_blank" rel="noopener" href="https://sealos.run/docs/k8s/quick-start/install-cli#%E6%BA%90%E7%A0%81%E5%AE%89%E8%A3%85">源码安装</a></h2><h3 id="2-5-1-前置依赖"><a href="#2-5-1-前置依赖" class="headerlink" title="2.5.1 前置依赖"></a>2.5.1 <a target="_blank" rel="noopener" href="https://sealos.run/docs/k8s/quick-start/install-cli#%E5%89%8D%E7%BD%AE%E4%BE%9D%E8%B5%96">前置依赖</a></h3><ol>
+<li><code>linux</code></li>
+<li><code>git</code></li>
+<li><code>golang</code>&nbsp;1.20+</li>
+<li><code>libgpgme-dev libbtrfs-dev libdevmapper-dev</code></li>
+</ol>
+<p>如果在&nbsp;<code>arm64</code>&nbsp;环境下需要添加&nbsp;<code>:arm64</code>&nbsp;后缀。</p>
+<h3 id="2-5-2-构建"><a href="#2-5-2-构建" class="headerlink" title="2.5.2 构建"></a>2.5.2 <a target="_blank" rel="noopener" href="https://sealos.run/docs/k8s/quick-start/install-cli#%E6%9E%84%E5%BB%BA">构建</a></h3><figure class="highlight plaintext"><table><tbody><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">$ git clone https://github.com/labring/sealos.git$ make build BINS=sealos</span><br></pre></td></tr></tbody></table></figure></article><div class="post-copyright"><div class="post-copyright__author"><span class="post-copyright-meta"><i class="fas fa-circle-user fa-fw"></i>文章作者: </span><span class="post-copyright-info"><a href="https://blog.aymar.cn">aymar</a></span></div><div class="post-copyright__type"><span class="post-copyright-meta"><i class="fas fa-square-arrow-up-right fa-fw"></i>文章链接: </span><span class="post-copyright-info"><a href="https://blog.aymar.cn/articles/%E4%BA%91%E8%AE%A1%E7%AE%97%EF%BC%88Cloud%20Service%EF%BC%89/k8s/k8s%E5%AE%89%E8%A3%85%E9%83%A8%E7%BD%B2%E6%8C%87%E5%8D%97%EF%BC%883%EF%BC%89/">https://blog.aymar.cn/articles/%E4%BA%91%E8%AE%A1%E7%AE%97%EF%BC%88Cloud%20Service%EF%BC%89/k8s/k8s%E5%AE%89%E8%A3%85%E9%83%A8%E7%BD%B2%E6%8C%87%E5%8D%97%EF%BC%883%EF%BC%89/</a></span></div><div class="post-copyright__notice"><span class="post-copyright-meta"><i class="fas fa-circle-exclamation fa-fw"></i>版权声明: </span><span class="post-copyright-info">本博客所有文章除特别声明外，均采用 <a href="https://creativecommons.org/licenses/by-nc-sa/4.0/" target="_blank">CC BY-NC-SA 4.0</a> 许可协议。转载请注明来源 <a href="https://blog.aymar.cn" target="_blank">热带雨林</a>！</span></div></div><div class="tag_share"><div class="post-meta__tag-list"><a class="post-meta__tags" href="/tags/k8s/">k8s</a><a class="post-meta__tags" href="/tags/sealos/">sealos</a><a class="post-meta__tags" href="/tags/chrony/">chrony</a></div><div class="post-share"><div class="social-share" data-image="https://haowallpaper.com/link/common/file/previewFileImg/15719455806689600" data-sites="facebook,twitter,wechat,weibo,qq"></div><link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/butterfly-extsrc/sharejs/dist/css/share.min.css" media="print" onload="this.media='all'"><script src="https://cdn.jsdelivr.net/npm/butterfly-extsrc/sharejs/dist/js/social-share.min.js" defer></script></div></div><nav class="pagination-post" id="pagination"><a class="pagination-related" href="/articles/%E4%BA%91%E8%AE%A1%E7%AE%97%EF%BC%88Cloud%20Service%EF%BC%89/k8s/k8s%E5%AE%89%E8%A3%85%E9%83%A8%E7%BD%B2%E6%8C%87%E5%8D%97%EF%BC%882%EF%BC%89/" title="k8s安装部署指南（2）"><img class="cover" src="https://haowallpaper.com/link/common/file/previewFileImg/16466521899191680" onerror="onerror=null;src='/img/404.jpg'" alt="cover of previous post"><div class="info"><div class="info-1"><div class="info-item-1">上一篇</div><div class="info-item-2">k8s安装部署指南（2）</div></div><div class="info-2"><div class="info-item-1">1 Kubernetes集群时间同步配置方案1.1 时间服务器部署（服务端1.1.1.17）12345678910111213141516# 安装chrony（所有节点）yum install -y chrony# 配置时间服务器（仅在1.1.1.17操作）cat &gt; /etc/chrony.conf &lt;&lt;'EOF'server ntp.aliyun.com iburstserver 0.centos.pool.ntp.org iburstallow 1.1.1.0/24local stratum 10keyfile /etc/chrony.keysdriftfile /var/lib/chrony/driftlogdir /var/log/chronylog measurements statistics trackingmaxdistance 16.0makestep 1.0 3EOF  1.2 客户端配置（k8s节点1.1.1.11-16）123456789# 统一配置客户端节点for node in {11..16}; do  ssh...</div></div></div></a><a class="pagination-related" href="/articles/%E4%BA%91%E8%AE%A1%E7%AE%97%EF%BC%88Cloud%20Service%EF%BC%89/k8s/k8s%E5%AE%89%E8%A3%85%E9%83%A8%E7%BD%B2%E6%8C%87%E5%8D%97%EF%BC%884%EF%BC%89/" title="k8s安装部署指南（4）"><img class="cover" src="https://haowallpaper.com/link/common/file/previewFileImg/15719455806689600" onerror="onerror=null;src='/img/404.jpg'" alt="cover of next post"><div class="info text-right"><div class="info-1"><div class="info-item-1">下一篇</div><div class="info-item-2">k8s安装部署指南（4）</div></div><div class="info-2"><div class="info-item-1">1 安装DNS(可选)docker run         -d \        –name=bind9         –restart=always         –publish 53:53/udp         –publish 53:53/tcp         –publish 127.0.0.1:953:953/tcp         –volume /etc/bind         –volume /var/cache/bind         –volume /var/lib/bind         –volume /var/log         test.com/public/bind9:9.18 2 配置DNS12345678910111213141516171819202122232425262728cat &gt; db.test.com&lt;&lt;EOF;; BIND data file for local loopback interface;\$TTL    604800@       IN      SOA    ...</div></div></div></a></nav><div class="relatedPosts"><div class="headline"><i class="fas fa-thumbs-up fa-fw"></i><span>相关推荐</span></div><div class="relatedPosts-list"><a class="pagination-related" href="/articles/%E4%BA%91%E8%AE%A1%E7%AE%97%EF%BC%88Cloud%20Service%EF%BC%89/k8s/k8s%E5%90%84%E7%A7%8D%E5%BA%94%E7%94%A8%E5%AE%89%E8%A3%85/" title="k8s各种应用安装"><img class="cover" src="https://haowallpaper.com/link/common/file/previewFileImg/16445126326406528" alt="cover"><div class="info text-center"><div class="info-1"><div class="info-item-1"><i class="far fa-calendar-alt fa-fw"></i> 2023-03-23</div><div class="info-item-2">k8s各种应用安装</div></div><div class="info-2"><div class="info-item-1">metrics-serversealos run labring/metrics-server:v0.6.2 local-path-provisionersealos run labring/local-path-provisioner:v0.0.23 helmsealos run registry.cn-shanghai.aliyuncs.com/labring/helm:v3.9.4 安装ingress-nginxkubectl apply -f cloud/app/webhook/ingress-nginx.yaml 安装webhook 123kubectl apply -f webhook-config.yamlkubectl apply -f webhook-service.yamlkubectl apply -f webhook-controller.yaml  安装kuboard 12sealos load -i kuboard_v3.tarsealos run labring/kuboard:v3</div></div></div></a><a class="pagination-related" href="/articles/%E4%BA%91%E8%AE%A1%E7%AE%97%EF%BC%88Cloud%20Service%EF%BC%89/k8s/Kubernetes%20StorageClass%20%E5%8F%8A%E6%9C%AC%E5%9C%B0%E5%AD%98%E5%82%A8%E9%85%8D%E7%BD%AE/" title="Kubernetes StorageClass 及本地存储配置"><img class="cover" src="https://haowallpaper.com/link/common/file/previewFileImg/15424390782292288" alt="cover"><div class="info text-center"><div class="info-1"><div class="info-item-1"><i class="far fa-calendar-alt fa-fw"></i> 2021-04-13</div><div class="info-item-2">Kubernetes StorageClass 及本地存储配置</div></div><div class="info-2"><div class="info-item-1">1 sealos 安装应用sealos run labring/local-path-provisioner:v0.0.23 2 查看当前 StorageClass 资源1kubectl get storageclass -n kube-system  3 本地存储配置方案3.1 Local PersistentVolume方案一：  Local PersistentVolume 适合生产环境 12345678910111213141516171819202122apiVersion: v1kind: PersistentVolumemetadata:  name: local-pvspec:  capacity:    storage: 500Gi  # 根据k8snode01-03的500GB磁盘配置  volumeMode: Filesystem  accessModes:  - ReadWriteOnce  persistentVolumeReclaimPolicy: Retain  # 生产环境建议Retain  storageClassName:...</div></div></div></a><a class="pagination-related" href="/articles/%E4%BA%91%E8%AE%A1%E7%AE%97%EF%BC%88Cloud%20Service%EF%BC%89/k8s/k8s%E5%AE%89%E8%A3%85%E9%83%A8%E7%BD%B2%E6%8C%87%E5%8D%97%EF%BC%881%EF%BC%89/" title="k8s安装部署指南（1）"><img class="cover" src="https://haowallpaper.com/link/common/file/previewFileImg/16546638706298240" alt="cover"><div class="info text-center"><div class="info-1"><div class="info-item-1"><i class="far fa-calendar-alt fa-fw"></i> 2021-04-13</div><div class="info-item-2">k8s安装部署指南（1）</div></div><div class="info-2"><div class="info-item-1">1 系统基础配置 ​安全设置 1234# 关闭防火墙和SELinuxsystemctl disable --now firewalldsetenforce 0sed -i 's/SELINUX=enforcing/SELINUX=disabled/' /etc/selinux/config  ​禁用Swap 12swapoff -ased -i '/swap/s/^/#/' /etc/fstab  ​网络配置   1234567891011121314151617# 主机名设置（示例）hostnamectl set-hostname k8s-master1ssh x.x.x.11 hostnamectl set-hostname k8s-master1;\ssh x.x.x.12 hostnamectl set-hostname k8s-master2;\ssh x.x.x.13 hostnamectl set-hostname k8s-master3;\ssh x.x.x.14 hostnamectl set-hostname k8s-node1;\ssh x.x.x.15...</div></div></div></a><a class="pagination-related" href="/articles/%E4%BA%91%E8%AE%A1%E7%AE%97%EF%BC%88Cloud%20Service%EF%BC%89/k8s/k8s%E5%AE%89%E8%A3%85%E9%83%A8%E7%BD%B2%E6%8C%87%E5%8D%97%EF%BC%882%EF%BC%89/" title="k8s安装部署指南（2）"><img class="cover" src="https://haowallpaper.com/link/common/file/previewFileImg/16466521899191680" alt="cover"><div class="info text-center"><div class="info-1"><div class="info-item-1"><i class="far fa-calendar-alt fa-fw"></i> 2021-04-13</div><div class="info-item-2">k8s安装部署指南（2）</div></div><div class="info-2"><div class="info-item-1">1 Kubernetes集群时间同步配置方案1.1 时间服务器部署（服务端1.1.1.17）12345678910111213141516# 安装chrony（所有节点）yum install -y chrony# 配置时间服务器（仅在1.1.1.17操作）cat &gt; /etc/chrony.conf &lt;&lt;'EOF'server ntp.aliyun.com iburstserver 0.centos.pool.ntp.org iburstallow 1.1.1.0/24local stratum 10keyfile /etc/chrony.keysdriftfile /var/lib/chrony/driftlogdir /var/log/chronylog measurements statistics trackingmaxdistance 16.0makestep 1.0 3EOF  1.2 客户端配置（k8s节点1.1.1.11-16）123456789# 统一配置客户端节点for node in {11..16}; do  ssh...</div></div></div></a><a class="pagination-related" href="/articles/%E4%BA%91%E8%AE%A1%E7%AE%97%EF%BC%88Cloud%20Service%EF%BC%89/k8s/k8s%E5%AE%89%E8%A3%85%E9%83%A8%E7%BD%B2%E6%8C%87%E5%8D%97%EF%BC%884%EF%BC%89/" title="k8s安装部署指南（4）"><img class="cover" src="https://haowallpaper.com/link/common/file/previewFileImg/15719455806689600" alt="cover"><div class="info text-center"><div class="info-1"><div class="info-item-1"><i class="far fa-calendar-alt fa-fw"></i> 2021-04-13</div><div class="info-item-2">k8s安装部署指南（4）</div></div><div class="info-2"><div class="info-item-1">1 安装DNS(可选)docker run         -d \        –name=bind9         –restart=always         –publish 53:53/udp         –publish 53:53/tcp         –publish 127.0.0.1:953:953/tcp         –volume /etc/bind         –volume /var/cache/bind         –volume /var/lib/bind         –volume /var/log         test.com/public/bind9:9.18 2 配置DNS12345678910111213141516171819202122232425262728cat &gt; db.test.com&lt;&lt;EOF;; BIND data file for local loopback interface;\$TTL    604800@       IN      SOA    ...</div></div></div></a><a class="pagination-related" href="/articles/%E4%BA%91%E8%AE%A1%E7%AE%97%EF%BC%88Cloud%20Service%EF%BC%89/k8s/k8s%E5%AE%89%E8%A3%85%E8%A7%84%E5%88%92/" title="k8s安装规划"><img class="cover" src="https://haowallpaper.com/link/common/file/previewFileImg/16466521899191680" alt="cover"><div class="info text-center"><div class="info-1"><div class="info-item-1"><i class="far fa-calendar-alt fa-fw"></i> 2021-04-13</div><div class="info-item-2">k8s安装规划</div></div><div class="info-2"><div class="info-item-1">1 k8s安装规划   主机名 部署内容 CPU（线程） 内存（G） 磁盘（G）    k8smaster01 k8s master 节点部署组件 4 8 50   k8smaster02 k8s master 节点部署组件 4 8 50   k8smaster03 k8s master 节点部署组件 4 8 50   k8snode01 k8s node 节点部署组件cloud 8 64 500   k8snode02 k8s node 节点部署组件data 16 64 500   k8snode03 k8s node 节点部署组件 8 64 500   mysql mysql 4 16 50   jenkins01* jenkins master 4 16 50   jenkins02* jenkins slave 4 16 100   2 环境配置建议 研发环境优化 123456789101. ​**节点扩展**：   - 至少增加3个worker节点（建议8核/64GB配置）   - 增加专用节点：     -...</div></div></div></a></div></div><hr class="custom-hr"/><div id="post-comment"><div class="comment-head"><div class="comment-headline"><i class="fas fa-comments fa-fw"></i><span> 评论</span></div></div><div class="comment-wrap"><div><div id="gitalk-container"></div></div></div></div></div><div class="aside-content" id="aside-content"><div class="card-widget card-info text-center"><div class="avatar-img"><img src="/config/img/avatar.jpg" onerror="this.onerror=null;this.src='/img/friend_404.gif'" alt="avatar"/></div><div class="author-info-name">aymar</div><div class="author-info-description">知之者不如好之者，好之者不如乐之者。</div><div class="site-data"><a href="/archives/"><div class="headline">文章</div><div class="length-num">55</div></a><a href="/tags/"><div class="headline">标签</div><div class="length-num">48</div></a><a href="/categories/"><div class="headline">分类</div><div class="length-num">23</div></a></div><a id="card-info-btn" target="_blank" rel="noopener" href="https://github.com/xxxxxx"><i class="fab fa-github"></i><span>Follow Me</span></a></div><div class="card-widget card-announcement"><div class="item-headline"><i class="fas fa-bullhorn fa-shake"></i><span>公告</span></div><div class="announcement_content">亲爱的读者朋友们， 欢迎来到我的博客！非常感谢大家对我的支持和关注。 在这里，我将分享各种有趣的内容，包括技术文章、生活点滴、旅行故事、书籍推荐等等。无论你是技术爱好者、旅行达人，还是喜欢阅读和学习的新手，我希望你都能在这里找到你感兴趣的内容。 我会不定期更新博客，带来更多精彩的内容。同时，我也非常期待与大家互动交流，如果你有任何建议或想法，欢迎在评论区留言或者通过邮件与我联系。</div></div><div class="sticky_layout"><div class="card-widget" id="card-toc"><div class="item-headline"><i class="fas fa-stream"></i><span>目录</span><span class="toc-percentage"></span></div><div class="toc-content"><ol class="toc"><li class="toc-item toc-level-1"><a class="toc-link" href="#1-%E5%AE%89%E8%A3%85Kubernetes"><span class="toc-number">1.</span> <span class="toc-text">1 安装Kubernetes</span></a><ol class="toc-child"><li class="toc-item toc-level-2"><a class="toc-link" href="#1-1-%E9%9B%86%E7%BE%A4%E5%AE%89%E8%A3%85%E5%91%BD%E4%BB%A4"><span class="toc-number">1.1.</span> <span class="toc-text">1.1 集群安装命令</span></a></li></ol></li><li class="toc-item toc-level-1"><a class="toc-link" href="#2-%E5%8F%82%E8%80%83"><span class="toc-number">2.</span> <span class="toc-text">2 参考</span></a><ol class="toc-child"><li class="toc-item toc-level-2"><a class="toc-link" href="#2-1-%E5%AE%89%E8%A3%85sealos-https-sealos-run-docs-k8s-quick-start-install-cli"><span class="toc-number">2.1.</span> <span class="toc-text">2.1 安装sealos https:&#x2F;&#x2F;sealos.run&#x2F;docs&#x2F;k8s&#x2F;quick-start&#x2F;install-cli</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#2-2-%E4%BA%8C%E8%BF%9B%E5%88%B6%E8%87%AA%E5%8A%A8%E4%B8%8B%E8%BD%BD"><span class="toc-number">2.2.</span> <span class="toc-text">2.2 二进制自动下载</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#2-3-%E4%BA%8C%E8%BF%9B%E5%88%B6%E6%89%8B%E5%8A%A8%E4%B8%8B%E8%BD%BD"><span class="toc-number">2.3.</span> <span class="toc-text">2.3 二进制手动下载</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#2-4-%E5%8C%85%E7%AE%A1%E7%90%86%E5%B7%A5%E5%85%B7%E5%AE%89%E8%A3%85"><span class="toc-number">2.4.</span> <span class="toc-text">2.4 包管理工具安装</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#2-4-1-DEB-%E6%BA%90"><span class="toc-number">2.4.1.</span> <span class="toc-text">2.4.1 DEB 源</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#2-4-2-RPM-%E6%BA%90"><span class="toc-number">2.4.2.</span> <span class="toc-text">2.4.2 RPM 源</span></a></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#2-5-%E6%BA%90%E7%A0%81%E5%AE%89%E8%A3%85"><span class="toc-number">2.5.</span> <span class="toc-text">2.5 源码安装</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#2-5-1-%E5%89%8D%E7%BD%AE%E4%BE%9D%E8%B5%96"><span class="toc-number">2.5.1.</span> <span class="toc-text">2.5.1 前置依赖</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#2-5-2-%E6%9E%84%E5%BB%BA"><span class="toc-number">2.5.2.</span> <span class="toc-text">2.5.2 构建</span></a></li></ol></li></ol></li></ol></div></div><div class="card-widget card-recent-post"><div class="item-headline"><i class="fas fa-history"></i><span>最新文章</span></div><div class="aside-list"><div class="aside-list-item"><a class="thumbnail" href="/articles/%E8%BD%AF%E4%BB%B6%EF%BC%88Software%EF%BC%89/%E2%80%8B%E7%AC%94%E8%AE%B0%E7%9F%A5%E8%AF%86%E7%AE%A1%E7%90%86/obsidian/obsidian%E5%8D%8A%E8%87%AA%E5%8A%A8%E5%88%A0%E9%99%A4picgo%E5%9B%BE%E5%BA%8A%E7%85%A7%E7%89%87/" title="obsidian半自动删除picgo远端图床照片"><img src="https://haowallpaper.com/link/common/file/previewFileImg/15618381703582016" onerror="this.onerror=null;this.src='/img/404.jpg'" alt="obsidian半自动删除picgo远端图床照片"/></a><div class="content"><a class="title" href="/articles/%E8%BD%AF%E4%BB%B6%EF%BC%88Software%EF%BC%89/%E2%80%8B%E7%AC%94%E8%AE%B0%E7%9F%A5%E8%AF%86%E7%AE%A1%E7%90%86/obsidian/obsidian%E5%8D%8A%E8%87%AA%E5%8A%A8%E5%88%A0%E9%99%A4picgo%E5%9B%BE%E5%BA%8A%E7%85%A7%E7%89%87/" title="obsidian半自动删除picgo远端图床照片">obsidian半自动删除picgo远端图床照片</a><time datetime="2025-03-30T13:53:02.000Z" title="发表于 2025-03-30 21:53:02">2025-03-30</time></div></div><div class="aside-list-item"><a class="thumbnail" href="/articles/%E4%BA%BA%E5%B7%A5%E6%99%BA%E8%83%BD%EF%BC%88AI%EF%BC%89/Windows%E6%9C%AC%E5%9C%B0%E9%83%A8%E7%BD%B2DeepSeek-r1/" title="Windows本地部署DeepSeek-r1"><img src="https://haowallpaper.com/link/common/file/previewFileImg/16466521899191680" onerror="this.onerror=null;this.src='/img/404.jpg'" alt="Windows本地部署DeepSeek-r1"/></a><div class="content"><a class="title" href="/articles/%E4%BA%BA%E5%B7%A5%E6%99%BA%E8%83%BD%EF%BC%88AI%EF%BC%89/Windows%E6%9C%AC%E5%9C%B0%E9%83%A8%E7%BD%B2DeepSeek-r1/" title="Windows本地部署DeepSeek-r1">Windows本地部署DeepSeek-r1</a><time datetime="2025-02-04T16:00:00.000Z" title="发表于 2025-02-05 00:00:00">2025-02-05</time></div></div><div class="aside-list-item"><a class="thumbnail" href="/articles/%E8%BD%AF%E4%BB%B6%EF%BC%88Software%EF%BC%89/%E2%80%8B%E7%AC%94%E8%AE%B0%E7%9F%A5%E8%AF%86%E7%AE%A1%E7%90%86/obsidian/PicGo-app/" title="使用picgo为obsidian创建ftp图床"><img src="https://haowallpaper.com/link/common/file/previewFileImg/16466521899191680" onerror="this.onerror=null;this.src='/img/404.jpg'" alt="使用picgo为obsidian创建ftp图床"/></a><div class="content"><a class="title" href="/articles/%E8%BD%AF%E4%BB%B6%EF%BC%88Software%EF%BC%89/%E2%80%8B%E7%AC%94%E8%AE%B0%E7%9F%A5%E8%AF%86%E7%AE%A1%E7%90%86/obsidian/PicGo-app/" title="使用picgo为obsidian创建ftp图床">使用picgo为obsidian创建ftp图床</a><time datetime="2024-10-20T16:00:00.000Z" title="发表于 2024-10-21 00:00:00">2024-10-21</time></div></div><div class="aside-list-item"><a class="thumbnail" href="/articles/%E4%BA%91%E8%AE%A1%E7%AE%97%EF%BC%88Cloud%20Service%EF%BC%89/k8s/k8s%E5%90%84%E7%A7%8D%E5%BA%94%E7%94%A8%E5%AE%89%E8%A3%85/" title="k8s各种应用安装"><img src="https://haowallpaper.com/link/common/file/previewFileImg/16445126326406528" onerror="this.onerror=null;this.src='/img/404.jpg'" alt="k8s各种应用安装"/></a><div class="content"><a class="title" href="/articles/%E4%BA%91%E8%AE%A1%E7%AE%97%EF%BC%88Cloud%20Service%EF%BC%89/k8s/k8s%E5%90%84%E7%A7%8D%E5%BA%94%E7%94%A8%E5%AE%89%E8%A3%85/" title="k8s各种应用安装">k8s各种应用安装</a><time datetime="2023-03-22T16:00:00.000Z" title="发表于 2023-03-23 00:00:00">2023-03-23</time></div></div><div class="aside-list-item"><a class="thumbnail" href="/articles/%E4%BA%91%E8%AE%A1%E7%AE%97%EF%BC%88Cloud%20Service%EF%BC%89/k8s/k8s%E6%9C%8D%E5%8A%A1%E5%99%A8%E6%8C%82%E8%BD%BD%E5%8D%8E%E4%B8%BA%E7%A3%81%E7%9B%98%E9%98%B5%E5%88%97/" title="k8s服务器挂载华为磁盘阵列"><img src="https://haowallpaper.com/link/common/file/previewFileImg/15424390782292288" onerror="this.onerror=null;this.src='/img/404.jpg'" alt="k8s服务器挂载华为磁盘阵列"/></a><div class="content"><a class="title" href="/articles/%E4%BA%91%E8%AE%A1%E7%AE%97%EF%BC%88Cloud%20Service%EF%BC%89/k8s/k8s%E6%9C%8D%E5%8A%A1%E5%99%A8%E6%8C%82%E8%BD%BD%E5%8D%8E%E4%B8%BA%E7%A3%81%E7%9B%98%E9%98%B5%E5%88%97/" title="k8s服务器挂载华为磁盘阵列">k8s服务器挂载华为磁盘阵列</a><time datetime="2023-03-22T16:00:00.000Z" title="发表于 2023-03-23 00:00:00">2023-03-23</time></div></div></div></div></div></div></main><footer id="footer"><div id="footer-wrap"><div class="footer_custom_text">©2014 - ©2024 aymar. All rights reserved.</div></div></footer></div><div id="rightside"><div id="rightside-config-hide"><button id="readmode" type="button" title="阅读模式"><i class="fas fa-book-open"></i></button><button id="darkmode" type="button" title="日间和夜间模式切换"><i class="fas fa-adjust"></i></button><button id="hide-aside-btn" type="button" title="单栏和双栏切换"><i class="fas fa-arrows-alt-h"></i></button></div><div id="rightside-config-show"><button id="rightside-config" type="button" title="设置"><i class="fas fa-cog fa-spin"></i></button><button class="close" id="mobile-toc-button" type="button" title="目录"><i class="fas fa-list-ul"></i></button><a id="to_comment" href="#post-comment" title="前往评论"><i class="fas fa-comments"></i></a><button id="go-up" type="button" title="回到顶部"><span class="scroll-percent"></span><i class="fas fa-arrow-up"></i></button></div></div><div><script src="/js/utils.js"></script><script src="/js/main.js"></script><div class="js-pjax"><script>(() => {
+  const isShuoshuo = GLOBAL_CONFIG_SITE.isShuoshuo
+  const option = {"language":"zh-CN","perPage":50,"pagerDirection":"last","createIssueManually":false,"proxy":"https://gitalk.aymar.cn/https://github.com/login/oauth/access_token"}
+
+  const commentCount = n => {
+    const isCommentCount = document.querySelector('#post-meta .gitalk-comment-count')
+    if (isCommentCount) {
+      isCommentCount.textContent= n
+    }
+  }
+
+  const initGitalk = (el, path) => {
+    if (isShuoshuo) {
+      window.shuoshuoComment.destroyGitalk = () => {
+        if (el.children.length) {
+          el.innerHTML = ''
+          el.classList.add('no-comment')
+        }
+      }
+    }
+
+    const gitalk = new Gitalk({
+      clientID: '3911bd8dbdeee631dbc3',
+      clientSecret: '0e7b2a06fc06a1cae2293d84a7f83fe1213023c9',
+      repo: 'pping.github.io',
+      owner: 'pping',
+      admin: ['pping'],
+      updateCountCallback: commentCount,
+      ...option,
+      id: isShuoshuo ? path : (option && option.id) || 'f77c14c5e1a93a1a3960c2be7b153976'
+    })
+
+    gitalk.render('gitalk-container')
+  }
+
+  const loadGitalk = async(el, path) => {
+    if (typeof Gitalk === 'function') initGitalk(el, path)
+    else {
+      await btf.getCSS('https://cdn.jsdelivr.net/npm/gitalk/dist/gitalk.min.css')
+      await btf.getScript('https://cdn.jsdelivr.net/npm/gitalk/dist/gitalk.min.js')
+      initGitalk(el, path)
+    }
+  }
+
+  if (isShuoshuo) {
+    'Gitalk' === 'Gitalk'
+      ? window.shuoshuoComment = { loadComment: loadGitalk }
+      : window.loadOtherComment = loadGitalk
+    return
+  }
+
+  if ('Gitalk' === 'Gitalk' || !false) {
+    if (false) btf.loadComment(document.getElementById('gitalk-container'), loadGitalk)
+    else loadGitalk()
+  } else {
+    window.loadOtherComment = loadGitalk
+  }
+})()</script></div><link rel="stylesheet" href="/config/css/custom_bottom.css"><script async data-pjax src="//busuanzi.ibruce.info/busuanzi/2.3/busuanzi.pure.mini.js"></script><div id="local-search"><div class="search-dialog"><nav class="search-nav"><span class="search-dialog-title">搜索</span><span id="loading-status"></span><button class="search-close-button"><i class="fas fa-times"></i></button></nav><div class="text-center" id="loading-database"><i class="fas fa-spinner fa-pulse"></i><span>  数据加载中</span></div><div class="search-wrap"><div id="local-search-input"><div class="local-search-box"><input class="local-search-box--input" placeholder="人工智能" type="text"/></div></div><hr/><div id="local-search-results"></div><div id="local-search-stats-wrap"></div></div></div><div id="search-mask"></div><script src="/js/search/local-search.js"></script></div></div></body></html>
