@@ -13,42 +13,6 @@
       </tags>
   </entry>
   <entry>
-    <title>SecureCRT、Xshell上传下载</title>
-    <url>/articles/Tools/SecureCRT%E3%80%81Xshell%E4%B8%8A%E4%BC%A0%E4%B8%8B%E8%BD%BD/</url>
-    <content><![CDATA[]]></content>
-      <categories>
-        <category>Tools</category>
-      </categories>
-      <tags>
-        <tag>lrzsz</tag>
-        <tag>SecureCRT</tag>
-        <tag>xshell</tag>
-      </tags>
-  </entry>
-  <entry>
-    <title>perl + eclips</title>
-    <url>/articles/Tools/perl%20+%20eclips/</url>
-    <content><![CDATA[]]></content>
-      <categories>
-        <category>Tools</category>
-      </categories>
-      <tags>
-        <tag>eclips</tag>
-        <tag>perl</tag>
-      </tags>
-  </entry>
-  <entry>
-    <title>缩略语 、术语表</title>
-    <url>/articles/Tools/eclipse%20%E5%AE%98%E6%96%B9%E4%B8%AD%E6%96%87%E8%AF%AD%E8%A8%80%E5%8C%85%E5%AE%89%E8%A3%85%E6%AD%A5%E9%AA%A4/</url>
-    <content><![CDATA[]]></content>
-      <categories>
-        <category>Tools</category>
-      </categories>
-      <tags>
-        <tag>eclipse</tag>
-      </tags>
-  </entry>
-  <entry>
     <title>Windows本地部署DeepSeek-r1</title>
     <url>/articles/%E4%BA%BA%E5%B7%A5%E6%99%BA%E8%83%BD%EF%BC%88AI%EF%BC%89/Windows%E6%9C%AC%E5%9C%B0%E9%83%A8%E7%BD%B2DeepSeek-r1/</url>
     <content><![CDATA[]]></content>
@@ -86,7 +50,7 @@
     <url>/articles/%E8%BD%AF%E4%BB%B6%EF%BC%88Software%EF%BC%89/%E7%BB%88%E7%AB%AF/SecureCRT%E3%80%81Xshell%E4%B8%8A%E4%BC%A0%E4%B8%8B%E8%BD%BD/</url>
     <content><![CDATA[]]></content>
       <categories>
-        <category>Tools</category>
+        <category>终端</category>
       </categories>
       <tags>
         <tag>lrzsz</tag>
@@ -204,7 +168,8 @@
     <url>/articles/%E8%BD%AF%E4%BB%B6%EF%BC%88Software%EF%BC%89/%E7%BC%96%E7%A8%8B%E5%BC%80%E5%8F%91/perl/perl%20+%20eclips/</url>
     <content><![CDATA[]]></content>
       <categories>
-        <category>Tools</category>
+        <category>编程开发</category>
+        <category>perl</category>
       </categories>
       <tags>
         <tag>eclips</tag>
