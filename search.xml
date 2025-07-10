@@ -15,6 +15,166 @@
       </tags>
   </entry>
   <entry>
+    <title></title>
+    <url>/articles/%E7%BD%91%E7%BB%9C%EF%BC%88network%EF%BC%89/%E7%BD%91%E7%BB%9C%EF%BC%88network%EF%BC%89/</url>
+    <content><![CDATA[]]></content>
+  </entry>
+  <entry>
+    <title>Kubernetes StorageClass 及本地存储配置</title>
+    <url>/articles/%E4%BA%91%E8%AE%A1%E7%AE%97%EF%BC%88Cloud%20Service%EF%BC%89/k8s/Kubernetes%20StorageClass%20%E5%8F%8A%E6%9C%AC%E5%9C%B0%E5%AD%98%E5%82%A8%E9%85%8D%E7%BD%AE/</url>
+    <content><![CDATA[]]></content>
+      <categories>
+        <category>云计算</category>
+        <category>k8s</category>
+      </categories>
+      <tags>
+        <tag>blog</tag>
+        <tag>k8s</tag>
+        <tag>sealos</tag>
+      </tags>
+  </entry>
+  <entry>
+    <title>k8s各种应用安装</title>
+    <url>/articles/%E4%BA%91%E8%AE%A1%E7%AE%97%EF%BC%88Cloud%20Service%EF%BC%89/k8s/k8s%E5%90%84%E7%A7%8D%E5%BA%94%E7%94%A8%E5%AE%89%E8%A3%85/</url>
+    <content><![CDATA[]]></content>
+      <categories>
+        <category>云计算</category>
+        <category>k8s</category>
+      </categories>
+      <tags>
+        <tag>blog</tag>
+        <tag>k8s</tag>
+        <tag>sealos</tag>
+        <tag>kubectl</tag>
+      </tags>
+  </entry>
+  <entry>
+    <title>k8s安装规划</title>
+    <url>/articles/%E4%BA%91%E8%AE%A1%E7%AE%97%EF%BC%88Cloud%20Service%EF%BC%89/k8s/k8s%E5%AE%89%E8%A3%85%E8%A7%84%E5%88%92/</url>
+    <content><![CDATA[]]></content>
+      <categories>
+        <category>容器</category>
+        <category>docker</category>
+      </categories>
+      <tags>
+        <tag>blog</tag>
+        <tag>k8s</tag>
+      </tags>
+  </entry>
+  <entry>
+    <title>k8s安装部署指南（2）</title>
+    <url>/articles/%E4%BA%91%E8%AE%A1%E7%AE%97%EF%BC%88Cloud%20Service%EF%BC%89/k8s/k8s%E5%AE%89%E8%A3%85%E9%83%A8%E7%BD%B2%E6%8C%87%E5%8D%97%EF%BC%882%EF%BC%89/</url>
+    <content><![CDATA[]]></content>
+      <categories>
+        <category>云计算</category>
+        <category>k8</category>
+      </categories>
+      <tags>
+        <tag>blog</tag>
+        <tag>k8s</tag>
+        <tag>chrony</tag>
+      </tags>
+  </entry>
+  <entry>
+    <title>k8s安装部署指南（4）</title>
+    <url>/articles/%E4%BA%91%E8%AE%A1%E7%AE%97%EF%BC%88Cloud%20Service%EF%BC%89/k8s/k8s%E5%AE%89%E8%A3%85%E9%83%A8%E7%BD%B2%E6%8C%87%E5%8D%97%EF%BC%884%EF%BC%89/</url>
+    <content><![CDATA[]]></content>
+      <categories>
+        <category>云计算</category>
+        <category>k8s</category>
+      </categories>
+      <tags>
+        <tag>blog</tag>
+        <tag>k8s</tag>
+        <tag>chrony</tag>
+        <tag>bind9</tag>
+      </tags>
+  </entry>
+  <entry>
+    <title>k8s安装部署指南（1）</title>
+    <url>/articles/%E4%BA%91%E8%AE%A1%E7%AE%97%EF%BC%88Cloud%20Service%EF%BC%89/k8s/k8s%E5%AE%89%E8%A3%85%E9%83%A8%E7%BD%B2%E6%8C%87%E5%8D%97%EF%BC%881%EF%BC%89/</url>
+    <content><![CDATA[]]></content>
+      <categories>
+        <category>云计算</category>
+        <category>k8s</category>
+      </categories>
+      <tags>
+        <tag>blog</tag>
+        <tag>k8s</tag>
+        <tag>chrony</tag>
+      </tags>
+  </entry>
+  <entry>
+    <title>k8s安装部署指南（3）</title>
+    <url>/articles/%E4%BA%91%E8%AE%A1%E7%AE%97%EF%BC%88Cloud%20Service%EF%BC%89/k8s/k8s%E5%AE%89%E8%A3%85%E9%83%A8%E7%BD%B2%E6%8C%87%E5%8D%97%EF%BC%883%EF%BC%89/</url>
+    <content><![CDATA[]]></content>
+      <categories>
+        <category>云计算</category>
+        <category>k8</category>
+      </categories>
+      <tags>
+        <tag>blog</tag>
+        <tag>k8s</tag>
+        <tag>sealos</tag>
+        <tag>chrony</tag>
+      </tags>
+  </entry>
+  <entry>
+    <title>k8s服务器挂载华为磁盘阵列</title>
+    <url>/articles/%E4%BA%91%E8%AE%A1%E7%AE%97%EF%BC%88Cloud%20Service%EF%BC%89/k8s/k8s%E6%9C%8D%E5%8A%A1%E5%99%A8%E6%8C%82%E8%BD%BD%E5%8D%8E%E4%B8%BA%E7%A3%81%E7%9B%98%E9%98%B5%E5%88%97/</url>
+    <content><![CDATA[]]></content>
+      <categories>
+        <category>云计算</category>
+        <category>k8s</category>
+      </categories>
+      <tags>
+        <tag>blog</tag>
+        <tag>k8s</tag>
+        <tag>SAN</tag>
+      </tags>
+  </entry>
+  <entry>
+    <title>包管理器安装kubadmin  kubelet  kubectl</title>
+    <url>/articles/%E4%BA%91%E8%AE%A1%E7%AE%97%EF%BC%88Cloud%20Service%EF%BC%89/k8s/%E5%8C%85%E7%AE%A1%E7%90%86%E5%99%A8%E5%AE%89%E8%A3%85kubadmin%20%20kubelet%20%20kubectl/</url>
+    <content><![CDATA[]]></content>
+      <categories>
+        <category>云计算</category>
+        <category>k8s</category>
+      </categories>
+      <tags>
+        <tag>blog</tag>
+        <tag>k8s</tag>
+      </tags>
+  </entry>
+  <entry>
+    <title>安装harbor</title>
+    <url>/articles/%E4%BA%91%E8%AE%A1%E7%AE%97%EF%BC%88Cloud%20Service%EF%BC%89/k8s/%E5%AE%89%E8%A3%85harbor/</url>
+    <content><![CDATA[]]></content>
+      <categories>
+        <category>云计算</category>
+        <category>k8s</category>
+      </categories>
+      <tags>
+        <tag>blog</tag>
+        <tag>k8s</tag>
+        <tag>harbor</tag>
+      </tags>
+  </entry>
+  <entry>
+    <title>安装helm管理工具</title>
+    <url>/articles/%E4%BA%91%E8%AE%A1%E7%AE%97%EF%BC%88Cloud%20Service%EF%BC%89/k8s/%E5%AE%89%E8%A3%85helm%E7%AE%A1%E7%90%86%E5%B7%A5%E5%85%B7/</url>
+    <content><![CDATA[]]></content>
+      <categories>
+        <category>云计算</category>
+        <category>k8s</category>
+      </categories>
+      <tags>
+        <tag>blog</tag>
+        <tag>k8s</tag>
+        <tag>helm</tag>
+      </tags>
+  </entry>
+  <entry>
     <title>mysql 密码证件安装</title>
     <url>/articles/%E6%95%B0%E6%8D%AE%E5%BA%93%EF%BC%88Database%EF%BC%89/mysql/mysql%E5%AF%86%E7%A0%81%E9%AA%8C%E8%AF%81%E6%8F%92%E4%BB%B6%E5%AE%89%E8%A3%85/</url>
     <content><![CDATA[]]></content>
@@ -25,15 +185,6 @@
       <tags>
         <tag>blog</tag>
         <tag>mysql</tag>
-      </tags>
-  </entry>
-  <entry>
-    <title>aria2c 添加 BT-Tracker</title>
-    <url>/articles/%E8%BD%AF%E4%BB%B6%EF%BC%88Software%EF%BC%89/%E4%B8%8B%E8%BD%BD/aria2c%20%E6%B7%BB%E5%8A%A0%20BT-Tracker/</url>
-    <content><![CDATA[]]></content>
-      <tags>
-        <tag>aria2c</tag>
-        <tag>blog</tag>
       </tags>
   </entry>
   <entry>
@@ -51,183 +202,17 @@
       </tags>
   </entry>
   <entry>
-    <title>Docker-compose 同时创建多个mysql数据库</title>
-    <url>/articles/%E4%BA%91%E8%AE%A1%E7%AE%97%EF%BC%88Cloud%20Service%EF%BC%89/%E5%AE%B9%E5%99%A8/dokcer-compose/Docker-compose%20%E5%90%8C%E6%97%B6%E5%88%9B%E5%BB%BA%E5%A4%9A%E4%B8%AAmysql%E6%95%B0%E6%8D%AE%E5%BA%93/</url>
-    <content><![CDATA[]]></content>
-      <categories>
-        <category>数据库</category>
-        <category>mysql</category>
-      </categories>
-      <tags>
-        <tag>docker</tag>
-        <tag>blog</tag>
-        <tag>mysql</tag>
-        <tag>docker-compose</tag>
-      </tags>
-  </entry>
-  <entry>
-    <title>在CentOS 7 上安装Docker</title>
-    <url>/articles/%E4%BA%91%E8%AE%A1%E7%AE%97%EF%BC%88Cloud%20Service%EF%BC%89/%E5%AE%B9%E5%99%A8/docker/%E5%9C%A8CentOS%207%20%E4%B8%8A%E5%AE%89%E8%A3%85Docker/</url>
-    <content><![CDATA[]]></content>
-      <categories>
-        <category>容器</category>
-        <category>docker</category>
-      </categories>
-      <tags>
-        <tag>docker</tag>
-        <tag>blog</tag>
-        <tag>centos</tag>
-      </tags>
-  </entry>
-  <entry>
-    <title>在Ubuntu 上安装Docker</title>
-    <url>/articles/%E4%BA%91%E8%AE%A1%E7%AE%97%EF%BC%88Cloud%20Service%EF%BC%89/%E5%AE%B9%E5%99%A8/docker/%E5%9C%A8Ubuntu%20%E4%B8%8A%E5%AE%89%E8%A3%85Docker/</url>
-    <content><![CDATA[]]></content>
-      <categories>
-        <category>容器</category>
-        <category>docker</category>
-      </categories>
-      <tags>
-        <tag>docker</tag>
-        <tag>blog</tag>
-        <tag>ubuntu</tag>
-        <tag>apt</tag>
-      </tags>
-  </entry>
-  <entry>
-    <title>使用picgo为obsidian创建ftp图床</title>
-    <url>/articles/%E8%BD%AF%E4%BB%B6%EF%BC%88Software%EF%BC%89/%E2%80%8B%E7%AC%94%E8%AE%B0%E7%9F%A5%E8%AF%86%E7%AE%A1%E7%90%86/obsidian/PicGo-app/</url>
-    <content><![CDATA[]]></content>
-      <categories>
-        <category>容器</category>
-        <category>软件</category>
-        <category>docker</category>
-        <category>笔记知识管理</category>
-        <category>obsidian</category>
-      </categories>
-      <tags>
-        <tag>docker</tag>
-        <tag>blog</tag>
-        <tag>picgo</tag>
-        <tag>picgo-core</tag>
-        <tag>obsidian</tag>
-        <tag>ftp</tag>
-        <tag>nginx</tag>
-        <tag>npm</tag>
-      </tags>
-  </entry>
-  <entry>
-    <title>pacman -Syu 升级失败</title>
-    <url>/articles/%E8%BD%AF%E4%BB%B6%EF%BC%88Software%EF%BC%89/%E5%8C%85%E7%AE%A1%E7%90%86/pacman/pacman%20-Syu%20%E5%8D%87%E7%BA%A7%E5%A4%B1%E8%B4%A5/</url>
+    <title>aria2c 添加 BT-Tracker</title>
+    <url>/articles/%E8%BD%AF%E4%BB%B6%EF%BC%88Software%EF%BC%89/%E4%B8%8B%E8%BD%BD/aria2c%20%E6%B7%BB%E5%8A%A0%20BT-Tracker/</url>
     <content><![CDATA[]]></content>
       <tags>
         <tag>blog</tag>
-        <tag>pcman</tag>
+        <tag>aria2c</tag>
       </tags>
   </entry>
   <entry>
-    <title>git@github.com Permission denied (publickey).</title>
-    <url>/articles/%E8%BD%AF%E4%BB%B6%EF%BC%88Software%EF%BC%89/%E7%89%88%E6%9C%AC%E6%8E%A7%E5%88%B6/git/git@github.com%20%20Permission%20denied%20(publickey)/</url>
-    <content><![CDATA[]]></content>
-      <tags>
-        <tag>github</tag>
-        <tag>git</tag>
-        <tag>blog</tag>
-      </tags>
-  </entry>
-  <entry>
-    <title>obsidian半自动删除picgo远端图床照片</title>
-    <url>/articles/%E8%BD%AF%E4%BB%B6%EF%BC%88Software%EF%BC%89/%E2%80%8B%E7%AC%94%E8%AE%B0%E7%9F%A5%E8%AF%86%E7%AE%A1%E7%90%86/obsidian/obsidian%E5%8D%8A%E8%87%AA%E5%8A%A8%E5%88%A0%E9%99%A4picgo%E5%9B%BE%E5%BA%8A%E7%85%A7%E7%89%87/</url>
-    <content><![CDATA[]]></content>
-      <categories>
-        <category>软件</category>
-        <category>笔记知识管理</category>
-        <category>obsidian</category>
-      </categories>
-      <tags>
-        <tag>blog</tag>
-        <tag>picgo</tag>
-        <tag>obsidian</tag>
-        <tag>ftp</tag>
-        <tag>quickadd</tag>
-      </tags>
-  </entry>
-  <entry>
-    <title>缩略语 、术语表</title>
-    <url>/articles/%E8%BD%AF%E4%BB%B6%EF%BC%88Software%EF%BC%89/%E7%BC%96%E7%A8%8B%E5%BC%80%E5%8F%91/IDE/eclipse%20%E5%AE%98%E6%96%B9%E4%B8%AD%E6%96%87%E8%AF%AD%E8%A8%80%E5%8C%85%E5%AE%89%E8%A3%85%E6%AD%A5%E9%AA%A4/</url>
-    <content><![CDATA[]]></content>
-      <categories>
-        <category>Tools</category>
-      </categories>
-      <tags>
-        <tag>blog</tag>
-        <tag>eclipse</tag>
-      </tags>
-  </entry>
-  <entry>
-    <title>perl + eclips</title>
-    <url>/articles/%E8%BD%AF%E4%BB%B6%EF%BC%88Software%EF%BC%89/%E7%BC%96%E7%A8%8B%E5%BC%80%E5%8F%91/perl/perl%20+%20eclips/</url>
-    <content><![CDATA[]]></content>
-      <categories>
-        <category>编程开发</category>
-        <category>perl</category>
-      </categories>
-      <tags>
-        <tag>blog</tag>
-        <tag>eclips</tag>
-        <tag>perl</tag>
-      </tags>
-  </entry>
-  <entry>
-    <title>No such file or directory in Unknown on line 0</title>
-    <url>/articles/%E8%BD%AF%E4%BB%B6%EF%BC%88Software%EF%BC%89/%E7%BD%91%E7%AB%99%E5%BB%BA%E8%AE%BE%E4%B8%8E%E7%AE%A1%E7%90%86%E8%BD%AF%E4%BB%B6/nginx/No%20such%20file%20or%20directory%20in%20Unknown%20on%20line%200/</url>
-    <content><![CDATA[]]></content>
-      <tags>
-        <tag>blog</tag>
-      </tags>
-  </entry>
-  <entry>
-    <title>如何使用 Docker Compose 安装 WordPress</title>
-    <url>/articles/%E8%BD%AF%E4%BB%B6%EF%BC%88Software%EF%BC%89/%E7%BD%91%E7%AB%99%E5%BB%BA%E8%AE%BE%E4%B8%8E%E7%AE%A1%E7%90%86%E8%BD%AF%E4%BB%B6/wordpress/%E5%A6%82%E4%BD%95%E4%BD%BF%E7%94%A8%20Docker%20Compose%20%E5%AE%89%E8%A3%85%20WordPress/</url>
-    <content><![CDATA[]]></content>
-      <categories>
-        <category>docker</category>
-      </categories>
-      <tags>
-        <tag>docker</tag>
-        <tag>linux</tag>
-        <tag>转载</tag>
-        <tag>blog</tag>
-      </tags>
-  </entry>
-  <entry>
-    <title>在授权gitalk后出现403错误</title>
-    <url>/articles/%E8%BD%AF%E4%BB%B6%EF%BC%88Software%EF%BC%89/%E7%BD%91%E7%AB%99%E5%BB%BA%E8%AE%BE%E4%B8%8E%E7%AE%A1%E7%90%86%E8%BD%AF%E4%BB%B6/%E8%AF%84%E8%AE%BA%E7%B3%BB%E7%BB%9F/gitalk/%E5%9C%A8%E6%8E%88%E6%9D%83gitalk%E5%90%8E%E5%87%BA%E7%8E%B0403%E9%94%99%E8%AF%AF/</url>
-    <content><![CDATA[]]></content>
-      <categories>
-        <category>blog</category>
-      </categories>
-      <tags>
-        <tag>gitalk</tag>
-        <tag>blog</tag>
-      </tags>
-  </entry>
-  <entry>
-    <title>Bash Reference Manual</title>
-    <url>/articles/%E8%BD%AF%E4%BB%B6%EF%BC%88Software%EF%BC%89/%E7%BC%96%E7%A8%8B%E5%BC%80%E5%8F%91/shell/Bash%20Reference%20Manual/</url>
-    <content><![CDATA[]]></content>
-      <categories>
-        <category>linux</category>
-        <category>shell</category>
-      </categories>
-      <tags>
-        <tag>blog</tag>
-        <tag>bash</tag>
-      </tags>
-  </entry>
-  <entry>
-    <title>Docker Hub 快速入门指南</title>
-    <url>/articles/%E4%BA%91%E8%AE%A1%E7%AE%97%EF%BC%88Cloud%20Service%EF%BC%89/%E5%AE%B9%E5%99%A8/docker/Docker%20Hub%20%E5%BF%AB%E9%80%9F%E5%85%A5%E9%97%A8%E6%8C%87%E5%8D%97/</url>
+    <title>Docker国内镜像</title>
+    <url>/articles/%E4%BA%91%E8%AE%A1%E7%AE%97%EF%BC%88Cloud%20Service%EF%BC%89/%E5%AE%B9%E5%99%A8/docker/Docker%E5%9B%BD%E5%86%85%E9%95%9C%E5%83%8F%E6%BA%90/</url>
     <content><![CDATA[]]></content>
       <categories>
         <category>容器</category>
@@ -235,34 +220,7 @@
       </categories>
       <tags>
         <tag>blog</tag>
-      </tags>
-  </entry>
-  <entry>
-    <title>centos 8 安装 docker 以及兼容性问题处理</title>
-    <url>/articles/%E4%BA%91%E8%AE%A1%E7%AE%97%EF%BC%88Cloud%20Service%EF%BC%89/%E5%AE%B9%E5%99%A8/docker/centos%208%20%E5%AE%89%E8%A3%85%20docker%20%E4%BB%A5%E5%8F%8A%E5%85%BC%E5%AE%B9%E6%80%A7%E9%97%AE%E9%A2%98%E5%A4%84%E7%90%86/</url>
-    <content><![CDATA[]]></content>
-      <categories>
-        <category>容器</category>
-        <category>docker</category>
-      </categories>
-      <tags>
         <tag>docker</tag>
-        <tag>blog</tag>
-        <tag>centos8</tag>
-      </tags>
-  </entry>
-  <entry>
-    <title>wsl  root用户下docker 无法启动</title>
-    <url>/articles/%E4%BA%91%E8%AE%A1%E7%AE%97%EF%BC%88Cloud%20Service%EF%BC%89/%E5%AE%B9%E5%99%A8/docker/wsl%20%E4%B8%8Bdocker%20%E6%97%A0%E6%B3%95%E5%90%AF%E5%8A%A8/</url>
-    <content><![CDATA[]]></content>
-      <categories>
-        <category>容器</category>
-        <category>docker</category>
-      </categories>
-      <tags>
-        <tag>docker</tag>
-        <tag>blog</tag>
-        <tag>wsl</tag>
       </tags>
   </entry>
   <entry>
@@ -278,33 +236,6 @@
       </tags>
   </entry>
   <entry>
-    <title>Docker国内镜像</title>
-    <url>/articles/%E4%BA%91%E8%AE%A1%E7%AE%97%EF%BC%88Cloud%20Service%EF%BC%89/%E5%AE%B9%E5%99%A8/docker/Docker%E5%9B%BD%E5%86%85%E9%95%9C%E5%83%8F%E6%BA%90/</url>
-    <content><![CDATA[]]></content>
-      <categories>
-        <category>容器</category>
-        <category>docker</category>
-      </categories>
-      <tags>
-        <tag>docker</tag>
-        <tag>blog</tag>
-      </tags>
-  </entry>
-  <entry>
-    <title>独立版 docker-compose安装</title>
-    <url>/articles/%E4%BA%91%E8%AE%A1%E7%AE%97%EF%BC%88Cloud%20Service%EF%BC%89/%E5%AE%B9%E5%99%A8/dokcer-compose/Docker-compose%20%E5%AE%89%E8%A3%85/</url>
-    <content><![CDATA[]]></content>
-      <categories>
-        <category>容器</category>
-        <category>docker-compose</category>
-      </categories>
-      <tags>
-        <tag>docker</tag>
-        <tag>blog</tag>
-        <tag>docker-compose</tag>
-      </tags>
-  </entry>
-  <entry>
     <title>Docker端口映射失败</title>
     <url>/articles/%E4%BA%91%E8%AE%A1%E7%AE%97%EF%BC%88Cloud%20Service%EF%BC%89/%E5%AE%B9%E5%99%A8/docker/Docker%E7%AB%AF%E5%8F%A3%E6%98%A0%E5%B0%84%E5%A4%B1%E8%B4%A5/</url>
     <content><![CDATA[]]></content>
@@ -317,22 +248,8 @@
       </tags>
   </entry>
   <entry>
-    <title>docker下指定mysql密码</title>
-    <url>/articles/%E4%BA%91%E8%AE%A1%E7%AE%97%EF%BC%88Cloud%20Service%EF%BC%89/%E5%AE%B9%E5%99%A8/docker/docker%E4%B8%8B%E6%8C%87%E5%AE%9Amysql%E5%AF%86%E7%A0%81/</url>
-    <content><![CDATA[]]></content>
-      <categories>
-        <category>容器</category>
-        <category>docker</category>
-      </categories>
-      <tags>
-        <tag>docker</tag>
-        <tag>blog</tag>
-        <tag>mysql</tag>
-      </tags>
-  </entry>
-  <entry>
-    <title>Docker desktop tutorial</title>
-    <url>/articles/%E4%BA%91%E8%AE%A1%E7%AE%97%EF%BC%88Cloud%20Service%EF%BC%89/%E5%AE%B9%E5%99%A8/docker/docker%20%E5%AD%98%E5%82%A8%E4%BD%8D%E7%BD%AE/</url>
+    <title>Docker Hub 快速入门指南</title>
+    <url>/articles/%E4%BA%91%E8%AE%A1%E7%AE%97%EF%BC%88Cloud%20Service%EF%BC%89/%E5%AE%B9%E5%99%A8/docker/Docker%20Hub%20%E5%BF%AB%E9%80%9F%E5%85%A5%E9%97%A8%E6%8C%87%E5%8D%97/</url>
     <content><![CDATA[]]></content>
       <categories>
         <category>容器</category>
@@ -355,6 +272,118 @@
       </tags>
   </entry>
   <entry>
+    <title>centos 8 安装 docker 以及兼容性问题处理</title>
+    <url>/articles/%E4%BA%91%E8%AE%A1%E7%AE%97%EF%BC%88Cloud%20Service%EF%BC%89/%E5%AE%B9%E5%99%A8/docker/centos%208%20%E5%AE%89%E8%A3%85%20docker%20%E4%BB%A5%E5%8F%8A%E5%85%BC%E5%AE%B9%E6%80%A7%E9%97%AE%E9%A2%98%E5%A4%84%E7%90%86/</url>
+    <content><![CDATA[]]></content>
+      <categories>
+        <category>容器</category>
+        <category>docker</category>
+      </categories>
+      <tags>
+        <tag>blog</tag>
+        <tag>docker</tag>
+        <tag>centos8</tag>
+      </tags>
+  </entry>
+  <entry>
+    <title>Docker desktop tutorial</title>
+    <url>/articles/%E4%BA%91%E8%AE%A1%E7%AE%97%EF%BC%88Cloud%20Service%EF%BC%89/%E5%AE%B9%E5%99%A8/docker/docker%20%E5%AD%98%E5%82%A8%E4%BD%8D%E7%BD%AE/</url>
+    <content><![CDATA[]]></content>
+      <categories>
+        <category>容器</category>
+        <category>docker</category>
+      </categories>
+      <tags>
+        <tag>blog</tag>
+      </tags>
+  </entry>
+  <entry>
+    <title>docker下指定mysql密码</title>
+    <url>/articles/%E4%BA%91%E8%AE%A1%E7%AE%97%EF%BC%88Cloud%20Service%EF%BC%89/%E5%AE%B9%E5%99%A8/docker/docker%E4%B8%8B%E6%8C%87%E5%AE%9Amysql%E5%AF%86%E7%A0%81/</url>
+    <content><![CDATA[]]></content>
+      <categories>
+        <category>容器</category>
+        <category>docker</category>
+      </categories>
+      <tags>
+        <tag>blog</tag>
+        <tag>mysql</tag>
+        <tag>docker</tag>
+      </tags>
+  </entry>
+  <entry>
+    <title>在CentOS 7 上安装Docker</title>
+    <url>/articles/%E4%BA%91%E8%AE%A1%E7%AE%97%EF%BC%88Cloud%20Service%EF%BC%89/%E5%AE%B9%E5%99%A8/docker/%E5%9C%A8CentOS%207%20%E4%B8%8A%E5%AE%89%E8%A3%85Docker/</url>
+    <content><![CDATA[]]></content>
+      <categories>
+        <category>容器</category>
+        <category>docker</category>
+      </categories>
+      <tags>
+        <tag>blog</tag>
+        <tag>docker</tag>
+        <tag>centos</tag>
+      </tags>
+  </entry>
+  <entry>
+    <title>在Ubuntu 上安装Docker</title>
+    <url>/articles/%E4%BA%91%E8%AE%A1%E7%AE%97%EF%BC%88Cloud%20Service%EF%BC%89/%E5%AE%B9%E5%99%A8/docker/%E5%9C%A8Ubuntu%20%E4%B8%8A%E5%AE%89%E8%A3%85Docker/</url>
+    <content><![CDATA[]]></content>
+      <categories>
+        <category>容器</category>
+        <category>docker</category>
+      </categories>
+      <tags>
+        <tag>blog</tag>
+        <tag>docker</tag>
+        <tag>ubuntu</tag>
+        <tag>apt</tag>
+      </tags>
+  </entry>
+  <entry>
+    <title>Docker-compose 同时创建多个mysql数据库</title>
+    <url>/articles/%E4%BA%91%E8%AE%A1%E7%AE%97%EF%BC%88Cloud%20Service%EF%BC%89/%E5%AE%B9%E5%99%A8/dokcer-compose/Docker-compose%20%E5%90%8C%E6%97%B6%E5%88%9B%E5%BB%BA%E5%A4%9A%E4%B8%AAmysql%E6%95%B0%E6%8D%AE%E5%BA%93/</url>
+    <content><![CDATA[]]></content>
+      <categories>
+        <category>数据库</category>
+        <category>mysql</category>
+      </categories>
+      <tags>
+        <tag>blog</tag>
+        <tag>mysql</tag>
+        <tag>docker</tag>
+        <tag>docker-compose</tag>
+      </tags>
+  </entry>
+  <entry>
+    <title>wsl  root用户下docker 无法启动</title>
+    <url>/articles/%E4%BA%91%E8%AE%A1%E7%AE%97%EF%BC%88Cloud%20Service%EF%BC%89/%E5%AE%B9%E5%99%A8/docker/wsl%20%E4%B8%8Bdocker%20%E6%97%A0%E6%B3%95%E5%90%AF%E5%8A%A8/</url>
+    <content><![CDATA[]]></content>
+      <categories>
+        <category>容器</category>
+        <category>docker</category>
+      </categories>
+      <tags>
+        <tag>blog</tag>
+        <tag>docker</tag>
+        <tag>wsl</tag>
+      </tags>
+  </entry>
+  <entry>
+    <title>独立版 docker-compose安装</title>
+    <url>/articles/%E4%BA%91%E8%AE%A1%E7%AE%97%EF%BC%88Cloud%20Service%EF%BC%89/%E5%AE%B9%E5%99%A8/dokcer-compose/Docker-compose%20%E5%AE%89%E8%A3%85/</url>
+    <content><![CDATA[]]></content>
+      <categories>
+        <category>容器</category>
+        <category>docker-compose</category>
+      </categories>
+      <tags>
+        <tag>blog</tag>
+        <tag>docker</tag>
+        <tag>docker-compose</tag>
+      </tags>
+  </entry>
+  <entry>
     <title>IFC</title>
     <url>/articles/%E7%BD%91%E7%BB%9C%EF%BC%88network%EF%BC%89/%E6%A0%B8%E5%BF%83%E7%BD%91/IMS/IFC/</url>
     <content><![CDATA[]]></content>
@@ -364,9 +393,9 @@
         <category>OpenIMSCore</category>
       </categories>
       <tags>
-        <tag>IMS</tag>
         <tag>blog</tag>
         <tag>OpenIMSCore</tag>
+        <tag>IMS</tag>
         <tag>ifc</tag>
       </tags>
   </entry>
@@ -380,9 +409,9 @@
         <category>OpenIMSCore</category>
       </categories>
       <tags>
-        <tag>IMS</tag>
         <tag>blog</tag>
         <tag>OpenIMSCore</tag>
+        <tag>IMS</tag>
       </tags>
   </entry>
   <entry>
@@ -395,26 +424,9 @@
         <category>OpenIMSCore</category>
       </categories>
       <tags>
-        <tag>IMS</tag>
         <tag>blog</tag>
         <tag>OpenIMSCore</tag>
-      </tags>
-  </entry>
-  <entry>
-    <title> OpenIMSCore端口</title>
-    <url>/articles/%E7%BD%91%E7%BB%9C%EF%BC%88network%EF%BC%89/%E6%A0%B8%E5%BF%83%E7%BD%91/IMS/OpenIMSCore%E7%AB%AF%E5%8F%A3/</url>
-    <content><![CDATA[]]></content>
-      <categories>
-        <category>核心网</category>
-        <category>IMS</category>
-        <category>OpenIMSCore</category>
-      </categories>
-      <tags>
         <tag>IMS</tag>
-        <tag>blog</tag>
-        <tag>OpenIMSCore</tag>
-        <tag>bind9</tag>
-        <tag>jdk</tag>
       </tags>
   </entry>
   <entry>
@@ -427,60 +439,11 @@
         <category>OpenIMSCore</category>
       </categories>
       <tags>
-        <tag>IMS</tag>
         <tag>blog</tag>
         <tag>mysql</tag>
         <tag>OpenIMSCore</tag>
+        <tag>IMS</tag>
         <tag>shell</tag>
-      </tags>
-  </entry>
-  <entry>
-    <title>bind9</title>
-    <url>/articles/%E7%BD%91%E7%BB%9C%EF%BC%88network%EF%BC%89/%E6%A0%B8%E5%BF%83%E7%BD%91/IMS/bind9/</url>
-    <content><![CDATA[]]></content>
-      <categories>
-        <category>核心网</category>
-        <category>IMS</category>
-        <category>OpenIMSCore</category>
-      </categories>
-      <tags>
-        <tag>IMS</tag>
-        <tag>blog</tag>
-        <tag>OpenIMSCore</tag>
-        <tag>bind9</tag>
-      </tags>
-  </entry>
-  <entry>
-    <title>jdk 安装1.7 或1.8</title>
-    <url>/articles/%E7%BD%91%E7%BB%9C%EF%BC%88network%EF%BC%89/%E6%A0%B8%E5%BF%83%E7%BD%91/IMS/jdk%20%E5%AE%89%E8%A3%851.7%20%E6%88%961.8/</url>
-    <content><![CDATA[]]></content>
-      <categories>
-        <category>核心网</category>
-        <category>IMS</category>
-        <category>OpenIMSCore</category>
-      </categories>
-      <tags>
-        <tag>IMS</tag>
-        <tag>blog</tag>
-        <tag>OpenIMSCore</tag>
-        <tag>bind9</tag>
-        <tag>jdk</tag>
-      </tags>
-  </entry>
-  <entry>
-    <title>fhoss log</title>
-    <url>/articles/%E7%BD%91%E7%BB%9C%EF%BC%88network%EF%BC%89/%E6%A0%B8%E5%BF%83%E7%BD%91/IMS/fhoss%20log/</url>
-    <content><![CDATA[]]></content>
-      <categories>
-        <category>核心网</category>
-        <category>IMS</category>
-        <category>OpenIMSCore</category>
-      </categories>
-      <tags>
-        <tag>IMS</tag>
-        <tag>blog</tag>
-        <tag>OpenIMSCore</tag>
-        <tag>fhoss</tag>
       </tags>
   </entry>
   <entry>
@@ -493,10 +456,44 @@
         <category>OpenIMSCore</category>
       </categories>
       <tags>
-        <tag>IMS</tag>
         <tag>blog</tag>
         <tag>OpenIMSCore</tag>
+        <tag>IMS</tag>
         <tag>gcc</tag>
+      </tags>
+  </entry>
+  <entry>
+    <title> OpenIMSCore端口</title>
+    <url>/articles/%E7%BD%91%E7%BB%9C%EF%BC%88network%EF%BC%89/%E6%A0%B8%E5%BF%83%E7%BD%91/IMS/OpenIMSCore%E7%AB%AF%E5%8F%A3/</url>
+    <content><![CDATA[]]></content>
+      <categories>
+        <category>核心网</category>
+        <category>IMS</category>
+        <category>OpenIMSCore</category>
+      </categories>
+      <tags>
+        <tag>blog</tag>
+        <tag>bind9</tag>
+        <tag>OpenIMSCore</tag>
+        <tag>IMS</tag>
+        <tag>jdk</tag>
+      </tags>
+  </entry>
+  <entry>
+    <title>jdk 安装1.7 或1.8</title>
+    <url>/articles/%E7%BD%91%E7%BB%9C%EF%BC%88network%EF%BC%89/%E6%A0%B8%E5%BF%83%E7%BD%91/IMS/jdk%20%E5%AE%89%E8%A3%851.7%20%E6%88%961.8/</url>
+    <content><![CDATA[]]></content>
+      <categories>
+        <category>核心网</category>
+        <category>IMS</category>
+        <category>OpenIMSCore</category>
+      </categories>
+      <tags>
+        <tag>blog</tag>
+        <tag>bind9</tag>
+        <tag>OpenIMSCore</tag>
+        <tag>IMS</tag>
+        <tag>jdk</tag>
       </tags>
   </entry>
   <entry>
@@ -509,27 +506,11 @@
         <category>OpenIMSCore</category>
       </categories>
       <tags>
-        <tag>IMS</tag>
         <tag>blog</tag>
-        <tag>OpenIMSCore</tag>
         <tag>bind9</tag>
-        <tag>jdk</tag>
-      </tags>
-  </entry>
-  <entry>
-    <title>openims安装脚本</title>
-    <url>/articles/%E7%BD%91%E7%BB%9C%EF%BC%88network%EF%BC%89/%E6%A0%B8%E5%BF%83%E7%BD%91/IMS/openims%E5%AE%89%E8%A3%85%E8%84%9A%E6%9C%AC/</url>
-    <content><![CDATA[]]></content>
-      <categories>
-        <category>核心网</category>
-        <category>IMS</category>
-        <category>OpenIMSCore</category>
-      </categories>
-      <tags>
-        <tag>IMS</tag>
-        <tag>blog</tag>
         <tag>OpenIMSCore</tag>
-        <tag>shell</tag>
+        <tag>IMS</tag>
+        <tag>jdk</tag>
       </tags>
   </entry>
   <entry>
@@ -542,10 +523,58 @@
         <category>OpenIMSCore</category>
       </categories>
       <tags>
-        <tag>IMS</tag>
         <tag>blog</tag>
         <tag>OpenIMSCore</tag>
+        <tag>IMS</tag>
         <tag>pcscf</tag>
+      </tags>
+  </entry>
+  <entry>
+    <title>fhoss log</title>
+    <url>/articles/%E7%BD%91%E7%BB%9C%EF%BC%88network%EF%BC%89/%E6%A0%B8%E5%BF%83%E7%BD%91/IMS/fhoss%20log/</url>
+    <content><![CDATA[]]></content>
+      <categories>
+        <category>核心网</category>
+        <category>IMS</category>
+        <category>OpenIMSCore</category>
+      </categories>
+      <tags>
+        <tag>blog</tag>
+        <tag>OpenIMSCore</tag>
+        <tag>IMS</tag>
+        <tag>fhoss</tag>
+      </tags>
+  </entry>
+  <entry>
+    <title>bind9</title>
+    <url>/articles/%E7%BD%91%E7%BB%9C%EF%BC%88network%EF%BC%89/%E6%A0%B8%E5%BF%83%E7%BD%91/IMS/bind9/</url>
+    <content><![CDATA[]]></content>
+      <categories>
+        <category>核心网</category>
+        <category>IMS</category>
+        <category>OpenIMSCore</category>
+      </categories>
+      <tags>
+        <tag>blog</tag>
+        <tag>bind9</tag>
+        <tag>OpenIMSCore</tag>
+        <tag>IMS</tag>
+      </tags>
+  </entry>
+  <entry>
+    <title>openims安装脚本</title>
+    <url>/articles/%E7%BD%91%E7%BB%9C%EF%BC%88network%EF%BC%89/%E6%A0%B8%E5%BF%83%E7%BD%91/IMS/openims%E5%AE%89%E8%A3%85%E8%84%9A%E6%9C%AC/</url>
+    <content><![CDATA[]]></content>
+      <categories>
+        <category>核心网</category>
+        <category>IMS</category>
+        <category>OpenIMSCore</category>
+      </categories>
+      <tags>
+        <tag>blog</tag>
+        <tag>OpenIMSCore</tag>
+        <tag>IMS</tag>
+        <tag>shell</tag>
       </tags>
   </entry>
   <entry>
@@ -558,169 +587,140 @@
         <category>OpenIMSCore</category>
       </categories>
       <tags>
-        <tag>IMS</tag>
         <tag>blog</tag>
         <tag>OpenIMSCore</tag>
+        <tag>IMS</tag>
       </tags>
   </entry>
   <entry>
-    <title>k8s各种应用安装</title>
-    <url>/articles/%E4%BA%91%E8%AE%A1%E7%AE%97%EF%BC%88Cloud%20Service%EF%BC%89/k8s/k8s%E5%90%84%E7%A7%8D%E5%BA%94%E7%94%A8%E5%AE%89%E8%A3%85/</url>
-    <content><![CDATA[]]></content>
-      <categories>
-        <category>云计算</category>
-        <category>k8s</category>
-      </categories>
-      <tags>
-        <tag>k8s</tag>
-        <tag>blog</tag>
-        <tag>sealos</tag>
-        <tag>kubectl</tag>
-      </tags>
-  </entry>
-  <entry>
-    <title>Kubernetes StorageClass 及本地存储配置</title>
-    <url>/articles/%E4%BA%91%E8%AE%A1%E7%AE%97%EF%BC%88Cloud%20Service%EF%BC%89/k8s/Kubernetes%20StorageClass%20%E5%8F%8A%E6%9C%AC%E5%9C%B0%E5%AD%98%E5%82%A8%E9%85%8D%E7%BD%AE/</url>
-    <content><![CDATA[]]></content>
-      <categories>
-        <category>云计算</category>
-        <category>k8s</category>
-      </categories>
-      <tags>
-        <tag>k8s</tag>
-        <tag>blog</tag>
-        <tag>sealos</tag>
-      </tags>
-  </entry>
-  <entry>
-    <title>k8s安装部署指南（1）</title>
-    <url>/articles/%E4%BA%91%E8%AE%A1%E7%AE%97%EF%BC%88Cloud%20Service%EF%BC%89/k8s/k8s%E5%AE%89%E8%A3%85%E9%83%A8%E7%BD%B2%E6%8C%87%E5%8D%97%EF%BC%881%EF%BC%89/</url>
-    <content><![CDATA[]]></content>
-      <categories>
-        <category>云计算</category>
-        <category>k8s</category>
-      </categories>
-      <tags>
-        <tag>k8s</tag>
-        <tag>blog</tag>
-        <tag>chrony</tag>
-      </tags>
-  </entry>
-  <entry>
-    <title>k8s安装规划</title>
-    <url>/articles/%E4%BA%91%E8%AE%A1%E7%AE%97%EF%BC%88Cloud%20Service%EF%BC%89/k8s/k8s%E5%AE%89%E8%A3%85%E8%A7%84%E5%88%92/</url>
+    <title>使用picgo为obsidian创建ftp图床</title>
+    <url>/articles/%E8%BD%AF%E4%BB%B6%EF%BC%88Software%EF%BC%89/%E2%80%8B%E7%AC%94%E8%AE%B0%E7%9F%A5%E8%AF%86%E7%AE%A1%E7%90%86/obsidian/PicGo-app/</url>
     <content><![CDATA[]]></content>
       <categories>
         <category>容器</category>
         <category>docker</category>
+        <category>软件</category>
+        <category>笔记知识管理</category>
+        <category>obsidian</category>
       </categories>
       <tags>
-        <tag>k8s</tag>
         <tag>blog</tag>
+        <tag>docker</tag>
+        <tag>picgo</tag>
+        <tag>picgo-core</tag>
+        <tag>obsidian</tag>
+        <tag>ftp</tag>
+        <tag>nginx</tag>
+        <tag>npm</tag>
       </tags>
   </entry>
   <entry>
-    <title>k8s安装部署指南（2）</title>
-    <url>/articles/%E4%BA%91%E8%AE%A1%E7%AE%97%EF%BC%88Cloud%20Service%EF%BC%89/k8s/k8s%E5%AE%89%E8%A3%85%E9%83%A8%E7%BD%B2%E6%8C%87%E5%8D%97%EF%BC%882%EF%BC%89/</url>
+    <title>git@github.com Permission denied (publickey).</title>
+    <url>/articles/%E8%BD%AF%E4%BB%B6%EF%BC%88Software%EF%BC%89/%E7%89%88%E6%9C%AC%E6%8E%A7%E5%88%B6/git/git@github.com%20%20Permission%20denied%20(publickey)/</url>
+    <content><![CDATA[]]></content>
+      <tags>
+        <tag>blog</tag>
+        <tag>github</tag>
+        <tag>git</tag>
+      </tags>
+  </entry>
+  <entry>
+    <title>obsidian半自动删除picgo远端图床照片</title>
+    <url>/articles/%E8%BD%AF%E4%BB%B6%EF%BC%88Software%EF%BC%89/%E2%80%8B%E7%AC%94%E8%AE%B0%E7%9F%A5%E8%AF%86%E7%AE%A1%E7%90%86/obsidian/obsidian%E5%8D%8A%E8%87%AA%E5%8A%A8%E5%88%A0%E9%99%A4picgo%E5%9B%BE%E5%BA%8A%E7%85%A7%E7%89%87/</url>
     <content><![CDATA[]]></content>
       <categories>
-        <category>云计算</category>
-        <category>k8</category>
+        <category>软件</category>
+        <category>笔记知识管理</category>
+        <category>obsidian</category>
       </categories>
       <tags>
-        <tag>k8s</tag>
         <tag>blog</tag>
-        <tag>chrony</tag>
+        <tag>picgo</tag>
+        <tag>obsidian</tag>
+        <tag>ftp</tag>
+        <tag>quickadd</tag>
       </tags>
   </entry>
   <entry>
-    <title>k8s安装部署指南（3）</title>
-    <url>/articles/%E4%BA%91%E8%AE%A1%E7%AE%97%EF%BC%88Cloud%20Service%EF%BC%89/k8s/k8s%E5%AE%89%E8%A3%85%E9%83%A8%E7%BD%B2%E6%8C%87%E5%8D%97%EF%BC%883%EF%BC%89/</url>
+    <title>No such file or directory in Unknown on line 0</title>
+    <url>/articles/%E8%BD%AF%E4%BB%B6%EF%BC%88Software%EF%BC%89/%E7%BD%91%E7%AB%99%E5%BB%BA%E8%AE%BE%E4%B8%8E%E7%AE%A1%E7%90%86%E8%BD%AF%E4%BB%B6/nginx/No%20such%20file%20or%20directory%20in%20Unknown%20on%20line%200/</url>
+    <content><![CDATA[]]></content>
+      <tags>
+        <tag>blog</tag>
+      </tags>
+  </entry>
+  <entry>
+    <title>perl + eclips</title>
+    <url>/articles/%E8%BD%AF%E4%BB%B6%EF%BC%88Software%EF%BC%89/%E7%BC%96%E7%A8%8B%E5%BC%80%E5%8F%91/perl/perl%20+%20eclips/</url>
     <content><![CDATA[]]></content>
       <categories>
-        <category>云计算</category>
-        <category>k8</category>
+        <category>编程开发</category>
+        <category>perl</category>
       </categories>
       <tags>
-        <tag>k8s</tag>
         <tag>blog</tag>
-        <tag>sealos</tag>
-        <tag>chrony</tag>
+        <tag>eclips</tag>
+        <tag>perl</tag>
       </tags>
   </entry>
   <entry>
-    <title>k8s安装部署指南（4）</title>
-    <url>/articles/%E4%BA%91%E8%AE%A1%E7%AE%97%EF%BC%88Cloud%20Service%EF%BC%89/k8s/k8s%E5%AE%89%E8%A3%85%E9%83%A8%E7%BD%B2%E6%8C%87%E5%8D%97%EF%BC%884%EF%BC%89/</url>
+    <title>pacman -Syu 升级失败</title>
+    <url>/articles/%E8%BD%AF%E4%BB%B6%EF%BC%88Software%EF%BC%89/%E5%8C%85%E7%AE%A1%E7%90%86/pacman/pacman%20-Syu%20%E5%8D%87%E7%BA%A7%E5%A4%B1%E8%B4%A5/</url>
+    <content><![CDATA[]]></content>
+      <tags>
+        <tag>blog</tag>
+        <tag>pcman</tag>
+      </tags>
+  </entry>
+  <entry>
+    <title>缩略语 、术语表</title>
+    <url>/articles/%E8%BD%AF%E4%BB%B6%EF%BC%88Software%EF%BC%89/%E7%BC%96%E7%A8%8B%E5%BC%80%E5%8F%91/IDE/eclipse%20%E5%AE%98%E6%96%B9%E4%B8%AD%E6%96%87%E8%AF%AD%E8%A8%80%E5%8C%85%E5%AE%89%E8%A3%85%E6%AD%A5%E9%AA%A4/</url>
     <content><![CDATA[]]></content>
       <categories>
-        <category>云计算</category>
-        <category>k8s</category>
+        <category>Tools</category>
       </categories>
       <tags>
-        <tag>k8s</tag>
         <tag>blog</tag>
-        <tag>bind9</tag>
-        <tag>chrony</tag>
+        <tag>eclipse</tag>
       </tags>
   </entry>
   <entry>
-    <title>包管理器安装kubadmin  kubelet  kubectl</title>
-    <url>/articles/%E4%BA%91%E8%AE%A1%E7%AE%97%EF%BC%88Cloud%20Service%EF%BC%89/k8s/%E5%8C%85%E7%AE%A1%E7%90%86%E5%99%A8%E5%AE%89%E8%A3%85kubadmin%20%20kubelet%20%20kubectl/</url>
+    <title>如何使用 Docker Compose 安装 WordPress</title>
+    <url>/articles/%E8%BD%AF%E4%BB%B6%EF%BC%88Software%EF%BC%89/%E7%BD%91%E7%AB%99%E5%BB%BA%E8%AE%BE%E4%B8%8E%E7%AE%A1%E7%90%86%E8%BD%AF%E4%BB%B6/wordpress/%E5%A6%82%E4%BD%95%E4%BD%BF%E7%94%A8%20Docker%20Compose%20%E5%AE%89%E8%A3%85%20WordPress/</url>
     <content><![CDATA[]]></content>
       <categories>
-        <category>云计算</category>
-        <category>k8s</category>
+        <category>docker</category>
       </categories>
       <tags>
-        <tag>k8s</tag>
         <tag>blog</tag>
+        <tag>docker</tag>
+        <tag>linux</tag>
+        <tag>转载</tag>
       </tags>
   </entry>
   <entry>
-    <title>k8s服务器挂载华为磁盘阵列</title>
-    <url>/articles/%E4%BA%91%E8%AE%A1%E7%AE%97%EF%BC%88Cloud%20Service%EF%BC%89/k8s/k8s%E6%9C%8D%E5%8A%A1%E5%99%A8%E6%8C%82%E8%BD%BD%E5%8D%8E%E4%B8%BA%E7%A3%81%E7%9B%98%E9%98%B5%E5%88%97/</url>
+    <title>在授权gitalk后出现403错误</title>
+    <url>/articles/%E8%BD%AF%E4%BB%B6%EF%BC%88Software%EF%BC%89/%E7%BD%91%E7%AB%99%E5%BB%BA%E8%AE%BE%E4%B8%8E%E7%AE%A1%E7%90%86%E8%BD%AF%E4%BB%B6/%E8%AF%84%E8%AE%BA%E7%B3%BB%E7%BB%9F/gitalk/%E5%9C%A8%E6%8E%88%E6%9D%83gitalk%E5%90%8E%E5%87%BA%E7%8E%B0403%E9%94%99%E8%AF%AF/</url>
     <content><![CDATA[]]></content>
       <categories>
-        <category>云计算</category>
-        <category>k8s</category>
+        <category>blog</category>
       </categories>
       <tags>
-        <tag>k8s</tag>
         <tag>blog</tag>
-        <tag>SAN</tag>
+        <tag>gitalk</tag>
       </tags>
   </entry>
   <entry>
-    <title>安装harbor</title>
-    <url>/articles/%E4%BA%91%E8%AE%A1%E7%AE%97%EF%BC%88Cloud%20Service%EF%BC%89/k8s/%E5%AE%89%E8%A3%85harbor/</url>
+    <title>Bash Reference Manual</title>
+    <url>/articles/%E8%BD%AF%E4%BB%B6%EF%BC%88Software%EF%BC%89/%E7%BC%96%E7%A8%8B%E5%BC%80%E5%8F%91/shell/Bash%20Reference%20Manual/</url>
     <content><![CDATA[]]></content>
       <categories>
-        <category>云计算</category>
-        <category>k8s</category>
+        <category>linux</category>
+        <category>shell</category>
       </categories>
       <tags>
-        <tag>k8s</tag>
         <tag>blog</tag>
-        <tag>harbor</tag>
+        <tag>bash</tag>
       </tags>
-  </entry>
-  <entry>
-    <title>安装helm管理工具</title>
-    <url>/articles/%E4%BA%91%E8%AE%A1%E7%AE%97%EF%BC%88Cloud%20Service%EF%BC%89/k8s/%E5%AE%89%E8%A3%85helm%E7%AE%A1%E7%90%86%E5%B7%A5%E5%85%B7/</url>
-    <content><![CDATA[]]></content>
-      <categories>
-        <category>云计算</category>
-        <category>k8s</category>
-      </categories>
-      <tags>
-        <tag>k8s</tag>
-        <tag>blog</tag>
-        <tag>helm</tag>
-      </tags>
-  </entry>
-  <entry>
-    <title></title>
-    <url>/articles/%E7%BD%91%E7%BB%9C%EF%BC%88network%EF%BC%89/%E7%BD%91%E7%BB%9C%EF%BC%88network%EF%BC%89/</url>
-    <content><![CDATA[]]></content>
   </entry>
 </search>
