@@ -1,18 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <search>
   <entry>
-    <title>在授权gitalk后出现403错误</title>
-    <url>/articles/gitalk/%E5%9C%A8%E6%8E%88%E6%9D%83gitalk%E5%90%8E%E5%87%BA%E7%8E%B0403%E9%94%99%E8%AF%AF/</url>
-    <content><![CDATA[]]></content>
-      <categories>
-        <category>blog</category>
-      </categories>
-      <tags>
-        <tag>gitalk</tag>
-        <tag>blog</tag>
-      </tags>
-  </entry>
-  <entry>
     <title>Windows本地部署DeepSeek-r1</title>
     <url>/articles/%E4%BA%BA%E5%B7%A5%E6%99%BA%E8%83%BD%EF%BC%88AI%EF%BC%89/Windows%E6%9C%AC%E5%9C%B0%E9%83%A8%E7%BD%B2DeepSeek-r1/</url>
     <content><![CDATA[]]></content>
@@ -21,6 +9,7 @@
         <category>deepseek</category>
       </categories>
       <tags>
+        <tag>blog</tag>
         <tag>deepseek</tag>
         <tag>AI</tag>
       </tags>
@@ -34,6 +23,7 @@
         <category>mysql</category>
       </categories>
       <tags>
+        <tag>blog</tag>
         <tag>mysql</tag>
       </tags>
   </entry>
@@ -43,6 +33,7 @@
     <content><![CDATA[]]></content>
       <tags>
         <tag>aria2c</tag>
+        <tag>blog</tag>
       </tags>
   </entry>
   <entry>
@@ -53,6 +44,7 @@
         <category>终端</category>
       </categories>
       <tags>
+        <tag>blog</tag>
         <tag>lrzsz</tag>
         <tag>SecureCRT</tag>
         <tag>xshell</tag>
@@ -68,6 +60,7 @@
       </categories>
       <tags>
         <tag>docker</tag>
+        <tag>blog</tag>
         <tag>mysql</tag>
         <tag>docker-compose</tag>
       </tags>
@@ -81,7 +74,9 @@
         <category>docker</category>
       </categories>
       <tags>
-        <tag>docker，centos</tag>
+        <tag>docker</tag>
+        <tag>blog</tag>
+        <tag>centos</tag>
       </tags>
   </entry>
   <entry>
@@ -94,6 +89,7 @@
       </categories>
       <tags>
         <tag>docker</tag>
+        <tag>blog</tag>
         <tag>ubuntu</tag>
         <tag>apt</tag>
       </tags>
@@ -111,6 +107,7 @@
       </categories>
       <tags>
         <tag>docker</tag>
+        <tag>blog</tag>
         <tag>picgo</tag>
         <tag>picgo-core</tag>
         <tag>obsidian</tag>
@@ -124,6 +121,7 @@
     <url>/articles/%E8%BD%AF%E4%BB%B6%EF%BC%88Software%EF%BC%89/%E5%8C%85%E7%AE%A1%E7%90%86/pacman/pacman%20-Syu%20%E5%8D%87%E7%BA%A7%E5%A4%B1%E8%B4%A5/</url>
     <content><![CDATA[]]></content>
       <tags>
+        <tag>blog</tag>
         <tag>pcman</tag>
       </tags>
   </entry>
@@ -134,6 +132,7 @@
       <tags>
         <tag>github</tag>
         <tag>git</tag>
+        <tag>blog</tag>
       </tags>
   </entry>
   <entry>
@@ -146,6 +145,7 @@
         <category>obsidian</category>
       </categories>
       <tags>
+        <tag>blog</tag>
         <tag>picgo</tag>
         <tag>obsidian</tag>
         <tag>ftp</tag>
@@ -160,6 +160,7 @@
         <category>Tools</category>
       </categories>
       <tags>
+        <tag>blog</tag>
         <tag>eclipse</tag>
       </tags>
   </entry>
@@ -172,6 +173,7 @@
         <category>perl</category>
       </categories>
       <tags>
+        <tag>blog</tag>
         <tag>eclips</tag>
         <tag>perl</tag>
       </tags>
@@ -180,6 +182,9 @@
     <title>No such file or directory in Unknown on line 0</title>
     <url>/articles/%E8%BD%AF%E4%BB%B6%EF%BC%88Software%EF%BC%89/%E7%BD%91%E7%AB%99%E5%BB%BA%E8%AE%BE%E4%B8%8E%E7%AE%A1%E7%90%86%E8%BD%AF%E4%BB%B6/nginx/No%20such%20file%20or%20directory%20in%20Unknown%20on%20line%200/</url>
     <content><![CDATA[]]></content>
+      <tags>
+        <tag>blog</tag>
+      </tags>
   </entry>
   <entry>
     <title>如何使用 Docker Compose 安装 WordPress</title>
@@ -192,6 +197,7 @@
         <tag>docker</tag>
         <tag>linux</tag>
         <tag>转载</tag>
+        <tag>blog</tag>
       </tags>
   </entry>
   <entry>
@@ -215,6 +221,7 @@
         <category>shell</category>
       </categories>
       <tags>
+        <tag>blog</tag>
         <tag>bash</tag>
       </tags>
   </entry>
@@ -226,6 +233,9 @@
         <category>容器</category>
         <category>docker</category>
       </categories>
+      <tags>
+        <tag>blog</tag>
+      </tags>
   </entry>
   <entry>
     <title>centos 8 安装 docker 以及兼容性问题处理</title>
@@ -237,6 +247,7 @@
       </categories>
       <tags>
         <tag>docker</tag>
+        <tag>blog</tag>
         <tag>centos8</tag>
       </tags>
   </entry>
@@ -250,6 +261,7 @@
       </categories>
       <tags>
         <tag>docker</tag>
+        <tag>blog</tag>
         <tag>wsl</tag>
       </tags>
   </entry>
@@ -261,6 +273,9 @@
         <category>容器</category>
         <category>docker</category>
       </categories>
+      <tags>
+        <tag>blog</tag>
+      </tags>
   </entry>
   <entry>
     <title>Docker国内镜像</title>
@@ -272,6 +287,7 @@
       </categories>
       <tags>
         <tag>docker</tag>
+        <tag>blog</tag>
       </tags>
   </entry>
   <entry>
@@ -284,6 +300,7 @@
       </categories>
       <tags>
         <tag>docker</tag>
+        <tag>blog</tag>
         <tag>docker-compose</tag>
       </tags>
   </entry>
@@ -295,6 +312,9 @@
         <category>容器</category>
         <category>docker</category>
       </categories>
+      <tags>
+        <tag>blog</tag>
+      </tags>
   </entry>
   <entry>
     <title>docker下指定mysql密码</title>
@@ -306,6 +326,7 @@
       </categories>
       <tags>
         <tag>docker</tag>
+        <tag>blog</tag>
         <tag>mysql</tag>
       </tags>
   </entry>
@@ -317,6 +338,9 @@
         <category>容器</category>
         <category>docker</category>
       </categories>
+      <tags>
+        <tag>blog</tag>
+      </tags>
   </entry>
   <entry>
     <title>Docker desktop tutorial</title>
@@ -326,6 +350,9 @@
         <category>容器</category>
         <category>docker</category>
       </categories>
+      <tags>
+        <tag>blog</tag>
+      </tags>
   </entry>
   <entry>
     <title>IFC</title>
@@ -338,6 +365,7 @@
       </categories>
       <tags>
         <tag>IMS</tag>
+        <tag>blog</tag>
         <tag>OpenIMSCore</tag>
         <tag>ifc</tag>
       </tags>
@@ -353,6 +381,7 @@
       </categories>
       <tags>
         <tag>IMS</tag>
+        <tag>blog</tag>
         <tag>OpenIMSCore</tag>
       </tags>
   </entry>
@@ -367,6 +396,7 @@
       </categories>
       <tags>
         <tag>IMS</tag>
+        <tag>blog</tag>
         <tag>OpenIMSCore</tag>
       </tags>
   </entry>
@@ -381,6 +411,7 @@
       </categories>
       <tags>
         <tag>IMS</tag>
+        <tag>blog</tag>
         <tag>OpenIMSCore</tag>
         <tag>bind9</tag>
         <tag>jdk</tag>
@@ -397,6 +428,7 @@
       </categories>
       <tags>
         <tag>IMS</tag>
+        <tag>blog</tag>
         <tag>mysql</tag>
         <tag>OpenIMSCore</tag>
         <tag>shell</tag>
@@ -413,6 +445,7 @@
       </categories>
       <tags>
         <tag>IMS</tag>
+        <tag>blog</tag>
         <tag>OpenIMSCore</tag>
         <tag>bind9</tag>
       </tags>
@@ -428,6 +461,7 @@
       </categories>
       <tags>
         <tag>IMS</tag>
+        <tag>blog</tag>
         <tag>OpenIMSCore</tag>
         <tag>bind9</tag>
         <tag>jdk</tag>
@@ -444,6 +478,7 @@
       </categories>
       <tags>
         <tag>IMS</tag>
+        <tag>blog</tag>
         <tag>OpenIMSCore</tag>
         <tag>fhoss</tag>
       </tags>
@@ -459,6 +494,7 @@
       </categories>
       <tags>
         <tag>IMS</tag>
+        <tag>blog</tag>
         <tag>OpenIMSCore</tag>
         <tag>gcc</tag>
       </tags>
@@ -474,6 +510,7 @@
       </categories>
       <tags>
         <tag>IMS</tag>
+        <tag>blog</tag>
         <tag>OpenIMSCore</tag>
         <tag>bind9</tag>
         <tag>jdk</tag>
@@ -490,6 +527,7 @@
       </categories>
       <tags>
         <tag>IMS</tag>
+        <tag>blog</tag>
         <tag>OpenIMSCore</tag>
         <tag>shell</tag>
       </tags>
@@ -505,6 +543,7 @@
       </categories>
       <tags>
         <tag>IMS</tag>
+        <tag>blog</tag>
         <tag>OpenIMSCore</tag>
         <tag>pcscf</tag>
       </tags>
@@ -520,6 +559,7 @@
       </categories>
       <tags>
         <tag>IMS</tag>
+        <tag>blog</tag>
         <tag>OpenIMSCore</tag>
       </tags>
   </entry>
@@ -533,6 +573,7 @@
       </categories>
       <tags>
         <tag>k8s</tag>
+        <tag>blog</tag>
         <tag>sealos</tag>
         <tag>kubectl</tag>
       </tags>
@@ -547,6 +588,7 @@
       </categories>
       <tags>
         <tag>k8s</tag>
+        <tag>blog</tag>
         <tag>sealos</tag>
       </tags>
   </entry>
@@ -560,6 +602,7 @@
       </categories>
       <tags>
         <tag>k8s</tag>
+        <tag>blog</tag>
         <tag>chrony</tag>
       </tags>
   </entry>
@@ -573,6 +616,7 @@
       </categories>
       <tags>
         <tag>k8s</tag>
+        <tag>blog</tag>
       </tags>
   </entry>
   <entry>
@@ -585,6 +629,7 @@
       </categories>
       <tags>
         <tag>k8s</tag>
+        <tag>blog</tag>
         <tag>chrony</tag>
       </tags>
   </entry>
@@ -598,6 +643,7 @@
       </categories>
       <tags>
         <tag>k8s</tag>
+        <tag>blog</tag>
         <tag>sealos</tag>
         <tag>chrony</tag>
       </tags>
@@ -612,6 +658,7 @@
       </categories>
       <tags>
         <tag>k8s</tag>
+        <tag>blog</tag>
         <tag>bind9</tag>
         <tag>chrony</tag>
       </tags>
@@ -626,6 +673,7 @@
       </categories>
       <tags>
         <tag>k8s</tag>
+        <tag>blog</tag>
       </tags>
   </entry>
   <entry>
@@ -638,6 +686,7 @@
       </categories>
       <tags>
         <tag>k8s</tag>
+        <tag>blog</tag>
         <tag>SAN</tag>
       </tags>
   </entry>
@@ -651,6 +700,7 @@
       </categories>
       <tags>
         <tag>k8s</tag>
+        <tag>blog</tag>
         <tag>harbor</tag>
       </tags>
   </entry>
@@ -664,7 +714,13 @@
       </categories>
       <tags>
         <tag>k8s</tag>
+        <tag>blog</tag>
         <tag>helm</tag>
       </tags>
+  </entry>
+  <entry>
+    <title></title>
+    <url>/articles/%E7%BD%91%E7%BB%9C%EF%BC%88network%EF%BC%89/%E7%BD%91%E7%BB%9C%EF%BC%88network%EF%BC%89/</url>
+    <content><![CDATA[]]></content>
   </entry>
 </search>
